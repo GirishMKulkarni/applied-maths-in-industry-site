@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hypothesis testing and p-values · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="hypothesis-testing-and-p-values">Hypothesis testing and p-values</h1>
+<p>This is the idea behind "is this result real, or did I just get lucky?" It is the
+quiet backbone of Session 19 (algorithmic trading), where the whole danger is
+mistaking luck for skill. Read it once and the class will feel easy. No proofs
+here, just the picture.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>You ran an experiment and got a nice-looking result. A new trading rule turned
+₹1 into ₹1.40 on past data. A new medicine seemed to help. A coin came up heads
+seven times out of ten. In every case one nagging question remains: could this
+have happened by chance alone, even if there is nothing special going on?</p>
+<p>Hypothesis testing is a careful way to answer that one question.</p>
+<h2 id="the-setup-a-nothing-is-going-on-story">The setup: a "nothing is going on" story</h2>
+<p>You start by writing down the boring explanation, the one that says your result
+is just luck. This boring explanation is called the <strong>null hypothesis</strong>. It is
+deliberately the dull, skeptical story:</p>
+<ul>
+<li>"This trading rule has no real edge; it made money by chance."</li>
+<li>"This medicine does nothing; the patients who improved would have anyway."</li>
+<li>"This coin is fair; seven heads was just a lucky run."</li>
+</ul>
+<p>You are the prosecutor and the null hypothesis is the defendant. You do not get
+to declare it guilty because you feel like it. You have to show the evidence
+would be surprising if the defendant were innocent.</p>
+<h2 id="the-p-value-how-surprising-is-my-result-if-nothing-is-going-on">The p-value: how surprising is my result, if nothing is going on?</h2>
+<p>Now the key number. The <strong>p-value</strong> answers exactly this:</p>
+<blockquote>
+<p>If the null hypothesis were true (nothing going on), how often would pure luck
+hand me a result at least this good?</p>
+</blockquote>
+<p>A small p-value means "luck almost never produces something this good, so I doubt
+the boring explanation." A large p-value means "luck produces this all the time,
+so I have no case."</p>
+<p>A common line in the sand is 0.05, meaning a 1-in-20 fluke. If the p-value is
+below 0.05, people say the result is <strong>statistically significant</strong> and reject the
+null. That line is a convention, not a law of nature.</p>
+<p>Picture a bell-shaped pile of all the results luck could give you. Your actual
+result is a marker somewhere on that pile. If the marker sits deep in the thin
+tail, far from the middle, the p-value is small: luck rarely goes that far. If
+the marker sits near the fat middle, the p-value is large: luck lands there
+often.</p>
+<h2 id="the-trap-that-ruins-trading-many-tries">The trap that ruins trading: many tries</h2>
+<p>Here is the part that matters most for Session 19, and it is where honest people
+still fool themselves.</p>
+<p>A 1-in-20 fluke sounds rare. But what if you run 20 experiments? Then, on
+average, you expect one of them to clear the "significant" bar by pure luck, even
+if every single one is worthless. Run 100 worthless trading rules and about 5
+will look "significant" at the 0.05 level for no reason at all.</p>
+<p>So if you quietly try many strategies and proudly report only the best one, your
+p-value is a lie. The right p-value has to account for how many things you tried.
+Keeping the best of many tries is called <strong>data-snooping</strong> or <strong>p-hacking</strong>, and
+it is the single easiest way to fake a winning backtest. Session 19's second
+notebook shows this happening with 200 pure-noise strategies: the luckiest one
+looks brilliant, and it is nothing.</p>
+<p>The honest rules that follow from this:</p>
+<ul>
+<li>Decide your one strategy first, then test it once.</li>
+<li>If you must compare many, demand a much stronger result before you believe any
+  of them.</li>
+<li>Be suspicious of a single gorgeous result, not excited by it.</li>
+</ul>
+<h2 id="what-a-p-value-is-not">What a p-value is not</h2>
+<p>Two honest cautions, because these trip up everyone at first:</p>
+<ul>
+<li>A small p-value does not tell you the result is important or large. It only
+  says luck is an unlikely explanation. A tiny, useless edge can be
+  "significant" if you have enough data.</li>
+<li>A p-value is not "the probability the null is true." It is the probability of
+  your evidence assuming the null is true. Those are different sentences, and the
+  difference is the whole subject.</li>
+</ul>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>This is the grammar of evidence. Medicine uses it to approve drugs. Factories use
+it to decide whether a new process really cut defects. A/B tests at Flipkart or
+Zomato use it to decide whether a new checkout screen truly lifted orders or just
+had a good week. And in quant finance it is the difference between a real edge and
+an expensive illusion. Learning to ask "how many things did I try before I got
+excited?" will save you money and embarrassment for the rest of your career.</p>
+<p>Where you'll use this: Session 19 (algorithmic trading and backtesting), where a
+trading edge is a hypothesis and a backtest is the test. The same skeptical habit
+shows up wherever you compare options and must ask whether the winner is real.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spread, moving together, and diversification · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="spread-moving-together-and-diversification">Spread, moving together, and diversification</h1>
+<p>This is the whole idea behind the portfolio session. It sounds like finance, but
+underneath it is one simple picture about numbers that bounce around. No proofs
+here, just the picture. Ten minutes and the session will feel easy.</p>
+<h2 id="return-how-much-a-stock-earns">Return: how much a stock earns</h2>
+<p>A stock's price changes every day. The <strong>return</strong> for a day is just the percentage
+change: if a share goes from ₹100 to ₹102, that is a +2% day. Returns are nicer to
+work with than raw prices, because they put a ₹50 stock and a ₹5000 stock on the
+same footing. A stock's <strong>expected return</strong> is roughly the average of its daily
+returns, scaled up to a year. Higher is better. That part is easy.</p>
+<h2 id="risk-is-just-spread">Risk is just spread</h2>
+<p>Now the more interesting number. Two stocks can both average, say, 12% a year, and
+yet feel completely different to own. One drifts up smoothly. The other lurches:
+up 6% one week, down 5% the next, up 8%, down 7%. The second one is riskier, even
+though the average is the same.</p>
+<p><strong>Risk</strong> is a name for how much the returns bounce around their average. A calm
+stock's returns huddle close to the average; a wild stock's returns are scattered
+far from it. The everyday word for that scatter is <strong>spread</strong>, and the standard way
+to measure spread is the <strong>standard deviation</strong>: the typical distance of the daily
+returns from their average. In finance the standard deviation of returns has its
+own name, <strong>volatility</strong>. Big volatility means a bumpy ride.</p>
+<pre><code>calm stock   returns:  1.0   0.9   1.1   1.0   0.9    -&gt; small spread, low risk
+wild stock   returns:  6.0  -5.0   8.0  -7.0   5.0    -&gt; big spread,   high risk
+</code></pre>
+<p>Both average to about 1, but the second is far riskier. That is the whole idea of
+risk: same average, different spread.</p>
+<p>(You will also hear <strong>variance</strong>. Variance is just the standard deviation squared.
+The maths is a little tidier with variance, so formulas use it, but it means the
+same thing: bigger variance, bigger spread, more risk.)</p>
+<h2 id="moving-together-covariance">Moving together: covariance</h2>
+<p>Here is the idea that makes portfolios work. Owning two stocks is not the same as
+owning each alone, because of <em>how they move together</em>.</p>
+<p>Think of two stocks over the same days.</p>
+<ul>
+<li>If they tend to rise on the same days and fall on the same days, they <strong>move
+  together</strong>. A software services firm and another software services firm often do
+  this, because the same news lifts both.</li>
+<li>If one tends to rise on the days the other falls, they <strong>move apart</strong>. An airline
+  and an oil producer can behave like this, because cheap oil helps the airline and
+  hurts the producer.</li>
+<li>If there is no pattern between them, they move <strong>independently</strong>.</li>
+</ul>
+<p>The single number that captures which of these is happening is called the
+<strong>covariance</strong>. Positive covariance means "they move together". Negative covariance
+means "they move opposite". Near zero means "no real link". You never compute it by
+hand today; the computer does it in one line. You just need the picture: covariance
+is a togetherness score for a pair of stocks.</p>
+<p>When you have many stocks, there is a covariance for every pair. Stack all those
+numbers into a table, one row and one column per stock, and you get the
+<strong>covariance matrix</strong>, written <code>Σ</code> (the Greek capital letter Sigma). It is just a
+table of togetherness scores. The diagonal, where a stock meets itself, is that
+stock's own spread. You will see it drawn as a coloured heatmap in the notebook.</p>
+<h2 id="why-mixing-lowers-risk">Why mixing lowers risk</h2>
+<p>Now the payoff, and it is genuinely a little bit magic.</p>
+<p>Suppose you split your money between two stocks that do <em>not</em> move together. On a
+day the first one drops, the second often holds up or rises, so it cushions the
+fall. On a day the second drops, the first cushions it. The bumps partly cancel,
+and the mix bounces around <em>less</em> than either stock does on its own.</p>
+<p>That is <strong>diversification</strong>: by spreading across things that move differently, you
+get the same expected return with less risk. "Don't put all your eggs in one
+basket" is not just folk wisdom, it is a fact about spread and covariance. And it
+is why the covariance matrix <code>Σ</code> is the star of the session: it is exactly the
+information you need to find the mix whose bumps cancel best.</p>
+<p>One honest caveat. Diversification can only cancel the bumps that are specific to
+individual companies. When the whole market falls together, as in a crash, almost
+everything moves the same way at once and there is a floor of risk you cannot
+diversify away. Mixing helps a lot; it is not a force field.</p>
+<h2 id="what-youll-do-with-this">What you'll do with this</h2>
+<p>In the session you measure each stock's return and risk, build the covariance
+table <code>Σ</code>, and then let the computer search through all the possible mixes for the
+one with the least bounce at each level of return. The best mixes trace a curve
+called the efficient frontier. Every step rests on the two ideas above: risk is
+spread, and covariance is how things move together.</p>
+<p>Where you'll use this: Session 16 (portfolios) directly, and again in Session 17
+(measuring how much you could lose) and the later risk and optimisation sessions.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graphs and DAGs · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="graphs-and-dags">Graphs and DAGs</h1>
+<p>This is a ten-minute, picture-first look at the one maths idea hiding under Git.
+You do not need it to finish Session 4. It is here for anyone who is curious why
+a "commit history" is really a well-known mathematical object.</p>
+<h2 id="a-graph-is-dots-and-arrows">A graph is dots and arrows</h2>
+<p>Forget the graphs with x and y axes from school. In this part of maths a <strong>graph</strong>
+is something simpler: a bunch of dots, with lines or arrows joining some of them.</p>
+<ul>
+<li>The dots are called <strong>nodes</strong> (or vertices). A node can be anything: a city, a
+  person, a web page, a task.</li>
+<li>The lines are called <strong>edges</strong>. An edge says "these two are connected".</li>
+</ul>
+<p>The Delhi Metro map is a graph: stations are nodes, tracks are edges. Your list of
+friends on a social app is a graph: people are nodes, a friendship is an edge.</p>
+<h2 id="directed-means-the-arrows-point-one-way">"Directed" means the arrows point one way</h2>
+<p>Sometimes a connection has a direction. On the metro you can go both ways, so those
+edges have no arrow. But some connections only go one way.</p>
+<p>Think of "who follows whom" on a social app. You following a cricketer does not mean
+the cricketer follows you. So we draw an <strong>arrow</strong> from you to the cricketer, not a
+plain line. A graph whose edges are arrows is a <strong>directed graph</strong>.</p>
+<h2 id="acyclic-means-you-can-never-loop-back">"Acyclic" means you can never loop back</h2>
+<p>Now add one rule: follow the arrows, and you can never come back to where you
+started. No round trips. That "no loops" property is the word <strong>acyclic</strong> (a-cyclic,
+"no cycle").</p>
+<p>Picture a family tree drawn with arrows from each person to their parents. You can
+walk from yourself up to a grandparent, but you can never follow parent-arrows and
+arrive back at yourself. Time only goes one way. A family tree is acyclic.</p>
+<p>Put the three words together and you get a <strong>directed acyclic graph</strong>, or <strong>DAG</strong>:
+dots joined by one-way arrows, with no way to loop back to the start.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>DAGs are everywhere once you notice them, because so many real things are "steps
+that depend on earlier steps and never circle back":</p>
+<ul>
+<li>A build system: to make the final report you first need the cleaned data, which
+  first needs the raw file. Arrows point to what a step depends on. No loops.</li>
+<li>A spreadsheet: cell C depends on cell B, which depends on cell A. If it looped,
+  Excel would throw a "circular reference" error, which is just "your graph has a
+  cycle".</li>
+<li>Project scheduling: task "paint the wall" must come after "plaster the wall".</li>
+<li><strong>Git</strong>, which is where Session 4 meets one. Each save point (a <strong>commit</strong>)
+  points back to the save point it grew from, its parent. Time only moves forward,
+  so the arrows never form a loop. Your whole project history is a DAG, and every
+  Git command (log, branch, merge, undo) is just tidy bookkeeping on that graph.</li>
+</ul>
+<h2 id="the-smallest-example">The smallest example</h2>
+<p>Three commits, made one after another:</p>
+<pre><code>   C1  &lt;-----  C2  &lt;-----  C3
+ (first)     (second)    (newest)
+</code></pre>
+<p>Read the arrows as "grew from". C3 grew from C2, which grew from C1. It is directed
+(arrows have a direction) and acyclic (you can never get back to C1 by following
+arrows forward). That is the entire mathematical object. When you make a branch,
+one node simply gets two arrows coming out of it, and the picture fans out.</p>
+<h2 id="where-youll-use-this">Where you'll use this</h2>
+<p>Session 4 (Git and GitHub) names the DAG as its "math object", in the optional box.
+The same dots-and-arrows idea returns whenever one thing depends on another: task
+schedulers, data pipelines, and dependency graphs later in the course.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

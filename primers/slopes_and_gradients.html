@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slopes and gradients: which way is downhill · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="slopes-and-gradients-which-way-is-downhill">Slopes and gradients: which way is downhill</h1>
+<p>This is the picture behind the phrase "the model learns". Almost every model in
+the course is trained by rolling downhill, and this page is that idea in plain
+words. No proofs, just the picture. Read it before Session 7 or Session 13 and
+those sessions will feel easy.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>A model has some dials on it: a line has a slope and a starting value; a neural
+network has thousands of weights. Each setting of the dials makes the model a
+little right or a little wrong on your data. You want the setting that makes it as
+right as possible. Trying every combination is hopeless once there is more than a
+couple of dials. So we need a way to improve the dials without searching blindly.</p>
+<h2 id="height-is-how-wrong">Height is "how wrong"</h2>
+<p>Picture a landscape. Sideways is a dial you can turn. Height is how wrong the
+model is at that setting, a single number we call the <strong>error</strong> or the <strong>loss</strong>.
+A high spot means the model is doing badly; a low spot means it is doing well. The
+best dial setting is the lowest point of the valley.</p>
+<p>You cannot see the whole landscape at once. You can only feel the ground right
+where you are standing. So how do you get to the bottom? You feel which way is
+downhill, take a small step that way, and repeat.</p>
+<h2 id="the-slope-tells-you-which-way-is-down">The slope tells you which way is down</h2>
+<p>The <strong>slope</strong> of the ground at your feet is exactly that "which way is downhill,
+and how steep" information. A steep slope means a big improvement is nearby, so a
+step helps a lot. A gentle slope means you are close to flat ground, near the
+bottom. When the slope is zero, the ground is level and you have arrived.</p>
+<p>For a single dial, the slope is one number: negative means "down is to the right",
+positive means "down is to the left". You step the opposite way to the slope, and
+you go downhill.</p>
+<h2 id="a-gradient-is-just-the-slope-with-many-dials">A gradient is just the slope with many dials</h2>
+<p>When the model has many dials at once, "which way is downhill" is no longer a
+single left-or-right. It is a direction across all the dials together: turn this
+one down a lot, that one up a touch, leave this one alone. That whole bundle of
+"which way, and how much, for every dial" is called the <strong>gradient</strong>. It is the
+same idea as a slope, only pointing through a space with one axis per dial.</p>
+<p>You do not have to picture that high-dimensional space. Hold on to the one-dial
+version: the gradient tells you which way is downhill, and you step against it.</p>
+<h2 id="gradient-descent-step-downhill-repeat">Gradient descent: step downhill, repeat</h2>
+<p>The recipe is called <strong>gradient descent</strong>, and it is three lines forever:</p>
+<ol>
+<li>Work out the gradient where you are (which way is downhill).</li>
+<li>Take a small step in the downhill direction.</li>
+<li>Repeat until the ground is flat.</li>
+</ol>
+<p>The size of each step is the <strong>learning rate</strong>. Too large and you leap over the
+valley and bounce around, maybe flying off entirely. Too small and you crawl and
+it takes forever. A sensible middle step size is why training "just works" most of
+the time, and picking it is most of the art.</p>
+<h2 id="where-the-chain-rule-sneaks-in-optional">Where the chain rule sneaks in (optional)</h2>
+<p>For a neural network the model is a stack of small steps, one feeding the next. To
+get the slope of the whole stack you multiply the little slopes of each step
+together. That multiplying-along-the-chain is the <strong>chain rule</strong> from calculus,
+and doing it backwards through the network is what people call
+<strong>backpropagation</strong>. You will never do it by hand in practice: libraries like
+PyTorch compute the gradient for you automatically. Knowing it is "just the slope
+of a stack of steps" is enough.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>This one idea trains almost everything. Fitting a line, a logistic model, a demand
+forecaster, a giant language model: under the hood each one is rolling downhill on
+its own "how wrong" landscape, nudging its dials to do better. Understand rolling
+downhill and you understand what "the model learns" means everywhere it appears.</p>
+<p>Where you'll use this: Session 7 (a line learned step by step), Session 13 (neural
+networks trained by gradient descent), and the optimisation module (Sessions 20
+to 22), where finding the lowest point of a landscape is the whole subject.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

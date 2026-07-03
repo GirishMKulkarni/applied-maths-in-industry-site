@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="glossary">Glossary</h1>
+<p>Plain-English meaning of the technical words in the course. When a word is new,
+look it up here. Each session also lists its own "new words" at the foot of its
+README, and the notebooks gloss terms in plain English right where they appear.</p>
+<p>Words are listed A to Z.</p>
+<h3 id="s-s-policy">(s, S) policy</h3>
+<p>a restock rule: when stock falls to <code>s</code>, order back up to <code>S</code>.</p>
+<h3 id="loc-iloc">.loc / .iloc</h3>
+<p>pick rows and columns by name (<code>.loc</code>) or by position (<code>.iloc</code>).</p>
+<h3 id="ab-test">A/B test</h3>
+<p>ship the old version to half your users and the new one to the other half, then compare, to see if the change really helped.</p>
+<h3 id="acet">ACET</h3>
+<p>the Actuarial Common Entrance Test, the entry exam to the Institute of Actuaries of India.</p>
+<h3 id="activation">activation</h3>
+<p>the "bend" (like ReLU) that lets a network fit curves, not just straight lines.</p>
+<h3 id="actuary">actuary</h3>
+<p>a professional who measures and prices long-term financial risk (insurance, pensions), qualifying through a series of exams.</p>
+<h3 id="aggregate">aggregate</h3>
+<p>a summary of many rows into one number, like a sum or a count.</p>
+<h3 id="ar-ma">AR / MA</h3>
+<p>today as a weighted sum of recent values (AR) or recent surprises (MA).</p>
+<h3 id="arima">ARIMA</h3>
+<p>a forecasting model that combines AR, differencing, and MA.</p>
+<h3 id="array">array</h3>
+<p>A list of numbers that the <code>numpy</code> library can do fast maths on all at once, for
+example finding the average of a thousand numbers in one step.</p>
+<h3 id="assert">assert</h3>
+<p>a line that checks a belief and stops loudly if it is false.</p>
+<h3 id="assignment-problem">assignment problem</h3>
+<p>match each worker to exactly one task at least total cost.</p>
+<h3 id="assumption">assumption</h3>
+<p>a simplification you chose, written down so it can be argued with and tested.</p>
+<h3 id="backpropagation">backpropagation</h3>
+<p>working out how to nudge each weight; it is the chain rule, run automatically.</p>
+<h3 id="backtest">backtest</h3>
+<p>replay a trading rule over past prices to see what it would have earned.</p>
+<h3 id="bagging-random-forest">bagging / Random Forest</h3>
+<p>grow many trees on random samples and let them vote.</p>
+<h3 id="bfsi">BFSI</h3>
+<p>Banking, Financial Services and Insurance, the sector most quant and actuarial jobs sit in.</p>
+<h3 id="bias-audit">bias audit</h3>
+<p>checking whether a model treats groups of people differently.</p>
+<h3 id="binary-variable">binary variable</h3>
+<p>a decision that can only be 0 or 1, a yes/no switch.</p>
+<h3 id="bluf-bottom-line-up-front">BLUF (bottom line up front)</h3>
+<p>lead with the recommendation, then justify it.</p>
+<h3 id="boolean-mask">boolean mask</h3>
+<p>a column of True/False that keeps only the rows you want.</p>
+<h3 id="boosting-xgboost">boosting / XGBoost</h3>
+<p>grow trees in sequence, each fixing the last one's mistakes.</p>
+<h3 id="branch">branch</h3>
+<p>a parallel line of history for trying something without risk.</p>
+<h3 id="broadcasting">broadcasting</h3>
+<p>NumPy stretching a smaller array to fit a bigger one so they combine without a loop.</p>
+<h3 id="caching-stcache_resource">caching (st.cache_resource)</h3>
+<p>load the model once and reuse it, instead of on every click.</p>
+<h3 id="calibrated-confidence">calibrated confidence</h3>
+<p>stating a level of certainty that matches reality, so "70%" really does come true about 70% of the time.</p>
+<h3 id="call-put">call / put</h3>
+<p>the right to buy (call) or to sell (put) at the fixed price.</p>
+<h3 id="capstone">capstone</h3>
+<p>the final project of the course: one real problem you scope, build and present end to end.</p>
+<h3 id="centroid">centroid</h3>
+<p>the centre point of a cluster, the average of its members.</p>
+<h3 id="cherry-picking">cherry-picking</h3>
+<p>showing only the flattering slice of the data and hiding the rest of the context.</p>
+<h3 id="churn">churn</h3>
+<p>a customer leaving or cancelling; the churn rate is the share who leave in a period.</p>
+<h3 id="classifier">classifier</h3>
+<p>a model that sorts each case into one of a few categories.</p>
+<h3 id="clustering">clustering</h3>
+<p>sorting unlabelled points into groups of similar ones.</p>
+<h3 id="coefficient">coefficient</h3>
+<p>the fitted number that says how much one input moves the output.</p>
+<h3 id="cointegration">cointegration</h3>
+<p>two wandering prices whose combined spread stays stable, so the pair is tradeable.</p>
+<h3 id="combinatorial-explosion">combinatorial explosion</h3>
+<p>the number of possible choices blowing up as the problem grows.</p>
+<h3 id="commit">commit</h3>
+<p>one save point: a snapshot of the whole project, with a message.</p>
+<h3 id="confidence-interval">confidence interval</h3>
+<p>an honest range for a result that came from randomness, reported instead of a single number.</p>
+<h3 id="confusion-matrix">confusion matrix</h3>
+<p>the table of the four counts: right and wrong, for each class.</p>
+<h3 id="constraint">constraint</h3>
+<p>a rule the answer must obey, like a queue length never going below zero.</p>
+<h3 id="convex-function">convex function</h3>
+<p>a bowl-shaped cost: every chord lies on or above the curve.</p>
+<h3 id="convex-optimization">convex optimization</h3>
+<p>finding the lowest point of a bowl-shaped problem, which a computer can always do reliably.</p>
+<h3 id="convex-set">convex set</h3>
+<p>a shape with no dents: the line between any two inside points stays inside.</p>
+<h3 id="covariance">covariance</h3>
+<p>a number saying whether two stocks tend to move up and down together.</p>
+<h3 id="covariance-matrix">covariance matrix (Σ)</h3>
+<p>the table holding the covariance of every pair of stocks.</p>
+<h3 id="cross-validation">cross-validation</h3>
+<p>try a setting on several train/check splits and average, to choose a knob without touching the test set.</p>
+<h3 id="cvar-expected-shortfall">CVaR / Expected Shortfall</h3>
+<p>the average loss on the worst few percent of days, beyond the VaR.</p>
+<h3 id="cvxpy">CVXPY</h3>
+<p>a Python library where you state an optimisation almost as you write it on paper, and it solves it.</p>
+<h3 id="data-scientist">data scientist</h3>
+<p>someone who turns a company's messy data into a decision, usually with statistics and machine-learning models.</p>
+<h3 id="data-snooping">data-snooping</h3>
+<p>trying many strategies and keeping the best, so the "winner" is mostly luck.</p>
+<h3 id="dataframe">DataFrame</h3>
+<p>a table in Python: rows and columns, like a spreadsheet you drive with code.</p>
+<h3 id="dbscan">DBSCAN</h3>
+<p>a clustering method that groups by crowding, finds any shape, and labels lonely points as noise.</p>
+<h3 id="decision-boundary">decision boundary</h3>
+<p>the frontier where the model switches its vote from one class to the other.</p>
+<h3 id="decision-tree">decision tree</h3>
+<p>a model shaped like a flowchart of yes/no questions.</p>
+<h3 id="decision-variable">decision variable</h3>
+<p>one of the quantities you get to choose.</p>
+<h3 id="deploy">deploy</h3>
+<p>put your app on the internet at a public link so other people can use it.</p>
+<h3 id="deployment-in-production">deployment (in production)</h3>
+<p>the stage where a model leaves the notebook and serves real users, where reliability matters more than cleverness.</p>
+<h3 id="dictionary-dict">dictionary (dict)</h3>
+<p>a lookup table that maps a key to a value.</p>
+<h3 id="differencing">differencing</h3>
+<p>replacing each value by its change from the step before, to remove a trend.</p>
+<h3 id="discrete-event-simulation">discrete-event simulation</h3>
+<p>a model that jumps along a clock from one event to the next (an arrival, a service finishing).</p>
+<h3 id="distribution">distribution</h3>
+<p>the shape of a single column of numbers: where they cluster and how spread out they are.</p>
+<h3 id="diversification">diversification</h3>
+<p>spreading money across stocks that don't move together, to lower risk.</p>
+<h3 id="duckdb">DuckDB</h3>
+<p>a tool that runs SQL straight on a table in Python, no setup.</p>
+<h3 id="efficient-frontier">efficient frontier</h3>
+<p>the curve of best portfolios: the most return for each level of risk.</p>
+<h3 id="elasticnet">ElasticNet</h3>
+<p>a blend of Ridge and Lasso.</p>
+<h3 id="elbow-silhouette">elbow / silhouette</h3>
+<p>two ways to decide how many groups to use.</p>
+<h3 id="epoch">epoch</h3>
+<p>one full pass over the training data during training.</p>
+<h3 id="equity-curve">equity curve</h3>
+<p>the running value of ₹1 put into a strategy over time.</p>
+<h3 id="esg">ESG</h3>
+<p>environmental, social, and governance: using data and models to assess sustainability and climate risk for companies and investors.</p>
+<h3 id="executive-summary-one-pager">executive summary / one-pager</h3>
+<p>the whole decision on a single page: answer, a little evidence, a caveat, a next step.</p>
+<h3 id="facility-location">facility location</h3>
+<p>choose which sites to open and who each serves, cheapest overall.</p>
+<h3 id="fan-chart">fan chart</h3>
+<p>a forecast drawn as a widening band (a range of outcomes) rather than a single line.</p>
+<h3 id="fat-tails">fat tails</h3>
+<p>extreme days happen far more often than a plain bell curve would predict.</p>
+<h3 id="feasible-region">feasible region</h3>
+<p>the set of all plans that obey every constraint at once.</p>
+<h3 id="feature">feature</h3>
+<p>An input you feed a model, one of the things you measure about each case. For a
+flat, its size and its locality are features. Also called an input variable.</p>
+<h3 id="feature-engineering">feature engineering</h3>
+<p>building better input columns so a simple model can succeed.</p>
+<h3 id="feature-importance">feature importance</h3>
+<p>how much each input contributed to the model's decisions.</p>
+<h3 id="fit-a-model">fit (a model)</h3>
+<p>The act of finding the best settings for a model from data. "Fit a line" means
+find the slope and starting value that match the data best.</p>
+<h3 id="for-loop">for loop</h3>
+<p>repeat a block of work once for each item in a collection.</p>
+<h3 id="forward-pass">forward pass</h3>
+<p>sending an input through the network to get a prediction.</p>
+<h3 id="function-in-code">function (in code)</h3>
+<p>A named, reusable recipe: you give it inputs, it returns an answer. See the
+<a href="python_in_15_minutes.html">Python primer</a>.</p>
+<h3 id="global-optimum">global optimum</h3>
+<p>the genuinely best answer, not just the best nearby.</p>
+<h3 id="groupby-split-apply-combine">groupby (split-apply-combine)</h3>
+<p>split rows into groups, apply a summary to each, combine the answers into a small table.</p>
+<h3 id="heuristic">heuristic</h3>
+<p>a fast, simple rule that finds a good answer, not always the perfect one.</p>
+<h3 id="holding-cost-stockout">holding cost / stockout</h3>
+<p>the cost of stock sitting idle, and of running out.</p>
+<h3 id="hypothesis-test">hypothesis test</h3>
+<p>the honest procedure for deciding whether a difference is real or just luck.</p>
+<h3 id="impurity">impurity</h3>
+<p>a number for how mixed a group of labels is; 0 means all one class.</p>
+<h3 id="index">index</h3>
+<p>the row labels down the left of a table; the address of each row.</p>
+<h3 id="information-gain">information gain</h3>
+<p>how much a question lowered the impurity; the tree picks the biggest.</p>
+<h3 id="integer-programming">integer programming</h3>
+<p>optimization where some variables must be whole numbers.</p>
+<h3 id="interaction-feature">interaction feature</h3>
+<p>a new column built from two others together (weekend AND rain), carrying signal neither column holds alone.</p>
+<h3 id="intercept">intercept</h3>
+<p>The starting value of a straight line, the prediction when the input is zero. In
+<code>y = slope × x + intercept</code> it is the second number.</p>
+<h3 id="join">join</h3>
+<p>combining two tables by matching on a shared column (a key).</p>
+<h3 id="k-means">k-means</h3>
+<p>a clustering method: pick a number of groups, then move each group's centre to the average of its points, repeating until nothing moves.</p>
+<h3 id="kaggle">Kaggle</h3>
+<p>a free website where you enter data-science competitions and learn from other people's shared notebooks.</p>
+<h3 id="knapsack-problem">knapsack problem</h3>
+<p>pick items under a capacity limit to maximise total value.</p>
+<h3 id="lasso">Lasso</h3>
+<p>regularization that pushes some weights to exactly zero, dropping those features for you.</p>
+<h3 id="law-of-large-numbers">law of large numbers</h3>
+<p>the average of many random samples settles close to the true value as you take more of them.</p>
+<h3 id="lead-time">lead time</h3>
+<p>the delay between placing an order and it arriving.</p>
+<h3 id="least-squares">least squares</h3>
+<p>The rule for picking the best line: choose the line that makes the total of the
+squared misses as small as possible. See <a href="least_squares_and_lines.html">Lines and least squares</a>.</p>
+<h3 id="library">library</h3>
+<p>A ready-made toolbox of code you import and use instead of writing everything
+yourself. <code>numpy</code>, <code>pandas</code> and <code>scikit-learn</code> are libraries.</p>
+<h3 id="linear-program-lp">linear program (LP)</h3>
+<p>a plan where the objective and every rule are plain weighted sums, no squares or curves.</p>
+<h3 id="list">list</h3>
+<p>an ordered collection of values, written in square brackets.</p>
+<h3 id="littles-law">Little's Law</h3>
+<p>average number in a system equals arrival rate times the average time each item spends in it.</p>
+<h3 id="live-demo">live demo</h3>
+<p>running your app in front of people, live, instead of showing a screenshot.</p>
+<h3 id="local-optimum">local optimum</h3>
+<p>a dip that beats its neighbours but is not the overall best; a trap that only wobbly problems have.</p>
+<h3 id="log-return">log-return</h3>
+<p>the same day-to-day change written with a logarithm, so the numbers add up nicely over time.</p>
+<h3 id="logistic-regression">logistic regression</h3>
+<p>the classic classifier: a linear score squashed into a probability.</p>
+<h3 id="long-short">long / short</h3>
+<p>going long is buying now hoping the price rises; going short is selling first (borrowed) hoping to buy back cheaper.</p>
+<h3 id="look-ahead-bias">look-ahead bias</h3>
+<p>accidentally using information you could not have had yet, which flatters a backtest.</p>
+<h3 id="loss">loss</h3>
+<p>one number saying how wrong the current predictions are; smaller is better.</p>
+<h3 id="loss-distribution">loss distribution</h3>
+<p>the spread of all the day's outcomes, drawn with bigger losses on the right.</p>
+<h3 id="lp-relaxation">LP relaxation</h3>
+<p>the easy version with the whole-number rule dropped; its answer can be fractional.</p>
+<h3 id="mae-mean-absolute-error">MAE (mean absolute error)</h3>
+<p>The average size of the model's misses, ignoring whether each miss is above or
+below. Smaller is better. In the same units as the thing you predict, so it is
+easy to explain.</p>
+<h3 id="markov-chain">Markov chain</h3>
+<p>a system that hops between states, where the next state depends only on the current one.</p>
+<h3 id="matrix">matrix</h3>
+<p>A table of numbers arranged in rows and columns. Useful for holding many features
+for many cases at once. You can do the whole course without manipulating matrices
+by hand.</p>
+<h3 id="merge-join">merge (join)</h3>
+<p>glue two tables together by matching a shared key column.</p>
+<h3 id="missing-value-nan">missing value (NaN)</h3>
+<p>a blank cell; the honest way to record "we do not know".</p>
+<h3 id="ml-engineer">ML engineer</h3>
+<p>someone who makes a working model run reliably for real users at scale, and keeps it healthy over time.</p>
+<h3 id="model">model</h3>
+<p>A rule that turns inputs into a prediction. A fitted straight line is the simplest
+model in the course.</p>
+<h3 id="monte-carlo">Monte Carlo</h3>
+<p>estimate a quantity by generating many random scenarios and averaging the outcomes.</p>
+<h3 id="monte-carlo-simulation">Monte Carlo simulation</h3>
+<p>rolling many random possible futures and reading the answer off them.</p>
+<h3 id="mse-mean-squared-error">MSE (mean squared error)</h3>
+<p>The average of the squared misses. Squaring punishes big misses more than small
+ones. Smaller is better. Used because it has nice mathematical behaviour.</p>
+<h3 id="mse-mae-r2">MSE, MAE, R²</h3>
+<p>three honest scores for how close the predictions are.</p>
+<h3 id="nan">NaN</h3>
+<p>pandas' marker for a missing or blank value.</p>
+<h3 id="neuron">neuron</h3>
+<p>one small step that multiplies inputs by weights, adds them up, and bends the result.</p>
+<h3 id="normal-equation">normal equation</h3>
+<p>The direct formula that gives the best-fit line in one step, without trying many
+lines. Uses matrices. Optional: the idea of least squares is what matters, the
+computer applies this for you.</p>
+<h3 id="null-hypothesis">null hypothesis</h3>
+<p>the sceptical default: there is no real difference, any gap is chance.</p>
+<h3 id="objective">objective</h3>
+<p>the one quantity you are trying to make best (smallest wait, biggest yield).</p>
+<h3 id="one-hot-encoding">one-hot encoding</h3>
+<p>turning a text category into one 0/1 column per value, so no fake order is implied.</p>
+<h3 id="operations-research-or">operations research (OR)</h3>
+<p>using maths and simulation to make operational decisions better: routing vehicles, scheduling staff, setting inventory.</p>
+<h3 id="optimization">optimization</h3>
+<p>choosing the best plan a set of limits allows.</p>
+<h3 id="option">option</h3>
+<p>a contract giving the right, not the duty, to trade at a fixed price.</p>
+<h3 id="overfitting">overfitting</h3>
+<p>When a model learns the noise in the training data instead of the real trend, so
+it looks great on data it has seen and does badly on new data. The reason we
+always test on held-out data.</p>
+<h3 id="p-value">p-value</h3>
+<p>if the change did nothing, how often luck alone would give a result this extreme. Small means surprising, so evidence of a real effect.</p>
+<h3 id="parameter">parameter</h3>
+<p>a number the world hands you and you hold fixed for one run, like an arrival rate or a cost.</p>
+<h3 id="payoff">payoff</h3>
+<p>what the option is worth at expiry, given the final stock price.</p>
+<h3 id="pca">PCA</h3>
+<p>squashing many columns into a few that keep most of the spread, so you can plot or de-noise the data.</p>
+<h3 id="penalty-alpha">penalty / alpha</h3>
+<p>the size charge added to the loss; <code>alpha</code> sets how strong it is.</p>
+<h3 id="pipeline">Pipeline</h3>
+<p>one object that does the data-prep and the model together, so the same steps run the same way every time.</p>
+<h3 id="portfolio">portfolio</h3>
+<p>the public collection of your work (repos, demos) that an employer can look at directly.</p>
+<h3 id="portfolio-project">portfolio project</h3>
+<p>one finished project of your own, shared on GitHub, that shows an employer what you can actually do.</p>
+<h3 id="practical-significance">practical significance</h3>
+<p>whether an effect is big enough to be worth acting on, as opposed to merely unlikely to be luck.</p>
+<h3 id="precision-recall">precision / recall</h3>
+<p>of the cases we flagged, how many were real; and of the real ones, how many we caught.</p>
+<h3 id="prediction-interval">prediction interval</h3>
+<p>the band around a forecast showing how uncertain it is.</p>
+<h3 id="premium">premium</h3>
+<p>the price the buyer pays up front to own the option.</p>
+<h3 id="prime-number">prime number</h3>
+<p>a whole number above 1 whose only exact divisors are 1 and itself.</p>
+<h3 id="push-pull">push / pull</h3>
+<p>send your save points up to GitHub / bring others' back down.</p>
+<h3 id="put-call-parity">put-call parity</h3>
+<p>a fixed relationship linking a call, a put, the stock and cash, true with no model at all.</p>
+<h3 id="pyramid-principle">pyramid principle</h3>
+<p>Barbara Minto's rule: answer on top, grouped support below, detail at the base.</p>
+<h3 id="quadratic-program-qp">quadratic program (QP)</h3>
+<p>a bowl-shaped objective with straight-line fences; the SVM is one.</p>
+<h3 id="quant">quant</h3>
+<p>a quantitative analyst who uses maths, statistics and code to price assets, manage risk, or design trading strategies in finance.</p>
+<h3 id="quantile">quantile</h3>
+<p>the value a given fraction of the numbers sit below; the 95% quantile has 95% below it.</p>
+<h3 id="query">query</h3>
+<p>one SQL question, and the smaller table it returns.</p>
+<h3 id="random-variable">random variable</h3>
+<p>a number whose value is decided by chance, like a dice roll or a customer's waiting time.</p>
+<h3 id="referral">referral</h3>
+<p>someone already inside a company recommending you, which moves your application to the top of the pile.</p>
+<h3 id="regularization">regularization</h3>
+<p>a gentle rule that discourages a model from over-trusting any one feature, so it does better on new data.</p>
+<h3 id="remote-github">remote / GitHub</h3>
+<p>the shared copy of your repo online; GitHub is where it lives.</p>
+<h3 id="repository-repo">repository (repo)</h3>
+<p>the folder Git watches, together with its full history.</p>
+<h3 id="representation">representation</h3>
+<p>the particular way you write the data down; changing it changes what the model can learn.</p>
+<h3 id="requirementstxt">requirements.txt</h3>
+<p>the list of exact package versions the hosting machine must install.</p>
+<h3 id="residual">residual</h3>
+<p>The miss for one data point: the real value minus the model's prediction. Least
+squares makes the squared residuals small. See <a href="least_squares_and_lines.html#best-means-smallest-total-miss">Lines and least squares</a>.</p>
+<h3 id="return">return</h3>
+<p>the percent change in price from one day to the next.</p>
+<h3 id="ridge">Ridge</h3>
+<p>regularization that shrinks every weight toward zero, but never to exactly zero.</p>
+<h3 id="risk-volatility">risk (volatility)</h3>
+<p>how much the returns bounce around; the spread of the returns.</p>
+<h3 id="roc-auc">ROC-AUC</h3>
+<p>one number for how well the model ranks real positives above the rest; 1.0 is perfect, 0.5 is guessing.</p>
+<h3 id="r2-r-squared">R² (R-squared)</h3>
+<p>A score from 0 to 1 (roughly) saying how much of the variation in the data the
+model explains. 1 is perfect, 0 is no better than guessing the average.</p>
+<h3 id="scope">scope</h3>
+<p>the exact boundary of what your project will and will not do; to "lock scope" is to fix that boundary so you stop wandering.</p>
+<h3 id="seasonality">seasonality</h3>
+<p>a pattern that repeats every fixed number of steps.</p>
+<h3 id="seed-random-seed">seed (random seed)</h3>
+<p>A fixed starting point for the computer's random numbers, set with
+<code>np.random.seed(0)</code>, so that everyone gets the same "random" data and results can
+be reproduced.</p>
+<h3 id="sentinel-value">sentinel value</h3>
+<p>a fake stand-in for missing, like 999 or "NA", that must be unmasked to a real NaN.</p>
+<h3 id="serialize-joblibdump">serialize (joblib.dump)</h3>
+<p>write a trained model to a file so it loads later without retraining.</p>
+<h3 id="series">Series</h3>
+<p>a single column of a DataFrame, carrying its row labels.</p>
+<h3 id="service-level">service level</h3>
+<p>the fraction of customer demand you actually meet from stock.</p>
+<h3 id="shadow-price">shadow price</h3>
+<p>how much the best answer moves if you loosen one constraint by one unit.</p>
+<h3 id="shape">shape</h3>
+<p>how big an array is along each direction, like <code>(3, 4)</code> for 3 rows and 4 columns.</p>
+<h3 id="share-equity">share / equity</h3>
+<p>a share is a tiny slice of ownership of a company; equity is the general word for it.</p>
+<h3 id="sharpe-ratio">Sharpe ratio</h3>
+<p>return above the safe rate, divided by risk; reward per unit of risk.</p>
+<h3 id="sigmoid">sigmoid</h3>
+<p>the S-shaped curve that turns any number into a value between 0 and 1.</p>
+<h3 id="simulation">simulation</h3>
+<p>running a model step by step to watch how a system behaves over time.</p>
+<h3 id="slope">slope</h3>
+<p>How steep a straight line is: how much the output goes up for each one-unit
+increase in the input.</p>
+<h3 id="solve-a-system">solve a system</h3>
+<p>give the computer some facts and ask it to find the unknown values that fit.</p>
+<h3 id="solver">solver</h3>
+<p>the tool (here CBC, inside PuLP) that searches for the best plan.</p>
+<h3 id="spread">spread</h3>
+<p>the gap between two prices, <code>A − β·B</code>, which for a good pair stays tethered to a mean.</p>
+<h3 id="sql">SQL</h3>
+<p>a short language for asking a table a precise question.</p>
+<h3 id="standardisation-scaling">standardisation (scaling)</h3>
+<p>shifting and stretching a column so it is centred at 0 with spread about 1, putting all columns on a common footing.</p>
+<h3 id="standardise-scaling">standardise (scaling)</h3>
+<p>rescale each feature to a comparable footing so the penalty treats them fairly.</p>
+<h3 id="state">state</h3>
+<p>one of the few situations a system can be in (sunny/rainy, working/broken).</p>
+<h3 id="stationary">stationary</h3>
+<p>a series whose statistics stay steady over time, so the past can teach us about the future.</p>
+<h3 id="stationary-distribution">stationary distribution</h3>
+<p>the steady long-run mix the system settles into.</p>
+<h3 id="statistical-power">statistical power</h3>
+<p>the chance of catching a real effect if one exists; the usual target is 80%.</p>
+<h3 id="streamlit">Streamlit</h3>
+<p>a library that turns a plain Python script into a web page, with no HTML.</p>
+<h3 id="stress-test">stress test</h3>
+<p>asking what one specific named disaster (a 2008-style crash) would cost the book today.</p>
+<h3 id="strike">strike</h3>
+<p>the fixed price written into the option, written <code>K</code>.</p>
+<h3 id="support-vector">support vector</h3>
+<p>a data point sitting right on the edge of an SVM's margin; a handful of these fix the whole boundary.</p>
+<h3 id="table-relation">table (relation)</h3>
+<p>data as rows and columns; one row is one record.</p>
+<h3 id="tail">tail</h3>
+<p>the far end of the distribution, the rare extreme outcomes.</p>
+<h3 id="target">target</h3>
+<p>The thing you are trying to predict, the answer column. For house prices, the
+price is the target. Also called the output or label.</p>
+<h3 id="tensor">tensor</h3>
+<p>PyTorch's array of numbers, like a NumPy array that can also track gradients.</p>
+<h3 id="test-statistic">test statistic</h3>
+<p>the effect measured in standard-error units, signal over noise.</p>
+<h3 id="the-greeks">the Greeks</h3>
+<p>how much the option price moves when one input moves (Delta, Gamma, Theta, Vega, Rho).</p>
+<h3 id="threshold">threshold</h3>
+<p>the cut-off probability at which we decide to call a case "yes".</p>
+<h3 id="time-series">time series</h3>
+<p>a column of numbers recorded in time order, each with a date.</p>
+<h3 id="traceback">traceback</h3>
+<p>the block of text Python prints when code breaks; read it bottom-up.</p>
+<h3 id="train-test-split">train / test split</h3>
+<p>Splitting your data into a part to learn from (train) and a part kept hidden to
+check honestly how well the model does on cases it never saw (test).</p>
+<h3 id="transaction-cost">transaction cost</h3>
+<p>what each trade really costs: brokerage, the bid-ask spread, and taxes like STT.</p>
+<h3 id="transition-matrix">transition matrix</h3>
+<p>the table of jump chances; each row sums to 1.</p>
+<h3 id="trend">trend</h3>
+<p>a slow drift up or down over time.</p>
+<h3 id="truncated-axis">truncated axis</h3>
+<p>a chart whose value axis does not start at zero, which fakes a big change out of a small one.</p>
+<h3 id="type">type</h3>
+<p>what kind of value something is: a whole number, a decimal, text, or true/false.</p>
+<h3 id="utilisation">utilisation</h3>
+<p>the fraction of time a server is busy; waits blow up as it nears 100%.</p>
+<h3 id="value-at-risk-var">Value at Risk (VaR)</h3>
+<p>the loss you won't exceed at a chosen confidence over a chosen horizon.</p>
+<h3 id="var-value-at-risk">VaR (Value at Risk)</h3>
+<p>a risk number: the loss a portfolio is not expected to exceed on most days, over a chosen window.</p>
+<h3 id="variable-in-code">variable (in code)</h3>
+<p>A name that holds a value so you can reuse it. See the
+<a href="python_in_15_minutes.html#a-variable-is-a-labelled-box">Python primer</a>.</p>
+<h3 id="vector-matrix">vector / matrix</h3>
+<p>a list of numbers, and a table of numbers (rows and columns).</p>
+<h3 id="virtual-environment">virtual environment</h3>
+<p>a sealed toolbox of libraries just for one project.</p>
+<h3 id="volatility">volatility</h3>
+<p>how much the price swings; the size of the moves, ignoring direction.</p>
+<h3 id="weight-bias">weight / bias</h3>
+<p>the dials of the network: the numbers it adjusts while learning.</p>
+<h3 id="while-loop">while loop</h3>
+<p>repeat a block of work until a condition stops being true.</p>
+<h3 id="widget">widget</h3>
+<p>an on-screen control (a slider, a box, a dropdown) that collects one input.</p>
+<h3 id="window-function">window function</h3>
+<p>a calculation that adds a column (like a running total) while keeping every row.</p>
+<h3 id="z-score">z-score</h3>
+<p>how many standard deviations a value sits from its mean; it turns the spread into a same-scale signal.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

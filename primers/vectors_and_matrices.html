@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vectors and matrices, as lists and tables of numbers · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="vectors-and-matrices-as-lists-and-tables-of-numbers">Vectors and matrices, as lists and tables of numbers</h1>
+<p>This is the picture behind a lot of the course. It sounds like heavy mathematics,
+but the whole idea fits on a napkin: a <strong>vector</strong> is a list of numbers, and a
+<strong>matrix</strong> is a table of numbers. That is it. No proofs here, just the picture.</p>
+<h2 id="a-vector-is-a-list-of-numbers">A vector is a list of numbers</h2>
+<p>Say a student scored 72, 85, 66 and 90 in four subjects. Write those four numbers
+in a row and you have a vector:</p>
+<pre><code>marks = [72, 85, 66, 90]
+</code></pre>
+<p>A vector is nothing more mysterious than that: a fixed-length list of numbers,
+kept in order. The order matters, because the first slot always means the first
+subject. A flat described by its size, its age and its distance from a metro
+station is also a vector: <code>[850, 6, 1.2]</code>. Any single thing you measure a few
+numbers about becomes a vector.</p>
+<p>People sometimes write a vector standing up (a column) instead of lying down (a
+row). It is the same list either way.</p>
+<h2 id="a-matrix-is-a-table-of-numbers">A matrix is a table of numbers</h2>
+<p>Now line up many students, one per row, with the same four subjects as columns:</p>
+<pre><code>        maths  english  science  history
+Asha       72       85       66       90
+Ravi       80       78       74       61
+Meera      65       90       88       84
+</code></pre>
+<p>Strip the labels and you are left with a grid of numbers with rows and columns.
+That grid is a <strong>matrix</strong>. One row is one student (a vector). One column is one
+subject across all students (also a vector). A matrix is just a stack of vectors,
+looked at as a single table.</p>
+<p>This is exactly how real data arrives. A property website holds a table with one
+row per flat and columns for size, age, bedrooms and price. A bank holds one row
+per customer. A matrix is the natural shape of "many cases, each measured the same
+way".</p>
+<h2 id="shape-how-big-the-table-is">Shape: how big the table is</h2>
+<p>The one thing you always want to know about a list or a table is how big it is.
+We call that its <strong>shape</strong>.</p>
+<ul>
+<li>A list of 4 numbers has shape <code>(4,)</code>.</li>
+<li>A table with 3 rows and 4 columns has shape <code>(3, 4)</code>: rows first, then columns.</li>
+</ul>
+<p>When code misbehaves, nine times out of ten the shapes did not line up the way you
+thought. Printing the shape is the first thing to check, always.</p>
+<h2 id="doing-maths-on-a-whole-list-at-once">Doing maths on a whole list at once</h2>
+<p>Here is why we bother. Suppose every flat's price should rise by 8 percent. You do
+not walk down the list multiplying each price by 1.08 one at a time. You multiply
+the whole list by 1.08 in a single stroke, and every number updates together:</p>
+<pre><code>new_prices = old_prices * 1.08
+</code></pre>
+<p>Add two lists and the numbers add up slot by slot. Multiply a list by a single
+number and every entry scales. This "do it to the whole list at once" style is
+the entire reason the <code>numpy</code> library exists, and it is both shorter to write and
+far faster to run than a loop. Session 2 is where you learn to do this.</p>
+<h2 id="solving-a-small-system">Solving a small system</h2>
+<p>One more everyday use. Suppose two samosas and one chai cost ₹50, and one samosa
+with three chais also costs ₹50. What is each item worth? Those are two facts
+about two unknown prices, and you can write them as a small table (the amounts) and
+a short list (the totals). Handing both to the computer gives you back the two
+prices at once. That "here are the knowns, find the unknowns" step is called
+<strong>solving a system</strong>, and it is a single line of code in Session 2.</p>
+<h2 id="what-about-eigenvectors-and-the-svd">What about eigenvectors and the SVD?</h2>
+<p>You may hear the words <strong>eigenvector</strong> and <strong>singular value decomposition (SVD)</strong>.
+These are deeper facts about what a table of numbers does when you multiply things
+by it, and they power tools like data compression and recommendation engines. They
+are genuinely useful, but you do not need them to do the main work of Session 2.
+When you are ready, they are waiting in the optional "for the mathematically
+curious" boxes. Skipping them costs you nothing today.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Almost every dataset in the world is a table of numbers: customers as rows,
+measurements as columns. Every spreadsheet, every export from a database, every
+batch of images fed to a model is a matrix underneath. Learning to hold that table
+as one object and do arithmetic on all of it at once is the foundation the rest of
+the course stands on.</p>
+<p>Where you'll use this: Session 2 (NumPy and arrays), and then everywhere. Session 3
+(tables in pandas), the machine-learning sessions from Session 7 onward, and the
+finance and optimisation modules all sit on top of lists and tables of numbers.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distance between two points · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="distance-between-two-points">Distance between two points</h1>
+<p>The whole of clustering leans on one small idea: how far apart are two things? Once
+you can put a number on "how far", the computer can find which things sit close
+together and group them. Read this before Session 11 and clustering will feel easy.
+No proofs here, just the picture.</p>
+<h2 id="two-customers-as-two-dots">Two customers as two dots</h2>
+<p>Take two customers from a shop. Describe each by two numbers: how many times they
+visited this month, and how much they spent. Now each customer is a dot on a chart,
+visits across the bottom, spend up the side.</p>
+<pre><code>Asha  →  (12 visits, ₹8,000)
+Ravi  →  (3 visits,  ₹1,500)
+</code></pre>
+<p>Two customers who behave alike sit near each other on the chart. Two very different
+customers sit far apart. "Similar" just means "close", and "different" means "far".
+That is the entire idea a clustering method uses: it keeps asking "which dots are
+close?" and puts the close ones in the same group.</p>
+<h2 id="straight-line-distance">Straight-line distance</h2>
+<p>So how far apart are two dots? The natural answer is the length of the straight
+line joining them, the distance you would measure with a ruler on the chart. If two
+dots are at the same spot the distance is zero; the further apart they drift, the
+bigger the number.</p>
+<p>For dots on a flat chart this is the school "Pythagoras" distance: take the gap
+along the bottom, take the gap up the side, and combine them into one length. You
+do not compute it by hand. <code>numpy</code> and <code>scikit-learn</code> do it for you. All you need
+to carry is the picture: distance is how far apart two dots are, and small distance
+means similar.</p>
+<p>The same idea keeps working when each thing has more than two numbers. A customer
+described by three numbers (recency, frequency, money spent) is a dot in three
+dimensions, and one described by fifty numbers is a dot in fifty dimensions. You
+cannot picture fifty dimensions, but the computer measures the distance between two
+such dots exactly the same way. Nothing new happens; there are just more numbers to
+combine.</p>
+<h2 id="why-you-must-put-every-column-on-the-same-scale-first">Why you must put every column on the same scale first</h2>
+<p>Here is the trap that catches everyone the first time. Suppose one column is age in
+years (roughly 20 to 60) and another is income in rupees (roughly 20,000 to
+90,000). When you combine the gaps into a distance, the income gap is in the tens of
+thousands and the age gap is in the tens. The income completely drowns out the age.
+Two people the same age but ₹100 apart look "close"; two people ₹100 apart but
+thirty years apart still look "close". Age has effectively vanished from the
+distance.</p>
+<p>The fix is to put every column on the same footing before measuring anything. The
+standard move is to <strong>standardise</strong> each column: shift it so its average is 0 and
+stretch or squeeze it so its spread is 1 (this rescaled value is called a
+<strong>z-score</strong>). After that, a one-step change in age counts the same as a one-step
+change in income, and every column gets a fair vote. In the notebooks this is one
+line, <code>StandardScaler</code>, and skipping it is the number one reason clustering gives
+nonsense. Scale first, always.</p>
+<h2 id="other-ways-to-measure-far-optional-skip-on-a-first-read">Other ways to measure "far" (optional, skip on a first read)</h2>
+<p>Straight-line distance (its proper name is <strong>Euclidean</strong> distance) is the default
+and the only one you need for Session 11. Two others exist for when they fit better:</p>
+<ul>
+<li><strong>Manhattan distance</strong> adds up the gaps one column at a time, like walking a city
+  grid where you cannot cut across the block. It is steadier when a stray column
+  misbehaves.</li>
+<li><strong>Cosine distance</strong> ignores how big the numbers are and looks only at the
+  direction they point. It is the right choice for text and recommendations, where
+  a blockbuster and a niche film can still count as "similar" if the same kind of
+  people like both.</li>
+</ul>
+<p>You can do all of Session 11 knowing only the straight-line one. Keep the others in
+your back pocket.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Every "find the similar ones" task is a distance underneath. Group customers who
+behave alike so you can treat each group differently. Group localities by rent and
+amenities so a property site can suggest "areas like this one". Flag a payment that
+sits far from a customer's usual behaviour as possible fraud. All of it is the same
+move: measure how far apart, then act on what is close and what is far.</p>
+<p>Where you'll use this: Session 11 (clustering and PCA). The scaling lesson returns
+every time distances or variances are involved.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

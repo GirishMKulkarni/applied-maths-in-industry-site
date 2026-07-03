@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overfitting and regularization · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="overfitting-and-regularization">Overfitting and regularization</h1>
+<p>This is the idea behind Week 4's Session 8. Read it before that class and the
+lab will feel easy. No proofs here, just the picture.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>You train a model on past data, it looks brilliant on that data, and then it
+embarrasses you the moment it meets something new. A house-price model trained on
+a few Pune localities quotes a sensible price for those flats, then tags an ₹80
+lakh flat in a locality it barely saw at ₹2 crore. It did not learn the real
+trend. It memorised the quirks of the flats it happened to see.</p>
+<p>That failure has a name: <strong>overfitting</strong>. The model fit the training data too
+snugly, including the random noise, so it does great on what it has seen and badly
+on what it has not.</p>
+<h2 id="the-picture-memorising-versus-understanding">The picture: memorising versus understanding</h2>
+<p>Think of two students preparing for an exam.</p>
+<ul>
+<li>One understands the subject. Give her a question she has never seen and she
+  reasons it out.</li>
+<li>The other memorised last year's paper word for word. On those exact questions he
+  is perfect. Change the numbers and he is lost.</li>
+</ul>
+<p>A model that overfits is the second student. It has memorised, not understood. The
+whole game in machine learning is to build the first kind of student.</p>
+<h2 id="why-models-over-trust-features">Why models over-trust features</h2>
+<p>Left to itself, a model will grab any pattern that helps it fit the data it has
+seen, even a coincidence. If, by pure chance, expensive flats in your sample
+tended to have odd door numbers, an unconstrained model will happily decide door
+number matters and crank up its weight. On new flats that "rule" is nonsense, and
+the prediction blows up.</p>
+<p>The more freedom the model has, the more of these coincidences it can chase. A
+model with large, wild weights is usually a model that has over-trusted a few
+features.</p>
+<h2 id="the-fix-turn-down-the-volume">The fix: turn down the volume</h2>
+<p><strong>Regularization</strong> is a gentle rule added while the model learns: "don't over-trust
+any one feature." Concretely, we charge the model a small fee for making any weight
+large. It now has to earn every bit of weight it uses, so it spends weight only
+where the pattern is real and stops chasing coincidences.</p>
+<p>The result is a model that fits the training data slightly less snugly and does
+noticeably better on new data. That trade is almost always worth it, because new
+data is the only data that ever mattered.</p>
+<p>There is a single knob, usually called <strong>alpha</strong>, for how firmly you turn the
+volume down:</p>
+<ul>
+<li>alpha small: barely any effect, close to the plain model (risk: still overfits).</li>
+<li>alpha large: everything is quietened hard (risk: the model becomes too timid and
+  underfits, missing the real trend too).</li>
+<li>the best alpha is somewhere in between, and you find it by
+  <strong>cross-validation</strong> — trying several settings on held-out slices of the
+  training data and keeping the one that does best, without ever peeking at the
+  final test set.</li>
+</ul>
+<h2 id="two-flavours-you-will-meet">Two flavours you will meet</h2>
+<p>Both turn the volume down; they differ in how.</p>
+<ul>
+<li><strong>Ridge</strong> shrinks every weight a little, smoothly. Nothing is dropped; the loud
+  features just get quieter. Good when many features each contribute a bit.</li>
+<li><strong>Lasso</strong> pushes some weights all the way to exactly zero, switching those
+  features off. It hands you a shorter list of features that actually matter, which
+  is why people call it automatic feature selection. Good when you suspect a lot of
+  the columns are useless.</li>
+<li><strong>ElasticNet</strong> is a blend of the two, for when you want a bit of both.</li>
+</ul>
+<p>You do not need to know the formulas to use these. The session's optional box has
+them for anyone curious.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Every model that goes into production faces data it was not trained on: tomorrow's
+customers, next month's prices, a new city's flats. A model that overfits looks
+great in the demo and fails in the field. Regularization is one of the cheapest,
+most reliable ways to make a model behave on data it has never seen, so it shows up
+in nearly every real prediction system, from credit scoring at a bank to demand
+forecasting at Flipkart.</p>
+<h2 id="where-youll-use-this">Where you'll use this</h2>
+<p>Session 8 (regularization and the housing project) is built entirely on this idea.
+The same "don't over-trust the data" instinct returns whenever we tune a model:
+Session 9 (classification), Session 10 (trees and boosting), and Session 12
+(feature engineering). The idea of a penalty added to a loss also connects to
+Session 22 (convex optimization).</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What a model is · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="what-a-model-is">What a model is</h1>
+<p>A "mathematical model" sounds heavy. It is not. This page explains the idea in
+plain words, with a small example, in about ten minutes. No proofs. Read it before
+the modelling session and the rest will feel obvious.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>Real problems are messy. "Will this junction jam at rush hour?" "What should we
+charge to deliver this parcel?" "How much crop will this season give us?" You
+cannot hand a question like that to a computer. It is too vague, and there is far
+too much detail.</p>
+<p>A model is how you shrink a messy real problem down to a small, tidy version that a
+computer, or a careful person, can actually work on. You throw away almost
+everything and keep only the handful of things that matter for the one question you
+are asking.</p>
+<p>Think of a map. A map of Pune is not Pune. It leaves out every tree, every pothole,
+every person. That is exactly why it is useful: it keeps only the roads, because
+roads are what you need to get from one place to another. A model is a map of a
+problem. It is never the whole truth, and it is not trying to be. We do not ask
+"is this model true?" We ask "is it useful for the decision in front of me?"</p>
+<p>There is a famous line for this, worth remembering: <strong>all models are wrong, but
+some are useful.</strong></p>
+<h2 id="the-five-parts-every-model-has">The five parts every model has</h2>
+<p>Here is the pleasant surprise. However different two problems look, the model you
+build for each has the same five parts. Once you can name these five for any
+problem, you can model.</p>
+<ul>
+<li><strong>Variables.</strong> The things you want to find, or the things you get to choose.
+  Give each a clear name and a unit. "L = number of cars waiting", not just "L".</li>
+<li><strong>Parameters.</strong> The numbers the world hands you: rates, costs, capacities. Fixed
+  for one run of the model, but you can change them to ask "what if?". "Cars arrive
+  at 30 per minute" is a parameter.</li>
+<li><strong>Constraints.</strong> The rules the answer must obey. A queue length cannot be
+  negative. You only have so many trucks. Money in must equal money out.</li>
+<li><strong>Objective.</strong> The one quantity you are trying to make as good as possible.
+  Smallest cost, shortest wait, biggest yield. Some models have no objective at all
+  (you are just adding things up), and that is fine too.</li>
+<li><strong>Assumptions.</strong> Every simplification you made, written down. "Cars arrive at a
+  steady average rate." "Rainfall is the main thing that drives yield." The danger
+  in a model is never the assumption you wrote down. It is the one you made without
+  noticing.</li>
+</ul>
+<p>A quick test that trips up beginners: is something a variable or a parameter? Ask
+"can the model choose it?" If yes, it is a variable. If the world just hands it to
+you, it is a parameter.</p>
+<h2 id="a-tiny-worked-example">A tiny worked example</h2>
+<p>Question: how long is the queue at a single traffic signal?</p>
+<ul>
+<li><strong>Variable:</strong> L, the number of cars waiting.</li>
+<li><strong>Parameters:</strong> how fast cars arrive (say 3 per minute), how fast the green light
+  clears them (say 4 per minute).</li>
+<li><strong>Constraint:</strong> L can never be below zero.</li>
+<li><strong>Objective:</strong> here we only want to predict L, so there is nothing to optimise.</li>
+<li><strong>Assumptions:</strong> one queue, one signal, arrivals are steady on average, no
+  breakdowns.</li>
+</ul>
+<p>That is a complete model, written in plain words, before a single line of code. The
+code comes after, and it is short.</p>
+<h2 id="it-goes-in-a-loop">It goes in a loop</h2>
+<p>You do not get a model right on the first try, and you are not supposed to. The
+honest picture is a loop: watch the real problem, simplify it, write it down, solve
+or simulate it, then check the answer against reality. If it is off, you change an
+assumption and go round again. This loop is called the <strong>modelling cycle</strong>. The
+step beginners skip is the last one, checking against reality. A number nobody has
+checked is just an opinion in a nice font.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>A model lets you answer a question before you spend the money or the time. A
+retailer can test a stocking plan on a laptop instead of losing crores finding out
+the hard way. A logistics firm can price a parcel instead of guessing. And because
+the assumptions are written down, a team can argue about a stated number in a
+meeting rather than about vague feelings. That is what an employer is really paying
+a mathematician for: not a formula, but the judgement to turn a fuzzy problem into
+something solvable.</p>
+<p>Where you'll use this: Session 6 (mathematical modelling) is built entirely on
+this page. The same five parts return whenever you predict something (the machine
+learning sessions), whenever you choose the best option under limits (the
+optimisation sessions), and whenever you simulate a system to see how it behaves.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

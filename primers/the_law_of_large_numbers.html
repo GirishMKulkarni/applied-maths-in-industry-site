@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The law of large numbers (and why we roll the dice) · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="the-law-of-large-numbers-and-why-we-roll-the-dice">The law of large numbers (and why we roll the dice)</h1>
+<p>This is the one idea that makes simulation work. Read it before Session 23 and the
+whole session will feel like common sense. No proofs here, just the picture.</p>
+<h2 id="a-number-decided-by-chance">A number decided by chance</h2>
+<p>Some numbers you know for certain. The number of days in a week is 7. Other numbers
+are decided by chance, and you only learn them when they happen: the roll of a dice,
+tomorrow's move in the Nifty, how long the next customer waits at an SBI counter. A
+number like that, one you cannot know in advance but that follows some pattern of
+"how often each value shows up", is called a <strong>random variable</strong>.</p>
+<p>You cannot predict a single roll. But you can say a lot about <em>many</em> rolls. That gap,
+between one unpredictable outcome and the very predictable behaviour of a large batch
+of them, is where today's tool lives.</p>
+<h2 id="roll-it-once-useless-roll-it-a-thousand-times-reliable">Roll it once: useless. Roll it a thousand times: reliable.</h2>
+<p>Throw one dice and ask "what is the average roll?" One throw tells you almost
+nothing. It might be a 2. Throw it ten times and average: you get something in the
+rough neighbourhood of 3.5, but it still jumps around. Throw it a thousand times and
+average: you land very close to 3.5, every time, no matter who does it.</p>
+<p>That is the <strong>law of large numbers</strong>: the average of many independent random samples
+settles down close to the true average, and the more samples you take, the closer and
+steadier it gets. The wobble does not vanish after ten throws; it shrinks smoothly as
+the pile of throws grows.</p>
+<p>Picture a running average being redrawn after every throw. Early on the line lurches
+about. As the throws pile up, the line calms down and hugs the true value. You will
+draw exactly this picture in the lab, using darts instead of dice.</p>
+<h2 id="the-trick-write-your-answer-as-an-average">The trick: write your answer as an average</h2>
+<p>Here is the move that turns this from a curiosity into a tool you reach for at work.
+Anything you can write as "the average of a random outcome", you can estimate by
+sampling that outcome many times and averaging. When the maths is too hard to solve
+on paper, you stop solving and start rolling.</p>
+<ul>
+<li>The number pi is hard to pin down with a formula you can do by hand. But it can be
+  written as an average: throw random darts at a square with a circle inside, and
+  four times the fraction landing inside the circle averages out to pi.</li>
+<li>The area under an awkward curve (an integral) is an average too: scatter random
+  points and average how many fall under the curve.</li>
+<li>A bank's average customer wait has no clean formula once the queue gets realistic.
+  So you simulate a day of arrivals many times and average the waits.</li>
+</ul>
+<p>This recipe, "write the quantity as an average, sample it a lot, and average", is
+called <strong>Monte Carlo</strong>, after the casino. It is one of the most used tools in
+industry precisely because it needs no clever mathematics, only patience and a
+computer that can roll the dice fast.</p>
+<h2 id="the-catch-accuracy-is-expensive">The catch: accuracy is expensive</h2>
+<p>Nothing is free. The law of large numbers promises the average settles down, but it
+settles slowly. The typical error shrinks like <code>1 / sqrt(N)</code>, where <code>N</code> is how many
+samples you took. In plain words: to make your answer ten times more accurate, you
+need about a hundred times as many samples. To get another decimal place, a hundred
+times again.</p>
+<p>This is why a Monte Carlo estimate of pi is a lovely teaching demo but a terrible way
+to actually compute pi. It is also why the real skill is not "sample more" but
+"sample smarter": there are tricks (one is called <strong>importance sampling</strong>) that spend
+your samples where they matter most and get a good answer for far less effort. You
+will meet the idea, lightly, in the lab.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Whenever a system has too much randomness for a formula, this is the tool. Insurers
+simulate a year of claims. Banks simulate thousands of market days to size their risk.
+Delhivery simulates a sorting hub to see where parcels pile up. Flipkart simulates a
+packing floor to decide how many stations to open on sale day. In every case the logic
+is the same one you are about to learn: you cannot predict one outcome, but you can
+roll the dice thousands of times and read off what usually happens.</p>
+<p>Where you'll use this: Session 23 (Monte Carlo and queue simulation) and Session 24
+(the inventory project, which is built on top of today's simulation skills). The same
+"average of many samples" idea underlies the confidence intervals you report whenever
+a result comes from randomness.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

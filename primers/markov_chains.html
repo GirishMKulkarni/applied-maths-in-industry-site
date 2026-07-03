@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A system that hops between states — Markov chains · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="a-system-that-hops-between-states-markov-chains">A system that hops between states — Markov chains</h1>
+<p>This is the picture behind Session 24. It sounds technical, but the whole idea is
+something you can watch in your head: a system that is always in one of a few
+situations and hops between them, one step at a time. No proofs here, just the
+picture and the few words that go with it.</p>
+<h2 id="states-and-hops">States and hops</h2>
+<p>Think of something that is always in exactly one of a few situations, and every so
+often it changes. The weather today is sunny or rainy. A phone customer is loyal to
+their network or has ported out to a rival. A machine on a factory floor is working
+or broken. A shop shelf holds this many units today and a different number tomorrow.</p>
+<p>Each of those situations is a <strong>state</strong>. A move from one to another is a
+<strong>transition</strong>, or a hop. A <strong>step</strong> is one tick of the clock: one day for the
+weather, one month for the customer, one shift for the machine.</p>
+<h2 id="the-one-rule-only-now-matters">The one rule: only "now" matters</h2>
+<p>To predict the next step, all you need is the current state. Tomorrow's weather
+depends on today's, not on the whole month before it. When that is true, the system
+is called a <strong>Markov chain</strong>, and the rule has a name: the <strong>Markov property</strong>, or
+"memoryless".</p>
+<p>It is an assumption, and often a very good one. Its payoff is huge: because only the
+present matters, the entire system is captured by one small table of chances.</p>
+<h2 id="the-table-of-chances">The table of chances</h2>
+<p>List the states down the side and across the top. In each box write the chance of
+hopping from the side-state to the top-state in a single step. That grid is the
+<strong>transition matrix</strong>. (If a grid of numbers is new, the primer
+<a href="vectors_and_matrices.html">Vectors and matrices</a> has the picture; a matrix is just a
+table of numbers.)</p>
+<p>Here is the weather as a table:</p>
+<pre><code>             to Sunny   to Rainy
+from Sunny      0.7        0.3
+from Rainy      0.4        0.6
+</code></pre>
+<p>Read the top row as "if it is sunny today, there is a 70% chance of sun tomorrow and
+a 30% chance of rain." One rule the table must always obey: <strong>each row adds up to 1</strong>,
+because from wherever you are, <em>something</em> has to happen next.</p>
+<h2 id="where-it-settles-the-long-run">Where it settles: the long run</h2>
+<p>Here is the surprising and useful part. Start the weather off as "definitely sunny"
+and roll it forward with those chances, day after day. The chance of sun drifts, then
+stops drifting, and settles near 57%. Now start it off as "definitely rainy" instead.
+It settles at the <em>same</em> 57%. After a while the system forgets where it began.</p>
+<p>That settled mix, roughly 57% sunny and 43% rainy, is the <strong>stationary distribution</strong>,
+also called the <strong>steady state</strong>. It is the long-run share of time the system spends
+in each state: the long-run share of sunny days, the long-run fraction of customers
+still loyal, the long-run fraction of time a machine is up and running.</p>
+<p>You can find that settled mix two ways, and both show up in the lab. You can roll the
+system forward until it stops moving. Or you can just play it out at random for a long
+time and count how often each state comes up. They agree.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>This one idea is everywhere. Google's original PageRank treats the whole web as a
+giant Markov chain, a random surfer clicking links, and the settled mix ranks the
+pages by long-run popularity. Banks and telecom firms model customers hopping between
+"active", "at-risk" and "gone" to forecast churn and value their customer base.
+Engineers model machines hopping between working and broken to plan maintenance. And a
+restock rule for a warehouse is a Markov chain on stock levels, which is exactly the
+case study you build in this session.</p>
+<p>The appeal is always the same: a messy, dynamic, random question, "what happens to
+this system in the long run?", turns into something you can just compute or simulate.</p>
+<p>Where you'll use this: Session 24 (Markov chains and the inventory project). The
+table-of-numbers mechanics come from Session 2; see
+<a href="vectors_and_matrices.html">Vectors and matrices</a>.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

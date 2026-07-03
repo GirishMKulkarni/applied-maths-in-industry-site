@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Convex sets and functions (why a bowl is easy) · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="convex-sets-and-functions-why-a-bowl-is-easy">Convex sets and functions (why a bowl is easy)</h1>
+<p>This is the one idea behind Session 22. Read it before that session and the whole
+thing will feel simple. No proofs here, just two pictures and why they matter.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>A huge amount of industry work is "find the best setting". The cheapest way to
+route Delhivery vans. The mix of Nifty stocks with the least risk. The line that
+best fits past sales. In every case a computer searches for the best answer.</p>
+<p>There is one worry that hangs over all of it. When the computer stops and says
+"this is the best", is it really the best? Or did it just get stuck somewhere that
+looked good from where it happened to be standing? Convexity is the property that
+settles this worry once and for all.</p>
+<h2 id="a-convex-set-in-words">A convex set, in words</h2>
+<p>Think of a "set" as a shape: the region of answers you are allowed to pick from.</p>
+<p>A set is <strong>convex</strong> if it has no dents. The exact test is simple. Pick any two
+points inside the shape and draw the straight line between them. If that line
+always stays inside, for every pair of points you could pick, the shape is convex.</p>
+<p>A filled disc is convex. Any two points inside it, the line between them never
+leaves. A crescent moon is not convex. Pick a point on each horn and the line
+between them cuts across the empty gap, leaving the shape. That single bad pair is
+enough to spoil it.</p>
+<p>Why care? The set of allowed answers in a lot of real problems turns out to be
+convex, and convex shapes are the well-behaved ones to search.</p>
+<h2 id="a-convex-function-is-a-bowl">A convex function is a bowl</h2>
+<p>Now put a landscape of "cost" on top of that shape. High ground is expensive, low
+ground is cheap, and you want the lowest point.</p>
+<p>A function is <strong>convex</strong> if its graph curves up like a bowl. The test again uses a
+straight line. Pick any two points on the curve and join them with a straight line
+(a "chord"). For a bowl, the chord always sits on or above the curve. It never
+dips below. <code>x²</code> is the simplest bowl. A wobbly curve with several dips is not a
+bowl, and its chords cut below it in places.</p>
+<h2 id="why-the-bowl-matters-the-payoff">Why the bowl matters (the payoff)</h2>
+<p>Here is the whole point. Imagine dropping a marble onto the landscape and letting
+it roll downhill until it stops.</p>
+<p>On a bowl there is exactly one lowest point. Drop the marble anywhere and it always
+rolls to that same bottom. So "I rolled downhill and stopped" means "I am at the
+best point, for certain". This is called the <strong>global optimum</strong>: the genuinely best
+answer, not just the best nearby.</p>
+<p>On a wobbly landscape there are many little dips. The marble settles in whichever
+dip it happens to be near, which might be far worse than the true bottom. That trap
+is a <strong>local optimum</strong>: better than its neighbours, but not the best overall. And
+the painful part is you cannot tell from inside the dip whether a deeper one exists
+somewhere else.</p>
+<p>So the rule that runs through all of optimisation:</p>
+<blockquote>
+<p>A convex (bowl-shaped) problem has a single lowest point. Roll downhill and you
+are guaranteed the best answer. A non-convex (wobbly) problem can trap you, and
+you will not even know it.</p>
+</blockquote>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>When a fund desk reports the "lowest-risk portfolio", or a shipping firm reports
+the "cheapest routing", the claim only means something if it is the true best. If
+the problem is convex, they can say so with confidence and even hand over a
+certificate. If it is not convex, the honest statement is only "this is the best we
+found", which is a weaker thing to tell a regulator or a client.</p>
+<p>The pleasant surprise of Session 22 is that a surprising number of the models you
+build are quietly convex: fitting a line, Ridge and Lasso, the SVM, and the
+Markowitz portfolio are all bowls in disguise. Once you can spot the bowl, one tool
+(<strong>CVXPY</strong>) lets you write the problem almost exactly as the maths reads and hands
+back the guaranteed best answer.</p>
+<p>Where you'll use this: Session 22 (convex optimization) is built entirely on these
+two pictures. The same "single lowest point" idea is quietly why least squares
+(Session 7), Ridge and Lasso (Session 8) and the portfolio (Session 16) were so
+well behaved.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

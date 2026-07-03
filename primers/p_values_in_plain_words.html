@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P-values in plain words · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="p-values-in-plain-words">P-values in plain words</h1>
+<p>We changed something for half our users, the new version looks a little better, and
+now we have to decide: is that real, or is it just luck? A p-value is the honest way
+to answer. This primer gives you the picture and the one sentence that matters. No
+proofs.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>A shopping app changes its checkout screen. Half the users keep the old screen (call
+it A), half get a redesigned one-tap UPI screen (call it B). B looks a bit better:
+slightly more people finished paying. But every measurement wobbles. Flip a fair
+coin a hundred times, twice, and you will not get exactly fifty heads both times. So
+the honest question is not "did B do better in our sample?" (it did, a little). It
+is: could a gap this size have turned up even if the two screens were truly the
+same?</p>
+<h2 id="the-one-picture-the-it-made-no-difference-world">The one picture: the "it made no difference" world</h2>
+<p>Imagine a pretend world where the new screen changed nothing at all, where A and B
+are secretly identical. Even in that world the two groups will not tie exactly. Luck
+alone leaves a gap, sometimes A ahead, sometimes B. Now picture every gap that pure
+luck could produce in that world and how often each one shows up. Small gaps are
+common, big gaps are rare. Drawn out, they make a pile centred on zero: mostly small
+wobbles, thinning out as you move away from the middle.</p>
+<p>Now drop your actual result onto that picture. If your gap lands in the fat middle of
+the pile, it is the kind of thing luck produces all the time, so it is not
+convincing. If it lands far out in the thin tail, luck would almost never produce
+something that big, so it is surprising, and that is real evidence the change did
+something.</p>
+<h2 id="the-p-value-in-one-sentence">The p-value, in one sentence</h2>
+<p>The p-value is the answer to one question:</p>
+<blockquote>
+<p>If the change really did nothing, how often would luck alone produce a result at
+least this extreme?</p>
+</blockquote>
+<p>A small p-value means your result sits far out in the tail: it would be surprising if
+nothing had happened, so you have evidence that something did. A large p-value means
+your result sits in the fat middle: unremarkable, the sort of gap luck hands you
+routinely, so you have no real evidence.</p>
+<h2 id="what-it-is-not">What it is NOT</h2>
+<p>This is the part everyone gets wrong, so hold onto it. The p-value is <strong>not</strong> the
+probability that the change did nothing. We worked it out by <em>assuming</em> the change
+did nothing, so it cannot also be the chance that the assumption is true. A p-value
+of 0.03 does not mean "there is a 3% chance the new screen is useless." It means "if
+the new screen were useless, a result this extreme would show up about 3 times in
+100 by luck alone." Say that sentence out loud until it feels natural. Confusing the
+two causes more bad decisions than anything else in applied statistics.</p>
+<h2 id="the-005-line">The 0.05 line</h2>
+<p>By custom we call a result "statistically significant" when the p-value falls below
+0.05, a one-in-twenty line. There is nothing sacred about 0.05. It is a convention,
+chosen by habit, and in high-stakes work people use a stricter line like 0.01. The
+one rule that matters: pick your line before you look at the data, never after.</p>
+<h2 id="its-friendlier-companion-the-confidence-interval">Its friendlier companion: the confidence interval</h2>
+<p>A p-value only gives a yes or no. It hides how big the effect is, and size is usually
+what a business actually cares about. A confidence interval keeps the size and the
+uncertainty together: "the new screen lifts completed payments by about 1.4
+percentage points, and we are fairly sure the true lift is somewhere between 0.3 and
+2.5." That is the honest thing to report to a manager, far more useful than
+"p = 0.02".</p>
+<h2 id="one-trap-worth-naming-now">One trap worth naming now</h2>
+<p>A p-value only means what it claims if you decided the question <em>before</em> the
+experiment. Pick one main metric and your sample size in advance. If instead you
+measure twenty things and proudly report the one that came out "significant", you
+have handed luck twenty separate chances to fool you, and roughly one of them will
+look significant even when nothing is going on.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Every product team, bank, fintech and delivery app runs experiments like this
+constantly, and a wrong read costs real money. The p-value is simply the disciplined
+way to tell a genuine improvement from a lucky wobble, so you ship the changes that
+help and drop the ones that only looked good for a week.</p>
+<p>Where you'll use this: Session 25 (A/B testing and hypothesis tests). The same "how
+surprising would this be if nothing happened?" idea sits underneath every hypothesis
+test you will meet, whether it compares two averages, two conversion rates, or three
+designs at once.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

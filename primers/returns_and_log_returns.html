@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Returns and log-returns · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="returns-and-log-returns">Returns and log-returns</h1>
+<p>This is the one idea behind the whole finance block of the course: don't study the
+price, study how much it changed. Read this before Week 7 and the session will feel
+easy. No proofs here, just the picture.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>Suppose Reliance trades near ₹3,000 and a small stock trades near ₹100. Reliance
+goes up ₹30 today and the small stock goes up ₹10. Who had the better day?</p>
+<p>The rupee amounts say Reliance (₹30 beats ₹10). But ₹30 on ₹3,000 is a 1% move,
+while ₹10 on ₹100 is a 10% move. The small stock had the far bigger day. Raw prices
+hide this. We need a number that is fair across a ₹100 stock and a ₹3,000 stock.</p>
+<p>That number is the <strong>return</strong>.</p>
+<h2 id="a-return-is-the-percent-change-day-to-day">A return is the percent change, day to day</h2>
+<p>A return is simply how much the price changed, as a fraction of where it started:</p>
+<pre><code>return today = (price today − price yesterday) / price yesterday
+</code></pre>
+<p>If a stock goes from ₹100 to ₹102, the return is <code>(102 − 100) / 100 = 0.02</code>, i.e.
++2%. If it drops to ₹98, the return is −2%. That is it. A return is the day's move
+expressed as a percentage, so a 2% move means the same thing for any stock at any
+price. This is the "simple return", and it is what your broking app shows you in
+green or red each evening.</p>
+<h2 id="log-returns-the-same-thing-in-a-form-that-adds-up-nicely">Log-returns: the same thing, in a form that adds up nicely</h2>
+<p>There is a second, closely related way to measure the same daily move, called the
+<strong>log-return</strong>. It is the natural logarithm of the price ratio:</p>
+<pre><code>log-return today = ln( price today / price yesterday )
+</code></pre>
+<p>For everyday moves (a percent or two) the log-return and the simple return are
+almost the same number. A +2% simple return is a +1.98% log-return. So why bother?</p>
+<p>Because log-returns <strong>add up over time</strong>, and simple returns do not. Say a stock
+rises 10% one day and falls 10% the next. Simple returns suggest you are back to
+even, but you are not: 100 → 110 → 99, a small loss. Simple returns have to be
+multiplied together, which is fiddly. Log-returns just add: the log-return over a
+week is the plain sum of the five daily log-returns. That one property makes months
+of algebra later in the course disappear, which is why every quant uses them.</p>
+<p>So: a return is "percent change, day to day". A log-return is "the same thing, in a
+form that adds up nicely". Whenever this course says "returns", picture the first
+one, and know the second is a tidier twin used under the hood.</p>
+<h2 id="why-we-study-returns-and-not-prices">Why we study returns and not prices</h2>
+<p>Two more reasons this switch matters, both of which you will see with your own eyes
+in the lab:</p>
+<ul>
+<li><strong>A price wanders; a return sits still.</strong> A price drifts up and down for years
+  with no fixed level. Its return hovers around zero with a roughly steady spread.
+  A quantity that keeps a stable character is one you can actually study and model.
+  (The proper word for "keeps a stable character" is <em>stationary</em>.)</li>
+<li><strong>Returns are comparable.</strong> Across stocks, across years, across a ₹100 penny
+  stock and the whole Nifty 50, a return is a return.</li>
+</ul>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Before anyone at a bank, a mutual fund, or a trading desk forecasts a price,
+measures risk, or builds a portfolio, the very first step is always the same: pull
+the prices and turn them into returns. Risk numbers, portfolio weights, and options
+prices are all built on returns, never on raw prices. Getting this one conversion
+right is the foundation the rest of the finance block stands on.</p>
+<p>Where you'll use this: Session 14 (financial data and time series), and again in
+Session 15 (forecasting), Session 16 (portfolios) and every risk topic after.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

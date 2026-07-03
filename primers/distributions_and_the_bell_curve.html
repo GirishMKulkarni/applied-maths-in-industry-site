@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distributions and the bell curve · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="distributions-and-the-bell-curve">Distributions and the bell curve</h1>
+<p>This is the picture behind the finance and risk sessions, and behind today's
+options session especially. It sounds like heavy statistics, but the whole idea is
+just a shape and an area. No proofs here, only the picture.</p>
+<h2 id="a-distribution-is-how-often-each-value-shows-up">A distribution is "how often each value shows up"</h2>
+<p>Measure the daily percentage change of the Nifty for a few years and sort the days
+into little buckets: days it fell about 2 percent, days it barely moved, days it
+rose about 1 percent, and so on. Count how many days land in each bucket and draw a
+bar for each. That shape, "how often each value shows up", is a <strong>distribution</strong>.</p>
+<p>Most days the market barely moves, so the tall bars sit in the middle near zero. Big
+up days and big down days are rarer, so the bars get shorter as you move out to the
+sides. Almost anything you measure across many cases looks like this: heights of
+people, marks in an exam, delivery times for Zomato orders. A big lump in the
+middle, thinning out on both sides.</p>
+<h2 id="the-bell-curve-the-normal-distribution">The bell curve (the normal distribution)</h2>
+<p>Smooth that lumpy histogram into a clean curve and you very often get the
+<strong>bell curve</strong>, whose proper name is the <strong>normal distribution</strong>. It is the single
+most common shape in all of statistics. Two numbers describe it completely:</p>
+<ul>
+<li>the <strong>mean</strong> — where the peak sits, the typical value in the middle,</li>
+<li>the <strong>spread</strong> — how wide the bell is, how far values usually stray from the
+  middle. In finance the spread has a special name: <strong>volatility</strong>, written with
+  the Greek letter sigma (σ). A calm bluechip stock has a narrow bell; a jumpy
+  smallcap has a wide one.</li>
+</ul>
+<p>Same mean, bigger spread, means a wider, flatter bell and more uncertainty about
+what will happen.</p>
+<h2 id="the-area-under-the-curve-is-a-probability">The area under the curve is a probability</h2>
+<p>Here is the one move you need for options. The bell curve is drawn so that the
+<strong>total area under it is exactly 1</strong>, meaning "something definitely happens". So the
+area under any slice of it is the <strong>probability</strong> of landing in that slice.</p>
+<p>The area to the left of a point answers "what is the chance the value comes out
+below here?" That running area has a name, the <strong>CDF</strong> (cumulative distribution
+function), written <code>N(·)</code> for the bell curve. A few values worth carrying:</p>
+<ul>
+<li><code>N(0) = 0.5</code> — half the area is left of the middle, so there is a 50 percent
+  chance of being below the mean.</li>
+<li><code>N(1.96) ≈ 0.975</code> — about 97.5 percent of the bell sits to the left of 1.96
+  spreads above the mean.</li>
+</ul>
+<p>In code you never work this area out by hand. The <code>scipy</code> library hands it to you:
+<code>norm.cdf(x)</code> is <code>N(x)</code>, the area to the left of <code>x</code>. That single function is the
+<code>N(·)</code> that appears all over the Black-Scholes option formula.</p>
+<p>There is also <code>norm.pdf(x)</code>, the <strong>height</strong> of the bell at <code>x</code> (lower-case <code>n(·)</code>),
+as opposed to the area. The height turns up in the option sensitivities called the
+Greeks.</p>
+<h2 id="lognormal-why-stock-prices-lean-to-one-side">Lognormal: why stock prices lean to one side</h2>
+<p>A stock price cannot be neatly bell-shaped, for one blunt reason: a price can never
+go below zero. It can fall to zero at worst, but it can multiply many times over on
+the upside. So its distribution is lopsided, squashed against zero on the left and
+with a long tail stretching to the right.</p>
+<p>The fix is simple and it is the shape today's model uses. The daily <strong>returns</strong> (the
+percentage changes, strictly the log of them) are taken to be normal, a tidy bell.
+The price itself is then <code>exp</code> of that normal quantity, which is called a
+<strong>lognormal</strong> distribution. "Lognormal" just means "its logarithm is normal". The
+picture is a bell that has been bent to keep everything positive and to lean right.</p>
+<pre><code>normal returns   --- exp( ) ---&gt;   lognormal prices
+    a tidy bell                    squashed at 0, long right tail
+</code></pre>
+<p>You do not need to memorise the formula. Carry the picture: possible future stock
+prices spread out in a right-leaning lognormal shape, never going negative.</p>
+<h2 id="expectation-the-probability-weighted-average">Expectation: the probability-weighted average</h2>
+<p>Last idea. When the future can turn out many ways, the fair value of a payoff is its
+<strong>expectation</strong>, which is just a weighted average: list every possible outcome,
+multiply each payoff by how likely it is, and add them up. Common outcomes count for
+a lot, rare ones count for a little.</p>
+<p>You can compute an expectation two ways. If you know the distribution's formula you
+can work the average out exactly with pen and paper, which is what the Black-Scholes
+formula does. Or you can simulate thousands of possible futures, take the payoff in
+each, and average them, which is what a Monte Carlo simulation does. Today's options
+session does both and watches them agree.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Every risk number a bank reports, every option a trader prices, every "how bad could
+tomorrow be" question rests on a distribution of outcomes and areas under it. The
+bell curve and its lognormal cousin are the default working shapes for prices and
+returns, and the CDF <code>N(·)</code> is the workhorse behind the most quoted formula in
+finance.</p>
+<p>Where you'll use this: Session 18 (options and Black-Scholes) leans on all of it —
+the bell curve, the area <code>N(·)</code>, the lognormal shape of future prices, and
+expectation as an average. The same shapes return in Session 14 (finance
+foundations and log-returns) and Session 17 (risk, VaR and CVaR).</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

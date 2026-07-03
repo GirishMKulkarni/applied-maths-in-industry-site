@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choosing a chart · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="choosing-a-chart">Choosing a chart</h1>
+<p>This is the picture behind the visualization half of Session 5. Read it once and
+charts stop being a menu of shapes to memorise. No proofs, just the idea.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>You have a table with many columns and many rows. You have found something in it,
+and now you have to show it to someone who will not read your code or your table.
+A chart is how you do that. The catch is that a page has only two directions,
+across and up, while your data has many. So a chart can never show everything at
+once. It shows a slice. The whole skill is choosing the slice that answers your
+question and makes the pattern obvious.</p>
+<h2 id="a-chart-is-a-projection">A chart is a projection</h2>
+<p>Think of each column as a separate direction your data can vary in. Sales, month,
+city, ad spend, number of orders. That is five directions already, and a flat page
+has only two. Drawing a chart means picking which directions to keep, putting one
+across the bottom and one up the side, and letting the rest fall away.</p>
+<p>That act of squashing many directions down to two is called a <strong>projection</strong>. It is
+the same idea as the shadow a 3D object throws on a wall: the shadow is a flat,
+two-dimensional version of the thing. A good shadow shows the shape clearly. A bad
+angle turns a person into an unreadable blob. Choosing your chart is choosing the
+angle of the shadow.</p>
+<h2 id="start-from-the-question-not-the-chart">Start from the question, not the chart</h2>
+<p>The most common beginner mistake is to start from "I want a pie chart" and then go
+looking for data to put in it. Do the opposite. Start from the question, and the
+question tells you the chart. Here is the whole cheat sheet.</p>
+<ul>
+<li><strong>Comparing a value across a few categories?</strong> Use a <strong>bar chart</strong>. One bar per
+  category. Example: revenue by city this month.</li>
+<li><strong>Watching something change over time?</strong> Use a <strong>line chart</strong>. Time goes across
+  the bottom. Example: monthly revenue through the year.</li>
+<li><strong>Looking at the shape of one column of numbers?</strong> Use a <strong>histogram</strong>. It sorts
+  the values into bins and shows how many land in each. Example: how delivery times
+  are spread, in minutes. This shape is called the <strong>distribution</strong>.</li>
+<li><strong>Asking whether two numbers move together?</strong> Use a <strong>scatter plot</strong>. One dot per
+  record, placed by its two numbers. Example: ad spend against revenue, one dot per
+  month. If the dots drift up to the right, more spend tends to go with more
+  revenue.</li>
+</ul>
+<p>Four questions, four charts. That covers most of what you will ever need. Bar and
+line are the honest workhorses; reach for them first.</p>
+<h2 id="keep-it-honest">Keep it honest</h2>
+<p>A chart is an argument, so it can be a dishonest one. The commonest trick, usually
+by accident, is a bar chart whose bottom axis does not start at zero. Say four
+cities sold 52, 54, 53 and 56 lakh. Start the axis at 50 and the tallest bar looks
+several times bigger than the shortest, when the real gap is tiny. Start the axis at
+zero and the bars look almost equal, which is the truth. For bar charts, always
+start the height axis at zero.</p>
+<p>Two more, in the same spirit. Do not use a rainbow of colours for something that has
+a natural order, and do not add 3D, drop shadows or clip-art. Every mark of ink on
+a chart should carry information. If it does not, remove it. Less decoration, more
+truth.</p>
+<h2 id="say-the-one-thing">Say the one thing</h2>
+<p>Before you draw anything, decide the single sentence you want the reader to leave
+with. "Pune drives nearly half our festive sales." Then pick the chart that makes
+that sentence obvious, strip everything that does not support it, and title the
+chart with the takeaway rather than the column names. A figure that makes the reader
+hunt for the point has failed.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Nobody funds a project, changes a price or ships a feature because of a table. They
+do it because a chart made a pattern impossible to miss. An analyst who can turn a
+query into one clear, honest figure is worth a great deal, in a bank, at Flipkart,
+on an NSE desk or in a government office. The maths of the model matters, but the
+chart is what gets it believed.</p>
+<p>Where you'll use this: Session 5 (SQL and visualization), and every session after
+it that shows a result. The "chart is a projection" idea returns in Session 11
+(principal component analysis), where the computer chooses the best projection for
+you instead of you choosing it by hand.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

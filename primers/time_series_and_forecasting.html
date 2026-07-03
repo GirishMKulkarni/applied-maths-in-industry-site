@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Time series and forecasting · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="time-series-and-forecasting">Time series and forecasting</h1>
+<p>This is the picture behind Session 15. A time series is just data that arrives in
+order, one number after another, and forecasting is guessing the next few numbers
+from the ones you already have. Read this once and the session will feel easy. No
+proofs here, only the idea.</p>
+<h2 id="what-a-time-series-is">What a time series is</h2>
+<p>A time series is a column of numbers recorded at regular times, each with a date
+attached:</p>
+<ul>
+<li>the Nifty 50 closing value each trading day,</li>
+<li>units of a product sold each month,</li>
+<li>electricity load each hour,</li>
+<li>rainfall each week.</li>
+</ul>
+<p>The one thing that makes it special is order. The numbers come in sequence, and
+each one usually looks a lot like the one just before it. That is what lets you
+forecast at all: the near future tends to resemble the recent past.</p>
+<h2 id="most-series-are-three-simple-things-added-together">Most series are three simple things added together</h2>
+<p>A surprisingly good way to think about almost any business series is as a sum of
+three parts:</p>
+<ul>
+<li>a <strong>trend</strong>, a slow drift up or down (a brand growing year on year),</li>
+<li>a <strong>season</strong>, a pattern that repeats every fixed number of steps (air
+  conditioners sell more every summer, so a 12-month cycle),</li>
+<li><strong>noise</strong>, the random wobble you cannot explain and should not try to.</li>
+</ul>
+<p>If you can see which of these are present, you already know a lot about which
+forecasting method to reach for. A method needs a component for every structure
+you can see: no season in the data means no seasonal term in the model.</p>
+<h2 id="stationary-and-why-we-difference">Stationary, and why we "difference"</h2>
+<p>A series is called <strong>stationary</strong> when its average and its spread stay roughly the
+same over time. A flat, wobbly series is stationary. A steadily rising one is not,
+because its average keeps climbing.</p>
+<p>Many forecasting tools want a stationary series to work on. The usual fix is
+<strong>differencing</strong>: instead of the value itself, look at the <em>change</em> from one step
+to the next. A rising trend becomes a roughly flat series of changes. There is a
+quick test, the <strong>ADF test</strong>, that gives a small number (a p-value below 0.05)
+when a series looks stationary. This is exactly the "make it flat first" step in
+the session.</p>
+<h2 id="today-leans-on-the-recent-past-ar-and-ma-in-words">"Today leans on the recent past": AR and MA in words</h2>
+<p>The classic model, <strong>ARIMA</strong>, is built from two plain ideas, and both are just a
+<strong>weighted average over time</strong>:</p>
+<ul>
+<li><strong>AR (autoregressive)</strong> says today is a weighted sum of recent <em>values</em>. Today
+  leans on yesterday and the day before. Think of it as momentum.</li>
+<li><strong>MA (moving average)</strong> says today is a weighted sum of recent <em>shocks</em>, the
+  random surprises. Think of it as a fading echo of the last few surprises.</li>
+</ul>
+<p>ARIMA(<code>p</code>, <code>d</code>, <code>q</code>) is only three small whole numbers: how many past values to
+lean on (<code>p</code>), how many times you differenced to get stationary (<code>d</code>), and how
+many past shocks to lean on (<code>q</code>). ARIMA(1, 1, 1) means "difference once, use one
+past value and one past shock". That is the whole model.</p>
+<h2 id="the-other-family-exponential-smoothing">The other family: exponential smoothing</h2>
+<p><strong>Exponential smoothing</strong> reaches the same "weighted average of the past" from a
+gentler direction. It gives the most recent point the most weight and lets older
+points count a little less each step, so the weights fade smoothly into the past.
+One knob controls how fast the memory fades. Its three members grow with your
+data: simple smoothing tracks a level, <strong>Holt</strong> adds a trend, and <strong>Holt-Winters</strong>
+adds a season. It needs no stationarity check and is often a surprisingly strong
+baseline.</p>
+<h2 id="a-forecast-is-a-fan-not-a-line">A forecast is a fan, not a line</h2>
+<p>The single most useful habit in this session: never report a forecast as one
+number. The future is uncertain, and the further ahead you look the less you know,
+so a good forecast comes with a <strong>prediction interval</strong>, a band that widens as it
+goes. A shopkeeper who plans for "about 100, and quite possibly 80 to 120" makes
+better decisions than one who plans for "exactly 100". The band is the part that
+carries the honesty.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Forecasting is one of the most-asked-for skills in any analytics or finance job.
+How many units to stock next week, where demand or server load is heading, what a
+price might do next. The two workhorses here, ARIMA and exponential smoothing, are
+the honest baselines every forecaster starts from before reaching for anything
+fancier.</p>
+<p>Where you'll use this: Session 15 (forecasting with ARIMA and exponential
+smoothing). The "weighted average over time" idea and the trend-season-noise
+picture come straight from here.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

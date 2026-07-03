@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantiles and tails · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="quantiles-and-tails">Quantiles and tails</h1>
+<p>This is the picture behind Week 9's risk session. It sounds like heavy statistics,
+but the whole idea is something you already do when you look at exam marks. No proofs
+here, just the picture.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>You have a big pile of numbers: the daily gains and losses of a portfolio over the
+last few years, say. You do not want to stare at all of them. You want to summarise
+them with one honest number that answers a sharp question: "how bad is a bad day?"
+The average will not do, because the average hides the disasters. You need a way to
+point at the far end of the pile, not the middle.</p>
+<h2 id="a-quantile-is-just-a-mark-on-the-pile">A quantile is just a mark on the pile</h2>
+<p>Line up all your numbers from smallest to largest. A <strong>quantile</strong> is a mark that
+splits that line at a chosen fraction.</p>
+<p>You have met this already. If a student is in the 90th <strong>percentile</strong> of a class, 90%
+of the class scored below them and 10% scored above. A percentile is a quantile
+written as a percent. The median is simply the 50% quantile: half the numbers are
+below it, half above.</p>
+<p>So the 95% quantile of a pile of numbers is the value with 95% of the numbers below it
+and only 5% above. Nothing more mysterious than that. In code it is one line,
+<code>np.percentile(numbers, 95)</code>, and the computer does the sorting and counting for you.</p>
+<h2 id="the-tail-is-the-far-end">The tail is the far end</h2>
+<p>Draw the pile as a histogram: tall bars where numbers are common, short bars where
+they are rare. Daily losses look like a hill: most days sit near zero (small gains and
+small losses), and the bars get shorter as you move right toward the big losses.</p>
+<p>That thin far-right stretch, the rare big losses, is called the <strong>tail</strong>. It is where
+the scary outcomes live. The whole job of risk measurement is to describe that tail
+honestly, because that is the part that can sink a fund.</p>
+<pre><code>   number
+   of days
+      |            .:::.
+      |          .:::::::.
+      |        .:::::::::::.
+      |      .:::::::::::::::.
+      |   ..::::::::::::::::::::..____the tail____
+      +----------------------------|----|---------&gt;  loss (right = worse)
+                                  95%   worst 5%
+                                  mark  of days
+</code></pre>
+<h2 id="var-a-line-drawn-at-the-95-mark">VaR: a line drawn at the 95% mark</h2>
+<p>Now the payoff. Draw one vertical line at the 95% quantile of the losses. Only the
+worst 5% of days fall to its right. That line is the <strong>Value at Risk</strong>, or VaR.</p>
+<p>Read it in plain words: "on 95 days out of 100 we lose less than this; only about one
+day in twenty is worse." It is a threshold, the edge of the everyday-bad zone. It is
+<em>not</em> the worst case. Losses can and do go past it. That is the honest small print
+people forget.</p>
+<h2 id="cvar-how-far-past-the-line-on-average">CVaR: how far past the line, on average</h2>
+<p>VaR tells you where the tail begins. It says nothing about how deep it goes. Two piles
+of numbers can have the very same 95% mark and yet, beyond it, one is calm and the
+other is catastrophic.</p>
+<p>So we ask a second question: among just those worst 5% of days, what is the average
+loss? That average is the <strong>CVaR</strong> (also called Expected Shortfall). It always sits
+further right than VaR, because it averages numbers that are all at least as big as
+VaR. If VaR is the edge of the cliff, CVaR is how far you actually fall once you step
+over.</p>
+<p>The mature answer in a risk report, and in an interview, is to quote both: VaR for the
+threshold, CVaR for the depth.</p>
+<h2 id="why-the-tail-is-fatter-than-a-bell-curve-says">Why the tail is fatter than a bell curve says</h2>
+<p>You may be tempted to assume the losses follow a neat normal "bell curve". Be careful.
+Real market returns have <strong>fat tails</strong>: genuinely extreme days (a crash) happen far
+more often than a bell curve predicts. A bell curve says a huge drop is almost
+impossible; the market delivers one every few years. So a risk number built on the
+bell-curve assumption will quietly understate the danger. This is exactly why the
+session computes VaR more than one way and compares.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Every bank, fund and trading desk has to put a rupee figure on "how bad could a bad
+day be", and regulators (the RBI, following the global Basel rules) require it and make
+them hold spare capital against it. VaR and CVaR are the language that number is spoken
+in. Getting the tail right is not academic: understate it and you blow up in a crisis,
+overstate it and you tie up capital you could have used.</p>
+<p>Where you'll use this: Session 17 (VaR, CVaR and Monte Carlo). The same "look at the
+tail, not the average" idea also sharpens Session 14 (returns and fat tails) and
+Session 16 (portfolios and diversification).</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

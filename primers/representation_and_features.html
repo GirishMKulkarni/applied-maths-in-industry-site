@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Representation and features · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="representation-and-features">Representation and features</h1>
+<p>This is the one idea behind Week 6's feature-engineering session. Read it first and
+the class will feel obvious. No proofs here, just the picture.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>A model is a rule that turns some input numbers into an answer. But the rule can
+only be so clever. A simple model, like a straight-line classifier, can only draw
+straight boundaries. If the pattern in your data is not straight, the simple model
+fails, and you seem to be stuck.</p>
+<p>You are not stuck. You have a second option that is usually cheaper and more
+reliable than reaching for a fancier model: change how you describe the data.</p>
+<h2 id="a-picture-two-rings">A picture: two rings</h2>
+<p>Imagine dots on a chart in two groups. One group forms a small ring near the
+centre. The other forms a bigger ring around it.</p>
+<p>You want a rule that separates the two groups. Try a straight line. Wherever you
+put it, the line cuts through both rings and gets half of each group wrong. No
+straight line can do this job. It looks like you need a cleverer model.</p>
+<p>Now do one small thing. For each dot, measure its <strong>distance from the centre</strong>.
+The inner-ring dots all have a small distance. The outer-ring dots all have a large
+distance. Line those distances up and the two groups fall into two clean stretches
+with a gap between them. A single cut, "distance below this value or above it"
+separates them perfectly.</p>
+<p>The dots never moved. We just described each dot with a better number. That new
+number, the distance from the centre, is a <strong>feature</strong>. Inventing it is
+<strong>feature engineering</strong>.</p>
+<h2 id="what-representation-means">What "representation" means</h2>
+<p>The <strong>representation</strong> is simply the set of columns you choose to describe each
+case. Raw location <code>(x, y)</code> is one representation. <code>(x, y, distance)</code> is another,
+richer one. The facts are the same either way; what changes is how easy the model's
+job becomes.</p>
+<p>The lesson of the session, in one line:</p>
+<blockquote>
+<p>The right feature can turn a hard problem into an easy one, without changing the
+model at all.</p>
+</blockquote>
+<p>A weak model on great features beats a great model on raw features almost every
+time. This is why practitioners spend most of their effort here.</p>
+<h2 id="two-everyday-moves">Two everyday moves</h2>
+<p>Most feature engineering is not as dramatic as the rings. It is small, steady work
+to get data into a shape a model can use. Two moves come up constantly.</p>
+<p><strong>Turning text into numbers.</strong> A model computes with numbers, but a column might
+hold "Pune", "Mumbai", "Delhi". You cannot just number them 1, 2, 3, because that
+quietly tells the model Delhi is bigger than Mumbai, which is nonsense. The safe
+move is <strong>one-hot encoding</strong>: make one new column per city, holding a 1 where the
+row is that city and 0 everywhere else. No fake order is implied.</p>
+<p><strong>Putting columns on a common scale.</strong> Income might run into the tens of thousands
+while age stays under a hundred. Any model that measures distances between rows
+(like the clustering you met in Week 5) would then listen almost only to income and
+ignore age, just because its numbers are bigger. <strong>Standardisation</strong> fixes this:
+for each column, subtract its average and divide by its spread, so every column
+ends up centred at 0 with spread about 1. Now each column gets a fair say.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>This is where real projects are won or lost. The messy customer export, the scraped
+listings, the merged spreadsheets from three systems: none of it is model-ready as
+it arrives. Turning it into good features is the daily work of a data scientist,
+and it is the part that separates a model that works in production from one that
+only looked good in a demo. Domain knowledge, knowing that Diwali spikes sales or
+that a rainy weekend empties a shop, is exactly what tells you which features to
+build.</p>
+<p>Where you'll use this: Session 12 (feature engineering and messy data). The same
+"choose the right coordinates" idea comes back in Session 13, where a neural network
+learns its own features instead of you hand-building them.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

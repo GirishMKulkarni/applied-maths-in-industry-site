@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What optimization is: the best plan under limits · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="what-optimization-is-the-best-plan-under-limits">What optimization is: the best plan under limits</h1>
+<p>This is the idea behind the whole optimisation block of the course. Read it once
+and Session 20 will feel easy. No proofs here, just the picture.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>You almost always have limits. A fixed budget. A fixed number of delivery vans.
+Only so many hours in a shift. So much space in a warehouse. Inside those limits
+there are usually many plans you <em>could</em> choose, and they are not equally good.
+One meal plan is cheaper than another. One delivery schedule burns less fuel.
+One production mix earns more profit.</p>
+<p>Optimisation is the art of picking the single best plan the limits allow. Not a
+prediction of what will happen, but a decision about what to <em>do</em>.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Every optimisation problem has the same three pieces. Once you can spot them in a
+paragraph of plain business English, you can model almost anything.</p>
+<ul>
+<li><strong>The things you choose.</strong> How many servings of dal. How many vans on each
+  route. How many tables to build this week. These are the knobs you can turn.
+  We call them the <strong>decision variables</strong>.</li>
+<li><strong>The one number you care about.</strong> Total cost, total profit, total distance.
+  You want to push this number as low or as high as it will go. This is the
+  <strong>objective</strong>.</li>
+<li><strong>The rules you must obey.</strong> The budget. The van count. "At least 50 grams of
+  protein." "Ship no more than the warehouse holds." Each rule is a
+  <strong>constraint</strong>.</li>
+</ul>
+<p>The whole job is: turn the knobs to make the one number as good as possible,
+without ever breaking a rule.</p>
+<h2 id="the-picture-corners-of-a-shape">The picture: corners of a shape</h2>
+<p>Here is the surprise that makes it beautiful. Draw a simple problem with two
+decisions, say tables across the bottom and chairs up the side. Each rule ("no
+more than 6 assembly hours") is a straight line, and it allows everything on one
+side of that line. Stack a few rules and the plans that obey <em>all</em> of them form a
+shape with straight edges, like a cut gemstone seen from above.</p>
+<p>Every point inside that shape is an allowed plan. We call the shape the
+<strong>feasible region</strong>. Now here is the good part: when the objective is a plain
+weighted sum (no squares, no curves), the best plan is never hiding somewhere in
+the middle. It always sits at a <strong>corner</strong> of the shape.</p>
+<p>Why? Picture the profit as a gentle slope tilting the whole floor. A marble
+placed anywhere rolls downhill in one steady direction and never settles in the
+open middle. It comes to rest jammed into a corner. A straight objective behaves
+exactly like that slope, so the best plan is always pinned at a corner.</p>
+<p>That is a huge simplification. A shape has infinitely many points inside it but
+only a handful of corners. So the computer never has to search the whole region.
+It just checks the corners and keeps the best one.</p>
+<h2 id="a-tiny-example">A tiny example</h2>
+<p>Suppose a thali should give you at least 50 g of protein and at least 12 mg of
+iron, and you can build it from dal (₹8 a serving, lots of protein) and spinach
+(₹6 a serving, lots of iron). Too much dal is dear; too much spinach misses the
+protein. Somewhere between them sits the cheapest plate that still clears both
+targets. That "cheapest plate that clears every target" is a linear program, and
+it is exactly the first thing you will solve in the lab.</p>
+<h2 id="you-do-not-need-calculus-or-proofs">You do not need calculus or proofs</h2>
+<p>You do not find the best corner by hand, and you do not prove anything. You write
+down the three pieces (choices, objective, rules) in a few readable lines, and a
+free tool called a <strong>solver</strong> does the searching and hands you the answer. Your
+skill is the modelling, turning a business paragraph into those three pieces. The
+solver is just a very fast, very reliable calculator for corners.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>This is one of the most valuable skills a numbers person can bring to a company.
+Refineries blend crude into petrol with it. Indian Railways builds timetables
+with it. Flipkart and Delhivery decide which warehouse serves which city with it.
+Airlines roster their crews with it. The sums are enormous: a one-percent better
+blend at a refinery is worth crores a year. Prediction tells a business what will
+happen; optimisation tells it what to do, and that second answer is the one people
+pay the most for.</p>
+<p>Where you'll use this: Session 20 (linear programming), and then the rest of
+Module 4, Session 21 (integer programming and routing) and Session 22 (convex
+optimisation), all sit on top of these same three pieces.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

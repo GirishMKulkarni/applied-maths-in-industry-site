@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lines and least squares · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="lines-and-least-squares">Lines and least squares</h1>
+<p>This is the whole idea behind Week 4's linear regression. Read it before that
+session and the class will feel easy. No proofs here, just the picture.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>You have some data that seems to follow a trend. Bigger flats cost more. More
+study hours means higher marks. Hotter days sell more cold drinks. You want to
+draw the single straight line that best captures the trend, so that you can make a
+prediction for a new case you have not seen.</p>
+<h2 id="a-straight-line-in-words">A straight line, in words</h2>
+<p>A straight line is a rule that turns one number into another:</p>
+<pre><code>predicted price = slope × size + starting value
+</code></pre>
+<ul>
+<li>The <strong>starting value</strong> (mathematicians call it the intercept) is where the line
+  begins, the price when size is zero.</li>
+<li>The <strong>slope</strong> is how steep the line is, how much the price goes up for each
+  extra unit of size.</li>
+</ul>
+<p>If slope is 2.3 and the starting value is 4, then a flat of size 10 is predicted
+at <code>2.3 × 10 + 4 = 27</code>.</p>
+<h2 id="best-means-smallest-total-miss">"Best" means smallest total miss</h2>
+<p>Your data points will not sit perfectly on any line. Real data is noisy. So for a
+given line, each point is a little above or below it. That gap, the difference
+between the real value and the line's prediction, is called the <strong>residual</strong>, the
+"miss".</p>
+<p>Some misses are above the line, some below. To stop them cancelling out, we
+square each miss (a square is always positive) and add them all up. That total is
+the <strong>squared error</strong>.</p>
+<p>The best line is the one that makes this total squared error as small as possible.
+That is the entire meaning of the phrase <strong>least squares</strong>: the line with the
+least total of squared misses.</p>
+<p>Picture it as choosing, out of all possible lines, the one that sits most snugly
+through the middle of the cloud of points.</p>
+<h2 id="you-do-not-have-to-try-lines-one-by-one">You do not have to try lines one by one</h2>
+<p>Here is the pleasant surprise. You do not have to test thousands of lines to find
+the snuggest one. There is a direct formula that hands you the best slope and
+starting value in a single step. In the notebook we let the computer apply that
+formula, and we also check the answer against <code>scikit-learn</code>, the standard
+library, which does the same thing.</p>
+<p>If you have met matrices, the formula is called the <strong>normal equation</strong>, and the
+"Go deeper" box in the session shows it. If you have not met matrices, you do not
+need it. The idea, "find the line with the smallest total squared miss", is the
+part that matters, and the computer does the rest.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>This is the simplest useful prediction machine, and it is everywhere. Predicting
+demand, prices, risk, yield, sales. It is also the foundation the rest of machine
+learning is built on. Almost everything later is a cleverer version of "fit a
+rule to data by making the total miss small".</p>
+<p>Where you'll use this: Session 7 (linear regression) and Session 8
+(regularization). The same "smallest total miss" idea returns in Session 16
+(portfolios) and Session 22 (convex optimization).</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

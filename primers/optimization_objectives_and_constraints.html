@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Optimization: objectives and constraints · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="optimization-objectives-and-constraints">Optimization: objectives and constraints</h1>
+<p>A lot of the second half of this course is about one kind of question: out of all
+the choices you are allowed to make, which one is best? That question has a tidy
+shape, and once you see the shape you can read almost any optimization problem.
+Read this before the operations-research sessions. No proofs, just the picture.</p>
+<h2 id="the-shape-of-every-optimization-problem">The shape of every optimization problem</h2>
+<p>Three pieces. That is all.</p>
+<ul>
+<li><strong>Decision variables.</strong> The knobs you are allowed to turn. How many tonnes to
+  ship. Which warehouse to open. Whether to put this parcel on the van. These are
+  the things you get to choose.</li>
+<li><strong>An objective.</strong> The single number you are trying to make as good as possible.
+  Sometimes you want it as big as possible (profit, value delivered) and sometimes
+  as small as possible (cost, distance, time). "Best" always means best on this
+  one number.</li>
+<li><strong>Constraints.</strong> The rules you must not break. The van holds only 500 kg. You
+  cannot spend more than the budget. Every customer must be served by someone.
+  These fence off the choices that are actually allowed.</li>
+</ul>
+<p>Put in words: <strong>turn the knobs to make the objective as good as possible, without
+breaking any rule.</strong> A choice that breaks no rule is called <strong>feasible</strong>. The best
+feasible choice is the <strong>optimum</strong>, the answer we are after.</p>
+<h2 id="a-tiny-example">A tiny example</h2>
+<p>A snack stall makes samosas and vada pav. Each samosa earns ₹6 profit, each vada
+pav earns ₹8. The stall has only so much oil and only so many hours before the
+evening rush.</p>
+<ul>
+<li>Decision variables: how many samosas, how many vada pav.</li>
+<li>Objective: total profit, <code>6 × samosas + 8 × vadapav</code>, as large as possible.</li>
+<li>Constraints: oil used must fit the stock; hours used must fit the time.</li>
+</ul>
+<p>Every combination that respects the oil and time limits is feasible. Somewhere
+among them is the mix that earns the most. Finding that mix by hand is fiddly.
+Finding it with a solver is one short program.</p>
+<h2 id="what-a-solver-does">What a solver does</h2>
+<p>You do not search for the best choice yourself. You describe the three pieces to a
+<strong>solver</strong>, a ready-made program whose whole job is to find the best feasible
+choice for you. In this course the solver is free and open-source (PuLP hands your
+model to a solver called CBC), and you never see the clever search it runs
+inside. You write the goal and the rules in plain Python; the solver returns the
+numbers.</p>
+<p>The skill you are building is not the search. It is the modelling: taking a messy
+business situation and writing it down as a goal, some rules, and the knobs you
+control. Do that faithfully and the solver does the rest.</p>
+<h2 id="when-the-knobs-only-click-into-whole-notches">When the knobs only click into whole notches</h2>
+<p>So far imagine the knobs turn smoothly, so an answer like "ship 2.4 tonnes" is
+fine. That smooth world is <strong>linear programming</strong>, and it is the easy case: the
+best answer sits neatly at a corner of the allowed region and the solver finds it
+almost instantly.</p>
+<p>But some decisions are not smooth. You cannot open half a warehouse, hire 3.7
+drivers, or put 0.6 of a parcel on a van. Those knobs only click into whole
+numbers, and very often into just two settings, 0 or 1, a plain yes/no. Add that
+"must be whole" demand and you have an <strong>integer program</strong>.</p>
+<p>It sounds like a small change. It is not. The tidy corner answer from the smooth
+version is usually a fraction, and you cannot simply round it off, because
+rounding can break a rule or leave value on the table. Coping with whole-number
+decisions is genuinely harder, and it is exactly what the integer-programming
+session is about.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>This shape fits an enormous amount of real decision-making. Which projects to
+fund inside a budget. Where to place fulfilment centres. How to route a fleet of
+delivery vans. How to build a portfolio that earns the most for a given risk. All
+of them are "make this number best without breaking these rules", and all of them
+are solved by describing the three pieces and letting a solver work.</p>
+<p>Where you'll use this: Session 20 (linear programming), Session 21 (integer
+programming and routing), and Session 22 (convex optimization). The same three
+pieces — variables, objective, constraints — come back every time.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

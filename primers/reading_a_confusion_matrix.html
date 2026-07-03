@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading a confusion matrix · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="reading-a-confusion-matrix">Reading a confusion matrix</h1>
+<p>This is the whole idea behind judging a yes-or-no model in Week 5's
+classification session. Read it before that class and the evaluation half will
+feel easy. No proofs here, just the picture and a bit of counting.</p>
+<h2 id="the-problem-it-solves">The problem it solves</h2>
+<p>You built a model that answers a yes-or-no question. Is this UPI transaction
+fraud? Will this borrower default? Will this customer churn? Now you have to say
+how good it is. The tempting answer is accuracy: out of all its guesses, what
+fraction did it get right? That single number hides too much, and when the "yes"
+cases are rare it can be downright misleading. The confusion matrix is the honest
+replacement. It does not throw away information; it lays every kind of mistake out
+where you can see it.</p>
+<h2 id="the-four-kinds-of-right-and-wrong">The four kinds of right and wrong</h2>
+<p>Every guess the model makes lands in one of four buckets. There are two ways to be
+right and two ways to be wrong:</p>
+<pre><code>                        model said NO        model said YES
+   really NO   (legit)   correctly cleared     false alarm
+   really YES  (fraud)   missed it             caught it
+</code></pre>
+<p>Read across the rows by the truth, and down the columns by the guess:</p>
+<ul>
+<li><strong>Caught it</strong> — it really was fraud, and the model flagged it. A win. (The
+  textbooks call this a <em>true positive</em>.)</li>
+<li><strong>Correctly cleared</strong> — it really was legit, and the model let it through. Also
+  a win. (<em>True negative</em>.)</li>
+<li><strong>False alarm</strong> — it was legit, but the model shouted fraud. Annoying, wastes an
+  investigator's time, irritates a good customer. (<em>False positive</em>.)</li>
+<li><strong>Missed it</strong> — it really was fraud, but the model waved it through. Usually the
+  expensive one. (<em>False negative</em>.)</li>
+</ul>
+<p>That table of four counts is the <strong>confusion matrix</strong>. Every other score in the
+session is built from these four numbers.</p>
+<h2 id="a-worked-count">A worked count</h2>
+<p>Say we test the model on 1,000 transactions. 950 are legit, 50 are fraud (rare,
+as fraud always is). The model's guesses land like this:</p>
+<pre><code>                        model said legit     model said fraud
+   really legit             920                     30
+   really fraud              20                     30
+</code></pre>
+<p>Reading it off: it caught 30 of the 50 frauds, missed 20 of them, raised 30 false
+alarms on legit transactions, and correctly cleared 920. Now we can ask the two
+questions that actually matter.</p>
+<h2 id="precision-and-recall-two-different-questions">Precision and recall — two different questions</h2>
+<p>These two words trip people up because they sound similar. They are asking
+opposite things.</p>
+<p><strong>Precision</strong> looks only at the cases the model flagged and asks: of these, how
+many were real?</p>
+<pre><code>precision = caught / (caught + false alarms) = 30 / (30 + 30) = 0.50
+</code></pre>
+<p>Half of the model's fraud alarms were genuine. High precision means "when it
+shouts, believe it."</p>
+<p><strong>Recall</strong> looks only at the cases that really were fraud and asks: of these, how
+many did we catch?</p>
+<pre><code>recall = caught / (caught + missed) = 30 / (30 + 20) = 0.60
+</code></pre>
+<p>It caught 60% of the real fraud. High recall means "not much slips past."</p>
+<p>A handy way to remember: precision is "of the ones we flagged, how many were
+real?"; recall is "of the real ones, how many did we catch?"</p>
+<h2 id="why-plain-accuracy-can-lie">Why plain accuracy can lie</h2>
+<p>Look at the same example. A lazy model that simply says "legit" to everything gets
+950 of the 1,000 right, which is 95% accuracy. It sounds excellent. But its recall
+is zero: it caught none of the 50 frauds. That is the <strong>accuracy paradox</strong>, and it
+is exactly why we count the four buckets instead of trusting one headline number.
+When the interesting answer is rare, watch recall and precision, not accuracy.</p>
+<h2 id="the-threshold-is-a-dial">The threshold is a dial</h2>
+<p>The model does not really output a hard yes or no. It outputs a probability, like
+0.62. We turn that into a decision by picking a cut-off, the <strong>threshold</strong>: flag it
+if the probability is at least, say, 0.5. That cut-off is a dial you can turn.
+Lower it and you catch more fraud (recall goes up) but raise more false alarms
+(precision goes down). Raise it and the reverse happens. Where you set the dial is
+a business decision: how bad is a missed fraud compared with a false alarm? The
+maths does not answer that; the cost does.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Almost every high-stakes model is a rare-event detector: fraud, loan default,
+disease, machine failure. On all of them accuracy flatters and hides, and the
+confusion matrix tells the truth. Being able to read one, and to say whether a
+model needs more precision or more recall for the job at hand, is one of the most
+practical skills in the whole course, and a question interviewers love to ask.</p>
+<p>Where you'll use this: Session 9 (classification and evaluation). The same
+four-bucket thinking returns whenever a model makes a yes-or-no call, including the
+credit-default and churn projects later in the module.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

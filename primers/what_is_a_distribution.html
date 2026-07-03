@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What is a distribution? · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="what-is-a-distribution">What is a distribution?</h1>
+<p>A distribution is just a picture of "how often each kind of value happens". It is
+one of the most useful pictures in all of data work, and you do not need any
+statistics to read it. This primer gives you the picture and two words that go with
+it. No proofs.</p>
+<h2 id="start-with-a-histogram">Start with a histogram</h2>
+<p>Suppose you write down the daily move of the Nifty for a thousand days: −1.2%,
++0.4%, −0.1%, +2.1%, and so on. Now sort those thousand numbers into bins ("how
+many days moved between 0% and 0.5%?", "between 0.5% and 1%?", ...) and draw a bar
+for each bin, taller where more days landed. That bar chart is a <strong>histogram</strong>, and
+the shape it makes is the <strong>distribution</strong> of the daily moves.</p>
+<p>Reading it is intuitive. Tall bars in the middle mean most days were small moves.
+Short bars far out on the sides mean big moves were rare. The histogram answers, at
+a glance, "what does a typical day look like, and how wild can a day get?"</p>
+<h2 id="two-words-the-centre-and-the-spread">Two words: the centre and the spread</h2>
+<p>Almost every distribution is summarised by two numbers.</p>
+<ul>
+<li>The <strong>centre</strong> (the average, or mean) is where the pile sits. For daily stock
+  returns it is very close to zero.</li>
+<li>The <strong>spread</strong> (the standard deviation) is how wide the pile is. A narrow pile
+  means calm, predictable days. A wide pile means wild, uncertain days. In finance
+  this spread has its own name: <strong>volatility</strong>. High volatility just means a wide,
+  risky distribution of daily moves.</li>
+</ul>
+<p>If you know the centre and the spread, you know most of what the picture is telling
+you.</p>
+<h2 id="the-bell-curve-and-why-markets-break-it">The bell curve, and why markets break it</h2>
+<p>The most famous distribution is the <strong>normal distribution</strong>, the smooth, symmetric
+"bell curve". Lots of everyday things (heights, exam marks, measurement errors)
+follow it closely, so it is the default many people reach for.</p>
+<p>Here is the twist that matters for finance. Real market returns are <strong>not</strong> a neat
+bell curve. They have <strong>fat tails</strong>: extreme days, crashes and huge rallies, happen
+far more often than a bell curve would ever predict. If markets were a clean bell
+curve, a once-in-a-century crash would be genuinely once-in-a-century. In reality
+they show up every few years. You will draw this yourself in the lab: the real
+histogram pokes out well past the bell curve on both sides.</p>
+<p>This is not a technicality. Assuming a bell curve when the tails are fat is exactly
+how firms underestimate risk and get badly hurt. Seeing the fat tails with your own
+eyes is one of the main points of the session.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>A distribution is how anyone honest talks about uncertainty. What is a typical
+outcome? How bad is a bad day? How likely is the worst case? Insurers, banks,
+inventory planners and risk teams all live in this picture. The moment you can look
+at a histogram and say "centre here, spread this wide, and watch those fat tails",
+you are reading data the way a professional does.</p>
+<p>Where you'll use this: Session 14 (fat tails in market returns) and every session
+that talks about risk, error, or spread, from regression residuals to portfolio
+risk.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impurity and information gain · Applications of Mathematics in Industry</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="impurity-and-information-gain">Impurity and information gain</h1>
+<p>This is a ten-minute, picture-first look at the one idea hiding inside a decision
+tree: how the tree decides which question to ask. You do not need it to finish
+Session 10. It is here for anyone curious how a tree learns.</p>
+<h2 id="a-tree-is-a-flowchart-of-yesno-questions">A tree is a flowchart of yes/no questions</h2>
+<p>Think about how a loan officer might decide, on paper, whether to approve a loan.
+"Is the monthly income above ₹30,000?" If yes, "is the credit score above 650?"
+and so on, until they reach a decision. That chain of yes/no questions is a
+<strong>decision tree</strong>. Each question splits the applicants in front of you into two
+smaller groups.</p>
+<p>The only clever part is choosing the questions. The tree learns them from past
+data, and it learns them with one simple goal: make tidy groups.</p>
+<h2 id="a-good-question-makes-tidy-groups">A good question makes tidy groups</h2>
+<p>Picture your past applicants as coloured dots. Blue means they repaid, red means
+they defaulted. Before you ask anything, the pile is mixed: blues and reds all
+jumbled together.</p>
+<p>A good question splits that pile so that one side is almost all blue and the
+other side is almost all red. That is what we mean by tidy. A useless question
+leaves both sides just as mixed as before.</p>
+<p>So the tree is really playing one game over and over: find the question that best
+separates the colours.</p>
+<h2 id="impurity-is-a-number-for-how-mixed-a-group-is">"Impurity" is a number for how mixed a group is</h2>
+<p>To play that game the tree needs to measure mixed-ness. That measure is called
+<strong>impurity</strong>. It works like this:</p>
+<ul>
+<li>A group that is all one colour is perfectly tidy, so its impurity is <strong>0</strong>.</li>
+<li>A group that is a 50/50 mix is as messy as possible, so its impurity is at its
+  <strong>largest</strong>.</li>
+<li>Anything in between sits in between.</li>
+</ul>
+<p>There are two common ways to put a number on it, and they tell the same story:</p>
+<ul>
+<li><strong>Gini impurity</strong> — the everyday choice, what <code>scikit-learn</code> shows in each box
+  of the tree picture.</li>
+<li><strong>Entropy</strong> — the same idea borrowed from information theory, using logarithms.</li>
+</ul>
+<p>You do not need the formulas to read a tree. Here is the intuition as a table
+(exact numbers are in the notebook's optional cell):</p>
+<table>
+<thead>
+<tr>
+<th>the group</th>
+<th>how mixed</th>
+<th>impurity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>all repaid</td>
+<td>perfectly tidy</td>
+<td>0 (lowest)</td>
+</tr>
+<tr>
+<td>80 repaid, 20 default</td>
+<td>fairly tidy</td>
+<td>small</td>
+</tr>
+<tr>
+<td>50 repaid, 50 default</td>
+<td>as messy as it gets</td>
+<td>largest</td>
+</tr>
+</tbody>
+</table>
+<h2 id="information-gain-how-much-tidier-a-question-made-things">Information gain = how much tidier a question made things</h2>
+<p>Now the tree can score a question. Measure the impurity <strong>before</strong> the split.
+Measure the impurity of the two groups <strong>after</strong> the split, and combine them by
+size. The drop from before to after is the <strong>information gain</strong>: how much
+mess the question removed.</p>
+<p>The whole learning rule is now just:</p>
+<ol>
+<li>Try every sensible question.</li>
+<li>Keep the one with the biggest information gain.</li>
+<li>Repeat inside each new group, until the groups are tidy enough or you tell it
+   to stop.</li>
+</ol>
+<p>That is a decision tree, start to finish.</p>
+<h2 id="why-industry-cares">Why industry cares</h2>
+<p>Two reasons. First, a tree is <strong>readable</strong>. You can print the flowchart and show
+a manager, an auditor, or a regulator the exact reason a loan was refused. Few
+models can do that.</p>
+<p>Second, this same "reduce impurity" engine sits inside the models that win on
+real business tables: <strong>Random Forests</strong> and <strong>XGBoost</strong>, used every day for
+credit scoring, churn prediction, and fraud detection at banks, NBFCs and lending
+apps.</p>
+<h2 id="the-smallest-example">The smallest example</h2>
+<p>Ten past applicants: 5 repaid, 5 defaulted. As mixed as it gets, impurity at its
+peak. You ask "is the credit score above 650?" and the pile splits into:</p>
+<ul>
+<li>above 650: 4 repaid, 0 defaulted — perfectly tidy.</li>
+<li>650 or below: 1 repaid, 5 defaulted — mostly red.</li>
+</ul>
+<p>Both sides are far tidier than the messy start, so the impurity dropped a lot.
+Big information gain. That is a good question, and the tree would keep it.</p>
+<h2 id="where-youll-use-this">Where you'll use this</h2>
+<p>Session 10 (trees, random forests and boosting) names impurity, entropy and
+information gain as its optional "math object". The same "how mixed, how
+surprising" idea returns whenever we measure uncertainty later in the course.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+</footer>
+</body>
+</html>

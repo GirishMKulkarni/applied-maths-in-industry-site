@@ -3,88 +3,145 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Python Basics for Math Students · Applications of Mathematics in Industry</title>
+<title>Your First Lines of Code (Python Basics) · Applications of Mathematics in Industry</title>
 <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
 <header class="topbar">
   <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
-  <nav><a href="../index.html">Sessions</a> <a href="../about.html">About</a></nav>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../about.html">About</a>
+  </nav>
 </header>
 <main>
 <section class="shead">
   <p class="crumb">Module 0 — Industry Toolkit &amp; Math-to-Code Bridge</p>
-  <h1>S01 · Python Basics for Math Students</h1><p class="mathobj"><span>Math object today</span>Functions, sequences and sets — the objects you know, now written in code.</p></section>
+  <h1>S01 · Your First Lines of Code (Python Basics)</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
 <section class="body">
-<h2 id="overview">Overview</h2>
-<p>This is the very first session of the course, and the first time most of you will
-write code. That is exactly the right place to be: you already own the hard part,
-the mathematics. We are simply adding a tool that lets you put that mathematics to
-work.</p>
-<p>The big idea of the day is that programming is not a new way of thinking for a
-mathematician. A function in code has a domain, a rule and an output, just like
-the functions you have studied for years. A Python list is a finite sequence
-<code>a₀, a₁, a₂, …</code>. A Python set is a set: no duplicates, no order, with union and
-intersection. Once you see Python as a new notation for objects you already know,
-the fear melts away.</p>
-<p>We will not invent anything mathematically difficult today. Instead we take four
-algorithms you already understand — Fibonacci numbers, Euclid's GCD, the Sieve of
-Eratosthenes, and Newton–Raphson — and write each one in Python. Because the maths
-is familiar, you can spend all of your attention on the code.</p>
-<h2 id="what-youll-do-in-the-lab">What you'll do in the lab</h2>
+<h2 id="the-problem">The problem</h2>
+<p>Picture a small online store. Every evening a file lands with the day's orders,
+hundreds of rows: the amount, the city, whether the customer paid online. The
+owner wants three numbers before closing up. Total sales for the day. How many
+orders were above ₹1000, so free delivery kicked in. Which city bought the most.</p>
+<p>You could do it by hand in a spreadsheet every single night, slowly, and get it
+slightly wrong when you are tired. Or you can write the steps down once, as code,
+and let the computer redo them in a second, exactly the same way, every evening
+forever. That is what today is about: writing those steps down.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>A program is a list of instructions you hand to a very fast, very literal
+assistant. It does exactly what you say, in order, without getting bored and
+without making an arithmetic slip. The catch is that it does <em>exactly</em> what you
+say, so you have to say it clearly.</p>
+<p>The good news is that almost every program ever written is built from just a
+handful of instruction-types. Name a value. Notice what kind of value it is.
+Choose between two paths. Repeat some work. Bundle a few steps into a reusable
+recipe. Learn those five moves and you can read and write real code. Today you
+learn all five, and then you use them on four small classic programs.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
 <ol>
-<li>Take your first steps: name values with variables, meet the basic types, choose
-   a path with <code>if</code>/<code>else</code>, repeat work with a <code>for</code> loop, and define your own
-   function — then connect that function back to a maths mapping <code>x ↦ f(x)</code>.</li>
-<li>Write the Fibonacci sequence with a simple loop, then write Euclid's GCD, and
-   check both against small examples you can verify by hand.</li>
-<li>Build the Sieve of Eratosthenes from a list of True/False flags and print every
-   prime up to 50.</li>
-<li>Write a Newton–Raphson root finder for <code>f(x) = x² − 2</code>, watch the sequence
-   converge to √2, and compare with <code>math.sqrt</code>.</li>
+<li>Take your first steps: name values, meet the basic kinds of value, make a
+   decision with <code>if</code>/<code>else</code>, repeat work with a <code>for</code> loop, and write your own
+   reusable recipe (a function). You also meet lists and lookup tables.</li>
+<li>Write two classic number recipes: the Fibonacci sequence, and Euclid's method
+   for the largest number that divides two others.</li>
+<li>Find every prime number up to 50 by crossing out multiples, the way you may
+   have done with a pencil in school.</li>
+<li>Build a simple "zoom in on the answer" method that finds the square root of 2
+   correct to many decimal places in about five steps.</li>
 </ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>This is the first session of the course and the first time many of you will write
+code. That is exactly the right place to start. You do not need a computing
+background, and you do not need to think of yourself as a maths person. We teach
+every piece from scratch, in plain steps, right before you use it.</p>
+<p>If you have never written a line of code, spend ten minutes here first, then come
+back:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.
+  It walks through everything today uses: running a cell, naming a value, lists,
+  loops, <code>if</code>, and functions. If you read only one thing before class, read that.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>, in plain
+  English.</li>
+</ul>
+<p>If you already code, the main path will feel gentle by design, because the person
+next to you may be seeing a <code>for</code> loop for the first time. So that you are not
+bored, every notebook has cells marked <strong>Stretch (optional)</strong> with the faster or
+cleverer version: a one-line comprehension, a recursive function, the general
+algorithm. Skim the main path and jump to those.</p>
 <h2 id="by-the-end-you-can">By the end you can</h2>
 <ul>
-<li>Name values with variables, recognise the basic types (<code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>), and print results.</li>
-<li>Choose between paths with <code>if</code>/<code>else</code> and repeat work with a <code>for</code> loop.</li>
-<li>Define and call your own function, and see it as a mapping from inputs to one output.</li>
-<li>Implement four classic algorithms from scratch and test each on inputs you can check.</li>
+<li>Name values, tell apart the basic kinds of value, and print results to the
+  screen.</li>
+<li>Choose between two paths with <code>if</code>/<code>else</code>, and repeat work with a <code>for</code> loop.</li>
+<li>Write your own function and call it many times.</li>
+<li>Read and run four small classic programs, and check each one on inputs whose
+  answer you already know.</li>
 </ul>
-<h2 id="before-you-start">Before you start</h2>
-<p>Nothing to install: everything runs in your browser on Google Colab. This is the
-first session, so there is no previous idea to recap — just open the first notebook
-and start typing.</p>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is a bonus for readers who
+enjoy the connection to mathematics, and none of it is needed to finish.</p>
+<p>Today's mathematical object is <strong>functions, sequences and sets</strong>, and Python turns
+out to be a clean notation for all three. A function in code (a named recipe: an
+input goes in, one output comes back) is exactly a function in the mathematical
+sense, a mapping <code>x ↦ f(x)</code>: the same input always gives the same output. A Python
+list is a finite sequence <code>a₀, a₁, a₂, …</code>, with the one quirk that Python counts
+positions from 0. A Python set is a set in the set-theory sense: no duplicates, no
+order, and it supports union and intersection directly. Even set-builder notation
+has a twin: <code>{ x² : x ∈ S, x even }</code> is written in Python as
+<code>[x**2 for x in S if x % 2 == 0]</code>. You will meet that twin in a Stretch cell. Seen
+this way, learning to code is mostly learning a second notation for ideas that
+already make sense.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>variable</strong> — a name that holds a value so you can use it again later.</li>
+<li><strong>type</strong> — what kind of value something is: a whole number, a decimal, text, or
+  true/false.</li>
+<li><strong>for loop</strong> — repeat a block of work once for each item in a collection.</li>
+<li><strong>while loop</strong> — repeat a block of work until a condition stops being true.</li>
+<li><strong>function (in code)</strong> — a named, reusable recipe: inputs go in, one answer
+  comes back.</li>
+<li><strong>list</strong> — an ordered collection of values, written in square brackets.</li>
+<li><strong>dictionary (dict)</strong> — a lookup table that maps a key to a value.</li>
+<li><strong>prime number</strong> — a whole number above 1 whose only exact divisors are 1 and
+  itself.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
 </section>
-<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally.</p>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
   <div class="nb">
-    <span class="nbtitle">First steps — variables, types, choosing, repeating, and a function</span>
+    <span class="nbtitle">First steps — name a value, choose, repeat, and write a function</span>
     <span class="nblinks">
       <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S01/notebooks/01_first_steps.ipynb">Open in Colab</a>
-      <a class="btn" href="sessions/S01/notebooks/01_first_steps.ipynb" download>Download</a>
+      <a class="btn" href="S01/notebooks/01_first_steps.ipynb" download>Download</a>
       <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S01/notebooks/01_first_steps.ipynb">Preview</a>
     </span>
   </div>
   <div class="nb">
-    <span class="nbtitle">Fibonacci and Euclid&#x27;s GCD</span>
+    <span class="nbtitle">Two classic number recipes — Fibonacci and largest common factor</span>
     <span class="nblinks">
       <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S01/notebooks/02_fibonacci_gcd.ipynb">Open in Colab</a>
-      <a class="btn" href="sessions/S01/notebooks/02_fibonacci_gcd.ipynb" download>Download</a>
+      <a class="btn" href="S01/notebooks/02_fibonacci_gcd.ipynb" download>Download</a>
       <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S01/notebooks/02_fibonacci_gcd.ipynb">Preview</a>
     </span>
   </div>
   <div class="nb">
-    <span class="nbtitle">The Sieve of Eratosthenes</span>
+    <span class="nbtitle">Finding prime numbers by crossing out</span>
     <span class="nblinks">
       <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S01/notebooks/03_prime_sieve.ipynb">Open in Colab</a>
-      <a class="btn" href="sessions/S01/notebooks/03_prime_sieve.ipynb" download>Download</a>
+      <a class="btn" href="S01/notebooks/03_prime_sieve.ipynb" download>Download</a>
       <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S01/notebooks/03_prime_sieve.ipynb">Preview</a>
     </span>
   </div>
   <div class="nb">
-    <span class="nbtitle">Newton–Raphson, finding √2</span>
+    <span class="nbtitle">Zooming in on an answer — a simple root finder</span>
     <span class="nblinks">
       <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S01/notebooks/04_newton_raphson.ipynb">Open in Colab</a>
-      <a class="btn" href="sessions/S01/notebooks/04_newton_raphson.ipynb" download>Download</a>
+      <a class="btn" href="S01/notebooks/04_newton_raphson.ipynb" download>Download</a>
       <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S01/notebooks/04_newton_raphson.ipynb">Preview</a>
     </span>
   </div>
