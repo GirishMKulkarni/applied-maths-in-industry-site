@@ -3,8 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
 <title>Glossary · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
+
 </head>
 <body>
 <header class="topbar">
@@ -13,11 +18,12 @@
     <a href="../index.html">Sessions</a>
     <a href="../start-here.html">Start here</a>
     <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
     <a href="../about.html">About</a>
   </nav>
 </header>
 <main>
-<section class="body"><h1 id="glossary">Glossary</h1>
+<div class="gloss-tools"><input id="gloss-search" type="search" autocomplete="off" placeholder="Search the glossary — type a word…" aria-label="Search the glossary"><p class="gloss-empty" id="gloss-empty">No terms match that. Try a shorter word.</p></div><section class="body" id="glossary"><h1 id="glossary">Glossary</h1>
 <p>Plain-English meaning of the technical words in the course. When a word is new,
 look it up here. Each session also lists its own "new words" at the foot of its
 README, and the notebooks gloss terms in plain English right where they appear.</p>
@@ -490,10 +496,11 @@ check honestly how well the model does on cases it never saw (test).</p>
 <h3 id="window-function">window function</h3>
 <p>a calculation that adds a column (like a running total) while keeping every row.</p>
 <h3 id="z-score">z-score</h3>
-<p>how many standard deviations a value sits from its mean; it turns the spread into a same-scale signal.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p>
+<p>how many standard deviations a value sits from its mean; it turns the spread into a same-scale signal.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p><script>(function(){var q=document.getElementById('gloss-search');if(!q)return;var body=document.getElementById('glossary');var terms=[].slice.call(body.querySelectorAll('h3'));var empty=document.getElementById('gloss-empty');q.addEventListener('input',function(){var v=q.value.trim().toLowerCase(),shown=0;terms.forEach(function(h){var d=h.nextElementSibling;var t=h.textContent.toLowerCase()+' '+((d&&d.textContent)||'').toLowerCase();var ok=!v||t.indexOf(v)>-1;h.style.display=ok?'':'none';if(d&&d.tagName==='P')d.style.display=ok?'':'none';if(ok)shown++;});empty.style.display=shown?'none':'block';});})();</script>
 </main>
 <footer class="foot">
   <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
 </footer>
 </body>
 </html>
