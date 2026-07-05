@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Doing Maths on Whole Lists of Numbers (NumPy) · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 0 — Industry Toolkit &amp; Math-to-Code Bridge</p>
+  <h1>S02 · Doing Maths on Whole Lists of Numbers (NumPy)</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/vectors_and_matrices.html">Vectors and matrices</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A property website like MagicBricks holds a huge table of past flats. One row per
+flat, and columns for the numbers it knows: size in square feet, age, distance to
+the nearest metro, price. There are thousands of rows. Now the business wants to
+raise every listed price by 8 percent for the new financial year, and separately
+work out a fair price for a flat nobody has listed yet.</p>
+<p>You could open the table and change prices one cell at a time. Nobody does that.
+Today you learn the tool that does arithmetic on a whole column, or a whole table,
+in a single line, and does it fast enough for millions of rows.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>A plain Python list can hold a few numbers, but to do maths across it you have to
+write a loop that crawls through one number at a time. <code>numpy</code> gives you a better
+container called an <strong>array</strong>. An array is still just a list of numbers (or a
+table of numbers, if you stack several lists), but you can do maths on all of it at
+once.</p>
+<p>Picture it like a spreadsheet column. Multiply the whole column by 1.08 and every
+price rises together. Add two columns and they add up row by row. No loop, less
+code, and it runs at the speed of the language the computer really thinks in.</p>
+<p>That is the whole session. A list of numbers, a table of numbers, and doing maths
+on all of them in one stroke.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Make lists and tables of numbers, and read off how big they are.</li>
+<li>Do arithmetic on a whole list at once: raise every price, add two lists, scale.</li>
+<li>Pull out one row, one column, or a small block from a table.</li>
+<li>Solve a small "find the unknowns" problem (two prices from two clues) in one line.</li>
+<li>Fit a straight line through noisy data and use it to predict a new value.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We build all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what a list of numbers and a table of numbers are, and how the computer stores them,</li>
+<li>how to do maths on a whole list at once instead of writing a loop,</li>
+<li>how to ask the computer to find unknown values that fit some facts,</li>
+<li>how to draw the best straight line through a cloud of points.</li>
+</ul>
+<p>The little you may want in advance: how to run a notebook cell, and the idea of a
+list and a table of numbers. Both are covered here first:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Want the picture behind today in one page? Read
+  <a href="../primers/vectors_and_matrices.html">Vectors and matrices</a> — lists and tables
+  of numbers, no proofs.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code, or you already know your linear algebra, skip ahead and look
+for the cells marked <strong>Stretch (optional)</strong> in the notebooks. That is where the
+eigenvectors, the SVD and the from-scratch normal equation live.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Describe a list or a table of numbers by its shape, and pull out any row, column or block.</li>
+<li>Do arithmetic on a whole list at once instead of writing a loop.</li>
+<li>Solve a small system of two facts for two unknowns, and check the answer.</li>
+<li>Fit a straight line to data with one call and read off a prediction for a new case.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the whole lab. This box is the extra depth for
+those who want it, and none of it is needed to finish.</p>
+<p>Today's array is exactly the linear algebra you may have met on paper. A 1-D array
+is a <strong>vector</strong> in ℝⁿ; a 2-D array is a <strong>matrix</strong>, a linear map from ℝⁿ to ℝᵐ; a
+higher array is a <strong>tensor</strong>. Element-wise <code>*</code> is the Hadamard product, while <code>@</code>
+is true matrix multiplication, so <code>wᵀx</code> becomes <code>w @ x</code> and a matrix acts on a
+vector as <code>A @ x</code>.</p>
+<p><code>np.linalg.solve(A, b)</code> solves <code>Ax = b</code> by an LU factorisation, which is faster and
+more stable than forming <code>A⁻¹</code>. <code>np.linalg.eig</code> returns the <strong>eigenvalues and
+eigenvectors</strong> — the directions a matrix only stretches, <code>Av = λv</code>, the engine
+behind PCA in Session 11. <code>np.linalg.svd</code> gives the <strong>singular value decomposition</strong>
+<code>A = UΣVᵀ</code>, which exists for every matrix and turns "multiply by A" into rotate,
+stretch, rotate; keeping the largest singular values is how image and data
+compression work. The line-fitting lab is <strong>least squares</strong>: <code>ŷ = Xw</code> is the
+projection of <code>y</code> onto the column space of <code>X</code>, and the orthogonality of the
+residual gives the <strong>normal equation</strong> <code>XᵀX w = Xᵀy</code>, which the Stretch cell solves
+by hand and checks against <code>np.linalg.lstsq</code>. All of this is a bonus, never a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>array</strong> — a list (or table) of numbers you can do fast maths on all at once.</li>
+<li><strong>shape</strong> — how big an array is along each direction, like <code>(3, 4)</code> for 3 rows and 4 columns.</li>
+<li><strong>vector / matrix</strong> — a list of numbers, and a table of numbers (rows and columns).</li>
+<li><strong>broadcasting</strong> — NumPy stretching a smaller array to fit a bigger one so they combine without a loop.</li>
+<li><strong>solve a system</strong> — give the computer some facts and ask it to find the unknown values that fit.</li>
+<li><strong>least squares</strong> — pick the straight line whose total miss from the data is smallest.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Lists and tables of numbers, and maths on all of them at once</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S02/notebooks/01_lists_and_tables_of_numbers.ipynb">Open in Colab</a>
+      <a class="btn" href="S02/notebooks/01_lists_and_tables_of_numbers.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S02/notebooks/01_lists_and_tables_of_numbers.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Find the unknowns — solving a small system</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S02/notebooks/02_solve_a_system.ipynb">Open in Colab</a>
+      <a class="btn" href="S02/notebooks/02_solve_a_system.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S02/notebooks/02_solve_a_system.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Fit a straight line to data</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S02/notebooks/03_fit_a_line_to_data.ipynb">Open in Colab</a>
+      <a class="btn" href="S02/notebooks/03_fit_a_line_to_data.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S02/notebooks/03_fit_a_line_to_data.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>No external data — small arrays typed by hand and tiny synthetic datasets generated with NumPy (seeded)</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>NumPy user guide (numpy.org) — skim the &#x27;absolute basics&#x27; page</li>
+<li>3Blue1Brown — *Essence of Linear Algebra* (YouTube), for the pictures</li>
+<li>Gilbert Strang — *Linear Algebra* (any edition), if you want the full theory</li>
+</ul></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
