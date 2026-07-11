@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Spreadsheets You Drive with Code (Pandas &amp; Excel) · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 0 — Industry Toolkit &amp; Math-to-Code Bridge</p>
+  <h1>S03 · Spreadsheets You Drive with Code (Pandas &amp; Excel)</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A shop owner in Pune keeps a year of sales in an Excel file: every order, across a
+few city outlets, with customer names and amounts in rupees. Someone in the team
+emailed her the file. Before the month-end review she wants three things from it:
+which city sold the most, which customers are the big spenders, and a clean copy
+with the blanks, the repeated row, and the one column that came in as text all
+sorted out. Doing that by scrolling and clicking in the spreadsheet takes an
+afternoon, and she will still miss something.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>A DataFrame is a spreadsheet you drive with code. It has the same rows and columns
+you would see in Excel, but instead of clicking, dragging and copying formulas, you
+type one short instruction and the whole table answers. "Keep only the Mumbai
+rows." "Total the sales for each city." "Glue the loyalty-tier sheet onto this one."
+Each of those is a single line, and it runs exactly the same way on five rows or on
+five lakh.</p>
+<p>Once you can say what you want in that short language, the shop owner's afternoon of
+scrolling becomes a handful of lines that run in a blink and never miss a row.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Read the shop's sales file (<code>data/shop_sales.csv</code>) off disk, look at it (shape,
+   info), pull out the parts you want, and keep only the rows that pass a yes/no test.</li>
+<li>Total and count the sales for each city and customer (split-apply-combine), then
+   join a sheet of loyalty tiers onto it and summarise the result.</li>
+<li>Read a real, messy multi-sheet Excel workbook (<code>data/shop_sales_messy.xlsx</code>),
+   stack its regional sheets, and clean it end to end: blanks, a duplicate row, fake
+   "missing" codes, and a price column that arrived as text with commas.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in small steps:</p>
+<ul>
+<li>what a table (a DataFrame) is, and how to select, filter, group and join it,</li>
+<li>how to read and write a real Excel file from Python,</li>
+<li>the standard steps for cleaning real, messy data.</li>
+</ul>
+<p>The little we assume: how to run a notebook cell, and how to read a small table.
+Both are quick to pick up.</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already live in Excel — pivot tables, VLOOKUP, filters — you have the
+instincts for all of this already. This session hands those instincts a keyboard,
+and the notebooks have cells marked <strong>Stretch (optional)</strong> for you.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Read a real file into a table, describe it as rows of records with named columns,
+  and look before you compute (<code>.head()</code>, <code>.shape</code>, <code>.info()</code>).</li>
+<li>Select parts of a table by name (<code>.loc</code>) and by position (<code>.iloc</code>), and keep only
+  the rows that pass a True/False test.</li>
+<li>Total and count with <code>groupby</code> (split-apply-combine), and join two tables on a
+  shared column with <code>merge</code>.</li>
+<li>Read and write Excel files, and run the standard cleaning steps (blanks,
+  duplicates, wrong types) on messy data.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is a bonus for anyone who enjoys
+seeing the structure underneath, and none of it is needed to finish.</p>
+<p>The tidy name for today's table is a <strong>relation</strong>. Think of the set of every
+possible <code>(customer, city, units, price)</code> combination; the actual rows in your
+table are a chosen subset of that. Each row is a tuple, and the column names are
+its coordinates, its named fields. The row labels down the left are the <strong>index</strong>,
+an indexed set that addresses the rows the way keys address values in a dictionary.</p>
+<p>Seen this way, the operations stop looking like a bag of commands. Filtering with a
+mask picks out a sub-relation. <code>groupby</code> splits the relation into blocks that share
+a key and summarises each block. A <code>merge</code> combines two relations on a shared
+attribute. It is the same set theory you may have met in a first algebra course,
+now with a keyboard. But it is a nice picture, not a gate: you can do every lab
+today without thinking about it once.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>DataFrame</strong> — a table in Python: rows and columns, like a spreadsheet you drive
+  with code.</li>
+<li><strong>Series</strong> — a single column of a DataFrame, carrying its row labels.</li>
+<li><strong>index</strong> — the row labels down the left of a table; the address of each row.</li>
+<li><strong>.loc / .iloc</strong> — pick rows and columns by name (<code>.loc</code>) or by position (<code>.iloc</code>).</li>
+<li><strong>boolean mask</strong> — a column of True/False that keeps only the rows you want.</li>
+<li><strong>groupby (split-apply-combine)</strong> — split rows into groups, apply a summary to
+  each, combine the answers into a small table.</li>
+<li><strong>merge (join)</strong> — glue two tables together by matching a shared key column.</li>
+<li><strong>NaN</strong> — pandas' marker for a missing or blank value.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Your first DataFrame — a spreadsheet you drive with code</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S03/notebooks/01_your_first_dataframe.ipynb">Open in Colab</a>
+      <a class="btn" href="S03/notebooks/01_your_first_dataframe.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S03/notebooks/01_your_first_dataframe.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Grouping (split-apply-combine) and joining tables</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S03/notebooks/02_group_and_join.ipynb">Open in Colab</a>
+      <a class="btn" href="S03/notebooks/02_group_and_join.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S03/notebooks/02_group_and_join.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Cleaning a messy Excel file end to end</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S03/notebooks/03_clean_a_messy_excel_file.ipynb">Open in Colab</a>
+      <a class="btn" href="S03/notebooks/03_clean_a_messy_excel_file.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S03/notebooks/03_clean_a_messy_excel_file.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li><a href="S03/data/shop_sales.csv" download><code>data/shop_sales.csv</code></a> — a clean shop-sales file you read in (the import exercise)</li>
+<li><a href="S03/data/shop_sales_messy.xlsx" download><code>data/shop_sales_messy.xlsx</code></a> — a messy multi-sheet workbook for the cleaning lab</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Wes McKinney — *Python for Data Analysis*, ch. 5 (Getting Started with pandas)</li>
+<li><a href="https://pandas.pydata.org/docs/user_guide/10min.html">pandas: 10 minutes to pandas</a></li>
+<li><a href="https://pandas.pydata.org/docs/user_guide/io.html#excel-files">pandas: Working with Excel files</a></li>
+</ul></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
