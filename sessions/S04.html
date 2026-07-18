@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Save Your Work, Share It Safely, and Fix It When It Breaks · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 0 — Industry Toolkit &amp; Math-to-Code Bridge</p>
+  <h1>S04 · Save Your Work, Share It Safely, and Fix It When It Breaks</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/graphs_and_dags.html">Graphs and dags</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>You have spent two weeks on a data project. It finally works. Then your laptop
+plays up, or you "tidy up" a file and delete the one block that mattered, or a
+teammate emails you their copy and now there are two versions and nobody knows
+which is right. A week of work, gone or tangled. Later that night your script
+crashes with a wall of red text right before a deadline, and you have no idea
+what it is trying to tell you.</p>
+<p>Two fears sit behind almost every beginner's stress with code: losing the work,
+and the work breaking. Today is the session that removes both. It is not about a
+new result. It is about keeping what you build safe, sharing it cleanly, and
+staying calm when something breaks.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Git gives your project <strong>save points</strong>, exactly like the save points in a video
+game. Each time you reach a good spot you make one, and it keeps a full copy of
+the whole project at that moment, with a short note on what changed. You can walk
+back to any save point whenever you like. Nothing you save is ever truly lost.</p>
+<p><strong>GitHub</strong> is the place those save points live online. Push your project there and
+it is backed up, safe from a dying laptop, and shareable with a single link. A
+tidy public project on GitHub is also the first thing a recruiter opens.</p>
+<p>And when code breaks, the red error is not an insult. It is a clue. The trick is to
+read it <strong>from the bottom up</strong>: the very last line names what went wrong, and the
+lines above show where. Once you can read the clue, most bugs stop being scary.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Turn a plain folder into a Git project, make two save points, and walk back to
+   look at the earlier one, all inside a throwaway folder that cleans itself up.</li>
+<li>Publish your Session 1–3 labs as your first public GitHub repository, with a
+   proper README and a pinned <code>requirements.txt</code>, so the work is safe and shareable.</li>
+<li>Read the five Python errors you will meet most often, bottom-up, and learn the
+   one fix for each.</li>
+<li>Find and fix a bug with a calm, repeatable method, then guard your code with
+   <code>assert</code> so a wrong assumption cannot sneak through.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>This is the point of this edition, so let us be plain about it.</p>
+<ul>
+<li>You do <strong>not</strong> need any command-line experience. You have never opened a
+  terminal? Fine. Every Git command is shown and explained in one plain line
+  before we run it, and the first notebook runs the whole flow for you.</li>
+<li>You do <strong>not</strong> need to have used Git before. We build save points from scratch.</li>
+<li>You do <strong>not</strong> need any maths for today. The only maths idea, the "graph" behind
+  a commit history, is an optional bonus at the end.</li>
+</ul>
+<p>The little we do assume, and where to catch up if it is new:</p>
+<ul>
+<li>New to running code in a notebook? Read
+  <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a> first.</li>
+<li>Curious what a "graph" and a "DAG" are? Read
+  <a href="../primers/graphs_and_dags.html">Graphs and DAGs</a> — ten minutes, all pictures.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>Already comfortable with a terminal or with Git? Skim the first notebook and look
+for the cells marked <strong>Stretch (optional)</strong>, where we show <code>git log --graph</code> and
+the <code>pdb</code> debugger.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Make save points (commits) as you work, and walk back to any earlier one.</li>
+<li>Publish a clean, public GitHub repo with a clear README and a pinned
+  <code>requirements.txt</code>.</li>
+<li>Read a Python traceback <strong>bottom-up</strong> and recognise the five common errors:
+  NameError, KeyError, IndexError, ValueError, TypeError.</li>
+<li>Debug calmly: reproduce the problem, isolate it with <code>print()</code>, fix one thing,
+  verify it is gone, and guard your assumptions with <code>assert</code>.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is a bonus and none of it is
+needed to finish.</p>
+<p>The mathematical object hiding under Git is the <strong>directed acyclic graph</strong>, a DAG.
+Draw each save point (each <strong>commit</strong>) as a dot, with an arrow pointing back to the
+save point it grew from, its parent. The arrows have a direction (child points to
+parent), and because time only moves forward you can never follow arrows and loop
+back to where you started. That is exactly what "directed" and "acyclic" mean.</p>
+<p>Everything Git does is bookkeeping on that graph. <code>git log</code> walks it, a <strong>branch</strong>
+is a second arrow coming out of a node so history splits in two, and a <strong>merge</strong>
+is the one place the two lines fan back together into a node with two parents.
+Spotting a familiar abstract object living inside an everyday tool is the
+"mathematician in industry" instinct this whole course is training. If graphs are
+new to you, the picture-first version is in
+<a href="../primers/graphs_and_dags.html">Graphs and DAGs</a>.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>repository (repo)</strong> — the folder Git watches, together with its full history.</li>
+<li><strong>commit</strong> — one save point: a snapshot of the whole project, with a message.</li>
+<li><strong>branch</strong> — a parallel line of history for trying something without risk.</li>
+<li><strong>remote / GitHub</strong> — the shared copy of your repo online; GitHub is where it lives.</li>
+<li><strong>push / pull</strong> — send your save points up to GitHub / bring others' back down.</li>
+<li><strong>traceback</strong> — the block of text Python prints when code breaks; read it bottom-up.</li>
+<li><strong>assert</strong> — a line that checks a belief and stops loudly if it is false.</li>
+<li><strong>virtual environment</strong> — a sealed toolbox of libraries just for one project.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Git as save points you can walk back to</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S04/notebooks/01_git_save_points.ipynb">Open in Colab</a>
+      <a class="btn" href="S04/notebooks/01_git_save_points.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S04/notebooks/01_git_save_points.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Reading a Python error, from the bottom up</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S04/notebooks/02_reading_tracebacks.ipynb">Open in Colab</a>
+      <a class="btn" href="S04/notebooks/02_reading_tracebacks.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S04/notebooks/02_reading_tracebacks.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">A calm way to find and fix a bug</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S04/notebooks/03_debugging_method.ipynb">Open in Colab</a>
+      <a class="btn" href="S04/notebooks/03_debugging_method.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S04/notebooks/03_debugging_method.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>None — every example is typed into the notebooks; the Git notebook works inside a throwaway folder it creates and cleans up, so nothing on your machine is touched</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Pro Git book, ch. 1–3 — free at [git-scm.com/book](https://git-scm.com/book/en/v2)</li>
+<li><a href="https://skills.github.com/">GitHub Skills</a> — short, interactive, hands-on courses</li>
+<li><a href="https://docs.python.org/3/library/pdb.html">Python docs: pdb — the Python debugger</a></li>
+</ul></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
