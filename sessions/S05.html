@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Charts That Answer a Question (Seaborn) · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 0 — Industry Toolkit &amp; Math-to-Code Bridge</p>
+  <h1>S05 · Charts That Answer a Question (Seaborn)</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/choosing_a_chart.html">Choosing a chart</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>You have a table. It might be a year of sales, a month of delivery times, or a
+spreadsheet a colleague emailed you with no explanation. Somewhere in those rows
+is something worth knowing — which product is slipping, which month broke the
+trend, which two numbers move together. You cannot find it by scrolling, and even
+once you have found it, a column of numbers will not convince anybody.</p>
+<p>So you draw it. But a chart drawn badly is worse than no chart: it buries the
+pattern, or it makes a small difference look like a crisis. The skill is not
+learning chart syntax. It is choosing the picture that answers the question you
+actually asked, and drawing it honestly.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Every seaborn chart is the same function call.</p>
+<p><strong>You hand it a table, say which column runs across, which runs up, and which one
+decides the colour. Change the verb and you get a different chart.</strong></p>
+<pre><code class="language-python">sns.scatterplot(data=tips, x=&quot;total_bill&quot;, y=&quot;tip&quot;, hue=&quot;sex&quot;)
+sns.barplot(data=tips,     x=&quot;day&quot;,        y=&quot;tip&quot;, hue=&quot;sex&quot;)
+sns.boxplot(data=tips,     x=&quot;day&quot;,        y=&quot;tip&quot;, hue=&quot;sex&quot;)
+</code></pre>
+<p>Three different charts, one sentence. That is why seaborn is worth an evening: you
+learn <code>data</code>, <code>x</code>, <code>y</code> and <code>hue</code> once, and ten chart types come free. The rest of
+today is knowing which verb answers which question.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Draw the five charts that cover most real questions — scatter, line, bar,
+   histogram, box — on a restaurant's bills and a decade of airline traffic.</li>
+<li>Add five more: counting categories, comparing whole distributions, fitting a
+   trend line, and reading a grid of numbers as colour.</li>
+<li>Explore a dataset you have never seen, choose four charts that answer four
+   questions, and lay them out as a single page you would show someone.</li>
+</ol>
+<p>That third notebook is the deliverable that closes Module 0.</p>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>the shared arguments (<code>data</code>, <code>x</code>, <code>y</code>, <code>hue</code>) that nearly every seaborn
+  function accepts, so one pattern unlocks all of them,</li>
+<li>the ten functions worth memorising, and the question each one answers,</li>
+<li>how to size, theme and colour a chart, and how to give it a title that says
+  something,</li>
+<li>how a chart misleads, and how to keep yours honest.</li>
+</ul>
+<p>The little you may want in advance is only how to run a notebook cell. If you have
+never coded, that is covered here first:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Want the picture behind charts in one page? Read
+  <a href="../primers/choosing_a_chart.html">Choosing a chart</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already write pandas or matplotlib, you are welcome here too. Look for the
+cells marked <strong>Stretch (optional)</strong>. They show the same chart the professional
+way — catching the axes object, faceting, saving to file for a report.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Name the ten seaborn functions and say, for each, the question it answers.</li>
+<li>Draw any of them from memory using <code>data</code>, <code>x</code>, <code>y</code> and <code>hue</code>.</li>
+<li>Explore an unfamiliar dataset with <code>pairplot</code> and a correlation <code>heatmap</code>
+  before you know what to ask of it.</li>
+<li>Lay several charts on one page with <code>plt.subplots</code> and <code>ax=</code>.</li>
+<li>Spot a truncated axis and say why it misleads.</li>
+</ul>
+<h2 id="the-ten-functions">The ten functions</h2>
+<table>
+<thead>
+<tr>
+<th>Question you are asking</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Do two numbers move together?</td>
+<td><code>scatterplot</code></td>
+</tr>
+<tr>
+<td>What happened over time?</td>
+<td><code>lineplot</code></td>
+</tr>
+<tr>
+<td>How do categories compare?</td>
+<td><code>barplot</code></td>
+</tr>
+<tr>
+<td>What shape is one column?</td>
+<td><code>histplot</code></td>
+</tr>
+<tr>
+<td>How do shapes compare, and what is odd?</td>
+<td><code>boxplot</code></td>
+</tr>
+<tr>
+<td>How many rows in each category?</td>
+<td><code>countplot</code></td>
+</tr>
+<tr>
+<td>How do full distributions compare?</td>
+<td><code>violinplot</code></td>
+</tr>
+<tr>
+<td>Is there a trend, and how strong?</td>
+<td><code>regplot</code></td>
+</tr>
+<tr>
+<td>What does this grid of numbers say?</td>
+<td><code>heatmap</code></td>
+</tr>
+<tr>
+<td>What is in this dataset at all?</td>
+<td><code>pairplot</code></td>
+</tr>
+</tbody>
+</table>
+<p>The first five carry most of the work. Learn those before the rest.</p>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is extra depth, and none of it
+is needed to finish.</p>
+<p>A table with <em>n</em> numeric columns is a set of points in <em>n</em>-dimensional space: one
+point per row, one axis per column. The <code>iris</code> table is 150 points in four
+dimensions. You cannot see four dimensions, and a page has only two, so every
+chart you draw is a <strong>projection</strong> — a map from that high-dimensional space down
+to the two directions the eye can read.</p>
+<p>Choosing a chart is choosing that projection. A scatter of petal length against
+petal width keeps two coordinates and discards the other two. A <code>hue</code> smuggles a
+third back in as colour. A <code>pairplot</code> is the honest admission that you do not yet
+know which projection matters, so it draws every two-dimensional one at once and
+lets you pick.</p>
+<p>That is a real choice with real consequences. Project badly and three clearly
+separate groups collapse into one blob; project well and the structure is obvious
+at a glance — which is exactly what happens when you compare the sepal panels of
+the iris pair plot with the petal ones. Today you choose the projection by hand,
+by picking columns. In Session 11 (principal component analysis) we compute the
+projection that preserves as much of the spread as possible, so the machine picks
+it for you. The <code>pairplot</code> you draw today is the picture that PCA later automates.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>distribution</strong> — the shape of a single column of numbers: where they cluster
+  and how spread out they are.</li>
+<li><strong>histogram</strong> — a chart that chops one column into bins and counts each.</li>
+<li><strong>median</strong> — the middle value; half the data sits above it, half below.</li>
+<li><strong>outlier</strong> — a value far from the rest, worth asking about rather than
+  deleting.</li>
+<li><strong>correlation</strong> — a number from −1 to +1 for how strongly two columns move
+  together in a straight line.</li>
+<li><strong>skew</strong> — a distribution with a long tail on one side.</li>
+<li><strong>facet</strong> — repeating the same chart once per category, side by side.</li>
+<li><strong>axes object</strong> — matplotlib's name for a single panel of a figure; the thing
+  you pass as <code>ax=</code> to draw into a chosen panel.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+<h2 id="optional-coda-sql-and-duckdb">Optional coda — SQL and DuckDB</h2>
+<p>If there is time at the end of the session, we look briefly at where the table
+came from. In industry, data usually lives in a database, and <strong>SQL</strong> is the small
+language for asking it a precise question. <strong>DuckDB</strong> runs SQL directly on a
+pandas DataFrame with no database to install:</p>
+<pre><code class="language-python">import duckdb
+duckdb.sql(&quot;SELECT day, AVG(tip) FROM tips GROUP BY day&quot;).df()
+</code></pre>
+<p>That returns a DataFrame, which you then chart exactly as above. Nothing in
+today's notebooks or the deliverable depends on it — it is a pointer to what a
+data job looks like, not something you are examined on.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">The five seaborn functions that cover most charts you will ever draw</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S05/notebooks/01_your_first_five_charts.ipynb">Open in Colab</a>
+      <a class="btn" href="S05/notebooks/01_your_first_five_charts.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S05/notebooks/01_your_first_five_charts.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Five more — counts, distributions, trend lines and heatmaps</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S05/notebooks/02_five_more_charts.ipynb">Open in Colab</a>
+      <a class="btn" href="S05/notebooks/02_five_more_charts.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S05/notebooks/02_five_more_charts.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">A one-page dashboard — the Module-0 deliverable</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S05/notebooks/03_one_page_dashboard.ipynb">Open in Colab</a>
+      <a class="btn" href="S05/notebooks/03_one_page_dashboard.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S05/notebooks/03_one_page_dashboard.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li><a href="S05/data/tips.csv" download><code>data/tips.csv</code></a> — 244 restaurant bills (bar, scatter, histogram, box)</li>
+<li><a href="S05/data/flights.csv" download><code>data/flights.csv</code></a> — monthly air passengers 1949–1960 (line, heatmap)</li>
+<li><a href="S05/data/iris.csv" download><code>data/iris.csv</code></a> — 150 flowers measured four ways (pairplot, correlations)</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Claus O. Wilke — *Fundamentals of Data Visualization* (free online)</li>
+<li><a href="https://seaborn.pydata.org/tutorial">seaborn tutorial</a></li>
+<li><a href="https://seaborn.pydata.org/examples/index.html">seaborn example gallery</a></li>
+</ul></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
