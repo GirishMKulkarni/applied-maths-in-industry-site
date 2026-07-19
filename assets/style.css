@@ -188,6 +188,10 @@ a.card:hover::before { opacity: 1; }
 .body th { background: var(--bg-tint); font-family: var(--font-body); }
 .body img { max-width: 100%; height: auto; border-radius: 10px; }
 
+/* ---- inline reference (rendered straight into the page, e.g. S04 Git) ---- */
+.reference { margin-top: 2.8rem; border-top: 1px solid var(--line); padding-top: .6rem; }
+.reference .refhead { font-size: 1.6rem; margin-top: 1.4rem; }
+
 /* ---- "new here?" callout ------------------------------------------------- */
 .newhere {
   max-width: var(--prose); margin: 0 0 2rem; padding: 1.1rem 1.3rem 1.2rem;
