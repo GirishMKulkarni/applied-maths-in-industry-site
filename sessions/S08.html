@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>A Steadier House-Price Model — Regularization and Your First Full Project · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 2 — Machine Learning for Industry</p>
+  <h1>S08 · A Steadier House-Price Model — Regularization and Your First Full Project</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/overfitting_and_regularization.html">Overfitting and regularization</a></li><li><a href="../primers/least_squares_and_lines.html">Lines and least squares</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>In Session 7 you built a house-price model for a property website: type in a flat's
+details, get an estimated price. It worked well on the flats it had learned from.
+But a real site sees flats it has never seen before, in localities that barely
+showed up in the training data. When a model leans too hard on one odd detail of
+the flats it trained on, it can quote a wild price the moment it meets something
+new. A ₹80 lakh flat gets tagged at ₹2 crore because of one feature the model
+over-trusted. That is the failure we fix today, and then we package the whole thing
+into a project you could actually hand to someone.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Left alone, a model will grab any pattern that helps it fit the flats it has
+already seen, even a coincidence. Regularization is a gentle rule that says:
+"don't over-trust any one feature." We turn down the volume on the model's
+weights, so no single feature is allowed to shout. The model fits the training
+flats slightly less snugly, and in exchange it does better on the flats it has
+never seen. That trade is almost always worth it.</p>
+<p>There is one knob, usually called <code>alpha</code>, that sets how firmly we turn the volume
+down. Small <code>alpha</code>, barely any effect. Large <code>alpha</code>, everything is quietened.
+Most of today is learning to set that knob honestly instead of guessing.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Make a small dataset where some columns are pure noise, and watch a plain model
+   over-trust them.</li>
+<li>Add a penalty and see two styles of "turn it down": Ridge quietly shrinks every
+   weight, Lasso switches the useless ones off completely.</li>
+<li>Load real California housing data and lock away a test set before you touch
+   anything.</li>
+<li>Bundle the data-prep and the model into one tidy object (a Pipeline) that does
+   all the preparation and the model together, so nothing leaks.</li>
+<li>Let cross-validation choose the <code>alpha</code> knob for you, then score the model once,
+   honestly, on the flats it never saw.</li>
+<li>Read the model back in plain language and write up what actually drives the
+   price. The result is your first full project deliverable: a tuned house-price
+   predictor.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of today's new pieces from scratch, in plain steps:</p>
+<ul>
+<li>what a "penalty" is and how it turns the volume down on the weights,</li>
+<li>what it means to "scale" features so they are on a comparable footing,</li>
+<li>what a Pipeline is (one object that does the prep and the model together),</li>
+<li>what cross-validation does and why it beats guessing the knob by hand.</li>
+</ul>
+<p>The little we lean on from before: fitting a line, splitting data into train and
+test, and reading the honest scores (MSE, MAE, R²). All of that was Session 7, and
+here is where to catch up if any of it is fuzzy:</p>
+<ul>
+<li>New to the whole idea of a model over-trusting the data? Read
+  <a href="../primers/overfitting_and_regularization.html">Overfitting and regularization</a>
+  for a ten-minute, picture-first version.</li>
+<li>Want the line-fitting background in one page? Read
+  <a href="../primers/least_squares_and_lines.html">Lines and least squares</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code or already know shrinkage methods, skip ahead and look for the
+cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain Ridge as "shrink every weight a little" and Lasso as "switch some weights
+  off entirely (feature selection)".</li>
+<li>Set the penalty knob <code>alpha</code> with cross-validation instead of guessing.</li>
+<li>Build a scikit-learn Pipeline that scales inside the model, so no information
+  leaks from the test set into training.</li>
+<li>Score a model honestly on a held-out test set and read MSE, MAE and R².</li>
+<li>Turn the fitted model into a plain-language explanation of what drives the price.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those who
+want it, and none of it is needed to finish.</p>
+<p>The "penalty" has an exact form. Measure the size of the weight vector <code>w</code> with a
+norm and add it to the least-squares loss. Using the squared <strong>L2 norm</strong>,
+<code>‖w‖₂² = w₁² + w₂² + …</code>, gives <strong>Ridge</strong>; using the <strong>L1 norm</strong>,
+<code>‖w‖₁ = |w₁| + |w₂| + …</code>, gives <strong>Lasso</strong>:</p>
+<pre><code>Ridge:  minimise   Σ (yᵢ − ŷᵢ)²  +  alpha · ‖w‖₂²
+Lasso:  minimise   Σ (yᵢ − ŷᵢ)²  +  alpha · ‖w‖₁
+</code></pre>
+<p>Both keep the whole problem <strong>convex</strong> — a single bowl with one lowest point — so
+there is still exactly one best answer and it is reliable to find. The reason Lasso
+zeroes coefficients out while Ridge does not is geometric: the L1 "diamond" has
+sharp corners on the axes, and the best solution tends to land on a corner, where
+some weights are exactly zero. Turning <code>alpha</code> up and down is the <strong>bias-variance
+trade-off</strong> made into one tunable dial: small <code>alpha</code> means low bias and high
+variance (overfitting), large <code>alpha</code> means the opposite (underfitting), and
+cross-validation finds the sweet spot between them. All of this is a bonus, not a
+gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>regularization</strong> — a gentle rule that discourages a model from over-trusting
+  any one feature, so it does better on new data.</li>
+<li><strong>penalty / alpha</strong> — the size charge added to the loss; <code>alpha</code> sets how strong
+  it is.</li>
+<li><strong>Ridge</strong> — regularization that shrinks every weight toward zero, but never to
+  exactly zero.</li>
+<li><strong>Lasso</strong> — regularization that pushes some weights to exactly zero, dropping
+  those features for you.</li>
+<li><strong>ElasticNet</strong> — a blend of Ridge and Lasso.</li>
+<li><strong>standardise (scaling)</strong> — rescale each feature to a comparable footing so the
+  penalty treats them fairly.</li>
+<li><strong>Pipeline</strong> — one object that does the data-prep and the model together, so the
+  same steps run the same way every time.</li>
+<li><strong>cross-validation</strong> — try a setting on several train/check splits and average,
+  to choose a knob without touching the test set.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Shrink the weights — Ridge, Lasso and ElasticNet</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S08/notebooks/01_shrink_the_weights.ipynb">Open in Colab</a>
+      <a class="btn" href="S08/notebooks/01_shrink_the_weights.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S08/notebooks/01_shrink_the_weights.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Your first full project — a housing-price predictor</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S08/notebooks/02_housing_price_project.ipynb">Open in Colab</a>
+      <a class="btn" href="S08/notebooks/02_housing_price_project.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S08/notebooks/02_housing_price_project.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>California housing — loaded straight from scikit-learn (offline fallback built in)</li>
+<li>Small made-up dataset with some useless columns, generated inside notebook 1</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>James, Witten, Hastie &amp; Tibshirani — An Introduction to Statistical Learning, ch. 6 (shrinkage methods; the pictures are excellent even if you skip the maths)</li>
+<li><a href="https://scikit-learn.org/stable/modules/linear_model.html">scikit-learn user guide: Linear Models</a> and <a href="https://scikit-learn.org/stable/modules/compose.html">Pipelines</a></li>
+<li>Andrew Ng — Machine Learning Specialization (Coursera), Course 1</li>
+</ul></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

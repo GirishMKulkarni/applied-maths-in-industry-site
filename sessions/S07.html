@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Predicting a Number — Your First Model (Linear Regression) · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 2 — Machine Learning for Industry</p>
+  <h1>S07 · Predicting a Number — Your First Model (Linear Regression)</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/least_squares_and_lines.html">Lines and least squares</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A property website wants to show an estimated price the moment it has a home's
+details. Someone enters a neighbourhood, its typical income, the size of the
+houses, and a number should appear: "homes here are worth about $300,000". Nobody
+types that price in by hand. The site learns it from thousands of real records and
+predicts it.</p>
+<p>Guessing a number from other numbers like this is the most common task in all of
+industry. House prices, tomorrow's demand, a loan's risk, a crop's yield. Today you
+build the simplest machine that does it — on real California housing data — and it
+turns out to be something you can picture completely.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Look at real districts as dots on a chart: median income across the bottom, median
+house value up the side. Richer districts cost more, so the dots drift upward. The
+whole idea of today's model is to draw the single straight line that best follows
+that upward drift.</p>
+<p>Once you have the line, prediction is trivial. A new district comes in at some
+income, you read the line at that income, and that height is your predicted value.</p>
+<p>"Best" has an exact meaning: the line whose total miss is smallest, where a miss
+is the gap between a real record and the line. That is all machine learning is
+today: fit a rule to data so the misses are small. Everything later in this
+module is a cleverer version of this one move.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<p>We add exactly one new idea per notebook, so nothing feels crowded.</p>
+<ol>
+<li>Load real Boston housing data and fit your very first model on one feature —
+   then, in the same notebook, open the box and watch the model "learn" that line
+   one downhill step at a time, meeting the <strong>learning rate</strong> dial by turning it
+   too small, too big, and just right.</li>
+<li>Learn the habit that matters most in machine learning: judging the model on
+   districts it was never allowed to see, with honest scores (MAE, R²) and a
+   predicted-versus-actual picture, on real California housing data.</li>
+<li>Go deeper on gradient descent — build it fully from scratch and confirm it
+   lands exactly where <code>scikit-learn</code> does.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what "fitting a line" means and how the computer finds the best one,</li>
+<li>how to judge whether a model is any good, using held-out data,</li>
+<li>what "the model learns" actually refers to.</li>
+</ul>
+<p>The little you may want in advance: how to run a notebook cell, and the picture of
+a straight line. Both are covered here first:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Want the idea behind today in one page? Read
+  <a href="../primers/least_squares_and_lines.html">Lines and least squares</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code or already know regression, skip ahead and look for the cells
+marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain a prediction model as "a straight line drawn through past data".</li>
+<li>Fit that line with a professional library and read off a prediction.</li>
+<li>Split data into a part to learn from and a part to test on, and report honest
+  scores (MSE, MAE, R²) on the part the model never saw.</li>
+<li>Look at a predicted-versus-actual chart and say whether a model is any good.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those
+who want it, and none of it is needed to finish.</p>
+<p>Today's mathematical object is the <strong>linear map plus a constant</strong>: the model is
+<code>ŷ = w·x + b</code>, and with several inputs, <code>ŷ = wᵀx + b</code>. "Best" is made precise as
+<strong>least squares</strong>: choose <code>w, b</code> to minimise the sum of squared residuals
+<code>Σ (yᵢ − ŷᵢ)²</code>. Because that error surface is a smooth convex bowl, it has one
+lowest point, and setting the gradient to zero gives the <strong>normal equation</strong></p>
+<pre><code>(XᵀX) w = Xᵀ y
+</code></pre>
+<p>where <code>X</code> stacks each case as a row with a trailing 1 for the intercept. Solving
+it is one line of linear algebra and yields the exact best-fit weights. The third
+notebook reaches the same weights a different way, by <strong>gradient descent</strong>, which
+rolls downhill on that bowl. This is the cleanest link between your linear-algebra
+course and machine learning, but it is a bonus, not a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>residual</strong> — the miss for one point: real value minus predicted value.</li>
+<li><strong>least squares</strong> — pick the line with the smallest total of squared misses.</li>
+<li><strong>feature</strong> — an input you feed the model (here, a district's median income).</li>
+<li><strong>target</strong> — the thing you predict (here, the median house value).</li>
+<li><strong>train / test split</strong> — learn on one part of the data, judge on a hidden part.</li>
+<li><strong>MSE, MAE, R²</strong> — three honest scores for how close the predictions are.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Fit a line, then watch it learn</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S07/notebooks/01_fit_a_line.ipynb">Open in Colab</a>
+      <a class="btn" href="S07/notebooks/01_fit_a_line.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S07/notebooks/01_fit_a_line.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Scoring a model honestly</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S07/notebooks/02_first_house_price_model.ipynb">Open in Colab</a>
+      <a class="btn" href="S07/notebooks/02_first_house_price_model.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S07/notebooks/02_first_house_price_model.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">How a model learns: the learning rate</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S07/notebooks/03_learning_step_by_step.ipynb">Open in Colab</a>
+      <a class="btn" href="S07/notebooks/03_learning_step_by_step.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S07/notebooks/03_learning_step_by_step.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Boston housing (RM vs price) — real data fetched via scikit-learn&#x27;s OpenML loader</li>
+<li>California housing — real data fetched via scikit-learn (downloads once, then cached locally)</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>James, Witten, Hastie &amp; Tibshirani — An Introduction to Statistical Learning, ch. 3 (the pictures are excellent even if you skip the maths)</li>
+<li>Andrew Ng — Machine Learning Specialization (Coursera), Course 1</li>
+<li><a href="https://scikit-learn.org/stable/modules/linear_model.html">scikit-learn user guide: Linear Models</a></li>
+</ul></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

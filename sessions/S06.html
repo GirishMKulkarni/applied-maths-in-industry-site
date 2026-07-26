@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Mathematics as a Language for Making Decisions · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 1 — Mathematical Modeling</p>
+  <h1>S06 · Mathematics as a Language for Making Decisions</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/what_is_a_model.html">What is a model</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>It is six in the morning and the airport manager has to make one decision before
+the first flights: how many security counters to open today. Open too few and
+passengers miss flights and the queue spills out the door. Open too many and staff
+stand around, paid to do nothing. Nobody can know the exact right number. And yet a
+decision has to be made, today, and it will be better or worse depending on how the
+manager thinks about it.</p>
+<p>That same shape of problem is everywhere. Amazon has to decide how many warehouses
+to build and where. Uber has to set a surge price this minute. A hospital has to
+decide how many ICU beds to keep free. A farmer has to guess this season's yield. A
+forest department has to estimate how much carbon a plantation will lock away.
+Different worlds, one move underneath all of them: turning a vague, messy decision
+into something you can actually reason about with numbers.</p>
+<p>That move is called <strong>modelling</strong>, and it is the whole of today. This is a short,
+theory-only session — no code, no notebook. The point is not to build anything yet.
+The point is to change how you see the rest of the course.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>A model is a deliberate, useful simplification of reality. You throw away almost
+everything about the messy world and keep only the few things that matter for the
+one decision in front of you.</p>
+<p>Think of a map. A map of Pune leaves out every tree and every pothole, and that is
+exactly why it helps you find your way. A model is a map of a problem. It is never
+the whole truth and it does not try to be. So we never ask "is this model true?" We
+ask "is it useful for the decision I have to make?" That single shift is the mindset
+of the whole field, and if you have only ever met mathematics as a search for the
+one correct answer, it takes a moment to get used to.</p>
+<h2 id="every-company-is-already-doing-this">Every company is already doing this</h2>
+<p>The thing worth realising early is that modelling is not an academic exercise for
+mathematicians. It is what almost every organisation quietly does to make money and
+to make decisions. Google decides which advert to show you. Netflix decides which
+show to put in front of you. Tesla estimates how far you can go on the battery you
+have left. An insurance company sets your premium. An IPL team decides who to buy at
+the auction. Every one of those is a mathematical model doing its job, usually
+without anyone calling it that.</p>
+<h2 id="four-questions-every-model-answers">Four questions every model answers</h2>
+<p>The old way to teach this hands you a vocabulary list on day one — variables,
+parameters, constraints, objective, assumptions. Almost nobody remembers it. So we
+will use four plain questions instead, and they work on any problem in any field:</p>
+<ol>
+<li><strong>What do I know?</strong> The data you already have.</li>
+<li><strong>What do I want?</strong> A number, a yes-or-no, or a choice.</li>
+<li><strong>What affects it?</strong> The few things that actually move the answer.</li>
+<li><strong>How do I know I'm right?</strong> How you would check it against reality.</li>
+</ol>
+<p>Answer those four for a problem and you have modelled it. Take the airport. You know
+the flights that morning, the passengers per flight and how fast one counter works.
+You want the number of counters to open. What affects it is simply whether
+passengers arrive faster than the open counters can clear them. And you know you got
+it right by asking what it costs you to be wrong — too few counters costs missed
+flights, too many costs idle staff. "Good" is not a perfect number; it is the best
+balance between those two mistakes.</p>
+<h2 id="one-problem-many-models">One problem, many models</h2>
+<p>Here is the idea most worth carrying out of the session. The same problem, with the
+same data, becomes a completely different model depending on which question you ask
+of it. Stay at the airport and change only the question:</p>
+<ul>
+<li>How long will I wait in security? That is a <strong>prediction</strong>.</li>
+<li>Will my flight be delayed? That is a <strong>classification</strong>, a yes or no.</li>
+<li>Which counter should each passenger go to? That is an <strong>optimisation</strong>.</li>
+<li>How many counters will we need tomorrow? That is a <strong>forecast</strong>.</li>
+<li>What happens if a storm hits Delhi? That is a <strong>simulation</strong>.</li>
+</ul>
+<p>Beginners grab a technique they already know and bend the problem to fit it.
+Professionals start from the question and let it decide the model. Those five verbs —
+predict, classify, optimise, simulate — are also a map of the rest of this course.
+Every model you build this year is one of them.</p>
+<h2 id="the-mathematics-behind-it-and-the-loop">The mathematics behind it, and the loop</h2>
+<p>Students often think "modelling" means frightening equations. It does not. It is a
+ladder that starts at arithmetic — counting passengers per flight is already
+mathematics — and climbs through algebra, probability, statistics, optimisation and
+machine learning. Each rung is the same idea with a little more power, and this
+course walks you up a few of them. Even the things everyone is nervous about, like
+ChatGPT or a self-driving car, sit on that same ladder: they are very large models
+answering exactly the four questions above from enormous amounts of data.</p>
+<p>And you almost never get a model right the first time. Modelling is a loop, not a
+straight line: understand the real problem, simplify it hard, build something small,
+solve it, check it against reality, and improve. Your first model is <em>meant</em> to be
+rough. The gap between it and reality is what tells you how to make the next one
+better.</p>
+<h2 id="all-models-are-wrong-some-are-useful">All models are wrong, some are useful</h2>
+<p>Every famous model you rely on is wrong somewhere. GPS occasionally tells people to
+drive into a lake. The weather app promises sunshine and it pours. Some COVID
+forecasts were badly off. ChatGPT states a wrong fact with complete confidence. This
+is not a scandal. It is the nature of a map. The statistician George Box put the
+whole philosophy in eight words:</p>
+<blockquote>
+<p>All models are wrong, but some are useful.</p>
+</blockquote>
+<p>A good modeller is not someone who is never wrong. It is someone who knows where
+their model is wrong and uses it anyway, with their eyes open.</p>
+<h2 id="why-there-is-no-notebook-today">Why there is no notebook today</h2>
+<p>Every other session in this course is hands-on and runnable. This one is
+deliberately not. Before you learn <em>how</em> to fit a line or train a classifier, it is
+worth spending twenty minutes on <em>why</em> any of it exists. From next session onward we
+start building — and because you have this frame, regression, classification,
+optimisation and simulation will each land as one more way to speak the same
+language, instead of as four unrelated tricks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain what a model is in one sentence: a useful simplification, a map of a
+  problem, judged by whether it helps you decide rather than by whether it is
+  "true".</li>
+<li>Ask the four questions of any real problem: what do I know, what do I want, what
+  affects it, how would I check it.</li>
+<li>See why the same situation becomes a prediction, a classification, an optimisation
+  or a simulation depending only on the question asked.</li>
+<li>Recognise that almost every important decision a company makes is a model, and
+  that this whole course is learning to build them.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>None of this is needed to follow the session; it is only extra depth for those who
+want the formal version. The airport example is a queue in disguise. If passengers
+arrive at average rate <code>λ</code> and one counter serves at average rate <code>μ</code>, then <code>c</code>
+counters keep the queue stable exactly when <code>λ &lt; c·μ</code>; push arrivals past what the
+open counters can serve and the expected queue grows without bound, no matter how
+clever the arithmetic. That single inequality, not a precise headcount, is often the
+useful answer a manager needs.</p>
+<p>More generally, a model has a set of decision variables, an objective function you
+are trying to make best, and a feasible set carved out by the constraints. The four
+questions above are that structure in plain words: "what do I want" names the
+objective, "what do I know" and "what affects it" name the data and the variables,
+and "how do I know I'm right" is validation. Later sessions turn each verb —
+prediction, classification, optimisation, simulation — into its own machinery, but
+the judgement you practise today is what decides which of those tools to reach for.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>model</strong> — a deliberate, useful simplification of a real problem, kept only as
+  detailed as the decision needs.</li>
+<li><strong>prediction</strong> — a model whose answer is a number (how long, how much, how many).</li>
+<li><strong>classification</strong> — a model whose answer is a category or a yes/no.</li>
+<li><strong>optimisation</strong> — a model that chooses the best option out of many.</li>
+<li><strong>simulation</strong> — running a model step by step to see what would happen.</li>
+<li><strong>assumption</strong> — a simplification you chose on purpose, written down so it can be
+  argued with and tested.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Giordano, Fox &amp; Horton — <em>A First Course in Mathematical Modeling</em> (the examples read like stories)</li>
+<li>Meerschaert — <em>Mathematical Modeling</em></li>
+<li><a href="https://www.siam.org/careers/">SIAM: Math-in-Industry careers and reports</a></li>
+</ul></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
