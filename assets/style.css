@@ -235,6 +235,37 @@ a.card:hover::before { opacity: 1; }
 .back { max-width: var(--prose); margin-top: 3rem; font-size: .95rem; }
 .back a { font-weight: 600; }
 
+/* ---- slides (deck replica) ------------------------------------------------- */
+.slides { max-width: var(--prose); margin-top: 2.8rem; }
+.slides > h2 { font-size: 1.5rem; }
+.slides .hint { color: var(--ink-soft); font-size: .95rem; }
+.slides .deckhead {
+  margin: 1.6rem 0 .6rem; font-size: 1.05rem; color: var(--ink-soft);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.slides .deckhead:first-child { margin-top: 0; }
+.slidedeck {
+  border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+  background: var(--surface); box-shadow: var(--shadow-sm);
+}
+.slide {
+  padding: 1.1rem 1.2rem 1.2rem; border-top: 1px solid var(--line-soft);
+  scroll-margin-top: 4.5rem;
+}
+.slide:first-child { border-top: none; }
+.slide .stitle { margin: 0 0 .4rem; font-size: 1.08rem; }
+.slide .sbullets { margin: 0 0 .5rem; padding-left: 1.15rem; }
+.slide .sbullets li { color: var(--ink); margin-top: .25rem; }
+.slide .sdiagram {
+  display: block; max-width: 92%; margin: .4rem auto .5rem; border-radius: 10px;
+  border: 1px solid var(--line-soft); background: #fff;
+}
+.slide .scaption { color: var(--ink-soft); font-size: .92rem; margin: 0; }
+.slide .snote {
+  color: var(--accent-deep); background: var(--accent-tint);
+  border-radius: 8px; padding: .4rem .7rem; font-size: .9rem; margin: .3rem 0 .4rem;
+}
+
 /* ---- glossary search ----------------------------------------------------- */
 .gloss-tools { max-width: var(--prose); margin: 0 0 1.6rem; }
 #gloss-search {
