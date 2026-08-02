@@ -167,10 +167,16 @@ example finding the average of a thousand numbers in one step.</p>
 <p>the running value of ₹1 put into a strategy over time.</p>
 <h3 id="esg">ESG</h3>
 <p>environmental, social, and governance: using data and models to assess sustainability and climate risk for companies and investors.</p>
+<h3 id="euclidean-distance">euclidean distance</h3>
+<p>the straight-line distance between two points, the everyday distance you can
+measure with a ruler; the default distance KNN uses.</p>
 <h3 id="executive-summary-one-pager">executive summary / one-pager</h3>
 <p>the whole decision on a single page: answer, a little evidence, a caveat, a next step.</p>
 <h3 id="facility-location">facility location</h3>
 <p>choose which sites to open and who each serves, cheapest overall.</p>
+<h3 id="f1-score">F1 score</h3>
+<p>a single number that is high only when precision and recall are both high; the
+harmonic mean of the two, a common way to compare classifiers.</p>
 <h3 id="fan-chart">fan chart</h3>
 <p>a forecast drawn as a widening band (a range of outcomes) rather than a single line.</p>
 <h3 id="fat-tails">fat tails</h3>
@@ -184,6 +190,10 @@ flat, its size and its locality are features. Also called an input variable.</p>
 <p>building better input columns so a simple model can succeed.</p>
 <h3 id="feature-importance">feature importance</h3>
 <p>how much each input contributed to the model's decisions.</p>
+<h3 id="feature-scaling">feature scaling</h3>
+<p>putting every feature on a comparable scale (e.g. with a <code>StandardScaler</code>) so no
+single large-range column dominates a distance calculation; KNN and SVM need it,
+logistic regression does not.</p>
 <h3 id="fit-a-model">fit (a model)</h3>
 <p>The act of finding the best settings for a model from data. "Fit a line" means
 find the slope and starting value that match the data best.</p>
@@ -223,8 +233,18 @@ find the slope and starting value that match the data best.</p>
 <p>a clustering method: pick a number of groups, then move each group's centre to the average of its points, repeating until nothing moves.</p>
 <h3 id="kaggle">Kaggle</h3>
 <p>a free website where you enter data-science competitions and learn from other people's shared notebooks.</p>
+<h3 id="kernel">kernel</h3>
+<p>a trick that lets an SVM bend its boundary into a curve (e.g. the RBF kernel)
+instead of a straight line, by implicitly measuring similarity in a higher
+dimension.</p>
+<h3 id="k-means_1">k-means</h3>
+<p>a clustering method: pick a number of groups, then move each group's centre to the average of its points, repeating until nothing moves.</p>
 <h3 id="knapsack-problem">knapsack problem</h3>
 <p>pick items under a capacity limit to maximise total value.</p>
+<h3 id="knn-k-nearest-neighbours">KNN (k-nearest neighbours)</h3>
+<p>a classifier that labels a new case by a majority vote of the <code>k</code> stored cases
+closest to it (by Euclidean distance); it stores the data and does no real
+training.</p>
 <h3 id="lasso">Lasso</h3>
 <p>regularization that pushes some weights to exactly zero, dropping those features for you.</p>
 <h3 id="law-of-large-numbers">law of large numbers</h3>
@@ -440,6 +460,10 @@ increase in the input.</p>
 <p>the fixed price written into the option, written <code>K</code>.</p>
 <h3 id="support-vector">support vector</h3>
 <p>a data point sitting right on the edge of an SVM's margin; a handful of these fix the whole boundary.</p>
+<h3 id="svm-support-vector-machine">SVM (support vector machine)</h3>
+<p>a classifier that places the boundary to leave the widest gap (margin) between
+the two classes; only the borderline points (support vectors) on the margin's
+edge decide where it goes.</p>
 <h3 id="table-relation">table (relation)</h3>
 <p>data as rows and columns; one row is one record.</p>
 <h3 id="tail">tail</h3>

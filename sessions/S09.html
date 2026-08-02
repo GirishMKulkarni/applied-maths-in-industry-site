@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Three Ways to Classify — Logistic Regression, KNN and SVM · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 2 — Machine Learning for Industry</p>
+  <h1>S09 · Three Ways to Classify — Logistic Regression, KNN and SVM</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/reading_a_confusion_matrix.html">Reading a confusion matrix</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A bank is about to approve a loan. Before it releases the money it wants one
+answer: will this borrower repay, or default? A payments company watching a UPI
+transaction wants the same kind of answer in a fraction of a second: is this
+genuine, or fraud? A telecom looking at a customer's last few months wants to
+know: will they leave for another network next month, or stay?</p>
+<p>Every one of these is a yes-or-no question answered from data. Last time you
+predicted a number, like a flat's price. Today you predict a <strong>category</strong>. This
+is the other half of everyday machine learning, and it powers a huge share of
+what banks, payment apps and shops actually run in production.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Picture the past cases as coloured dots. Borrowers who repaid in blue, those who
+defaulted in red, spread out by whatever we measured about them. A classifier
+draws a boundary that separates the two colours as cleanly as it can. For a new
+case we see which side of the boundary it falls on, and that is our answer.</p>
+<p>There are three classic ways to draw that boundary, and today you build all
+three on the same data:</p>
+<ol>
+<li><strong>Logistic regression</strong> — the linear model you already know, plus a
+   <strong>sigmoid</strong> curve that turns its score into a probability between 0 and 1.
+   Straight boundary, fast, and it tells you <em>how sure</em> it is.</li>
+<li><strong>KNN (k-nearest neighbours)</strong> — a lazy learner. It stores the training
+   cases and classifies a new case by a majority vote of the <code>k</code> stored cases
+   nearest to it. No training at all; the boundary is whatever the data says.</li>
+<li><strong>SVM (support vector machine)</strong> — it places the boundary to leave the
+   widest empty "street" between the classes, using only the borderline cases
+   (the <strong>support vectors</strong>) that sit on the street's edge. With the <strong>RBF
+   kernel</strong> that boundary can bend into a smooth curve.</li>
+</ol>
+<p>Same job, three different approaches, and the honest message of the day: <strong>no
+single classifier is best</strong>. The shape of the data decides — a straight line is
+plenty when the groups are neatly separated, and curved boundaries win when they
+are not. Which brings the real lesson: <strong>how do you judge any of them
+honestly?</strong></p>
+<p>There is a catch, and it is the second half of today. When "yes" is rare, and in
+fraud or disease it always is, plain accuracy becomes a liar. A model that lazily
+says "no" to everything can be right 95% of the time and still catch zero fraud.
+So you will judge a classifier the way industry does: the <strong>confusion matrix</strong>,
+<strong>precision</strong>, <strong>recall</strong>, <strong>F1</strong> and <strong>ROC-AUC</strong> — and you will move the
+<strong>threshold</strong> to trade catching more cases against raising fewer false alarms.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Load real iris data, split it into training and test, and meet the three
+   classifiers — logistic regression, KNN and SVM — one step at a time.</li>
+<li>Fit all three and score them with the <em>same</em> metrics: accuracy, F1 and the
+   confusion matrix.</li>
+<li>Try the same three on curvy data a straight line cannot split, and watch the
+   two curved boundaries (KNN, SVM-RBF) pull ahead — with feature scaling so
+   distances are fair.</li>
+<li>Build a lopsided fraud-style dataset and watch the accuracy trap: "always say
+   legit" scores high accuracy yet catches no fraud at all.</li>
+<li>Judge a trained classifier the way industry does: a confusion matrix, then
+   precision, recall, F1 and ROC-AUC.</li>
+<li>Move the decision line and watch "catch more" trade off against "fewer false
+   alarms" — on synthetic fraud data and on real breast-cancer data.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what a classifier is and how it separates two groups,</li>
+<li>the one-line idea behind each of the three classifiers,</li>
+<li>how to count the four kinds of right and wrong in a confusion matrix,</li>
+<li>what precision and recall are asking, in plain English.</li>
+</ul>
+<p>The little you may want in advance: how to run a notebook cell, and comfort with
+the <code>.fit()</code> then <code>.predict()</code> habit from the linear-regression session (the
+output is now a category instead of a number, nothing else changes). Both are
+covered here first:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Want the evaluation idea in one page before class? Read
+  <a href="../primers/reading_a_confusion_matrix.html">Reading a confusion matrix</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code or already know one of these classifiers, skip ahead and look
+for the cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain classification as "a boundary that separates groups, plus (for some
+  models) a how-sure number".</li>
+<li>Say the one-line idea behind logistic regression, KNN and SVM, and when each
+  is the natural choice.</li>
+<li>Explain why KNN and SVM need feature scaling and logistic regression does not.</li>
+<li>Spot the accuracy paradox and explain why accuracy lies when one answer is rare.</li>
+<li>Read a confusion matrix and work out precision and recall from it.</li>
+<li>Move the decision threshold to trade catching more cases against raising fewer
+  false alarms, and justify the choice by cost.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those
+who want it, and none of it is needed to finish.</p>
+<p><strong>Logistic regression</strong> first computes the same linear score you met in
+regression, <code>z = wᵀx + b</code>, then passes it through the <strong>sigmoid</strong>
+<code>σ(z) = 1 / (1 + e^(−z))</code>, which squashes any real number into the interval
+<code>(0, 1)</code>. That output is read as a <strong>conditional probability</strong>, <code>P(class = 1 | x)</code>:
+the chance the label is 1 given what we observed. The <strong>decision boundary</strong> is the
+set of points where <code>z = 0</code>, so <code>σ(z) = 0.5</code>; because <code>z</code> is linear in <code>x</code>, that
+frontier is a straight line (a flat plane in higher dimensions). Training does
+not use squared error. It uses <strong>cross-entropy</strong>, also called <strong>log-loss</strong>: for
+each case take the probability the model gave the correct answer and score it as
+<code>−log(that probability)</code>, then average. A confident correct answer costs almost
+nothing; a confident wrong answer costs a lot. This comes straight from
+<strong>maximum likelihood</strong>: minimising cross-entropy is the same as maximising the
+probability of the labels we actually observed. The Stretch cell in the first
+notebook shows the sigmoid and the log-loss computed by hand, matching what
+<code>scikit-learn</code> does for you.</p>
+<p><strong>KNN</strong> is defined by a distance and a vote. The default distance is the
+<strong>Euclidean</strong> distance, <code>d(x, x′) = √(Σ(xᵢ − xᵢ′)²)</code>, the straight-line distance
+you know from the Pythagorean theorem. For a new point, take the <code>k</code> stored
+points with the smallest distance and let them vote; the majority class wins.
+Because distance adds up contributions from every feature, a feature with a large
+range silently dominates — which is why KNN (like SVM) demands <strong>feature
+scaling</strong>, usually a <code>StandardScaler</code> that gives every feature mean 0 and
+variance 1. Training is effectively nil; the cost is paid at prediction time,
+when the new point must be compared with every stored point.</p>
+<p><strong>SVM</strong> chooses the boundary with the largest <strong>margin</strong> — the widest empty
+strip between the classes. If the hyperplane is <code>w·x + b = 0</code>, the margin width
+is <code>2 / ‖w‖</code>, so training minimises <code>½‖w‖²</code> subject to every point being on the
+correct side (allowing soft margins controlled by the cost <code>C</code>). Only the
+<strong>support vectors</strong> — the points exactly on the margin edge — constrain the
+solution, so moving any other point leaves the boundary unchanged. The <strong>kernel
+trick</strong> makes the boundary bend: the RBF kernel
+<code>K(x, x′) = exp(−γ‖x − x′‖²)</code> corresponds to mapping the points into a higher
+dimension where they <em>are</em> linearly separable, without ever computing that map
+explicitly. <code>C</code> and <code>γ</code> are the two knobs you tune.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>classifier</strong> — a model that sorts each case into one of a few categories.</li>
+<li><strong>logistic regression</strong> — the classic classifier: a linear score squashed into
+  a probability.</li>
+<li><strong>sigmoid</strong> — the S-shaped curve that turns any number into a value between 0
+  and 1.</li>
+<li><strong>decision boundary</strong> — the frontier where the model switches its vote from one
+  class to the other.</li>
+<li><strong>KNN (k-nearest neighbours)</strong> — a classifier that labels a new case by a
+  majority vote of the <code>k</code> stored cases closest to it; it does no real training.</li>
+<li><strong>Euclidean distance</strong> — the straight-line distance between two points.</li>
+<li><strong>SVM (support vector machine)</strong> — a classifier that places the boundary to
+  leave the widest gap (margin) between the two classes.</li>
+<li><strong>support vector</strong> — one of the borderline cases sitting on the edge of that
+  gap; only these points decide where the SVM boundary goes.</li>
+<li><strong>kernel</strong> — a trick that lets an SVM bend its boundary into a curve (e.g. the
+  RBF kernel) instead of a straight line.</li>
+<li><strong>feature scaling</strong> — putting every feature on a comparable scale (e.g. with a
+  <code>StandardScaler</code>) so no single large-range column dominates a distance; KNN and
+  SVM need it.</li>
+<li><strong>confusion matrix</strong> — the table of the four counts: right and wrong, for each
+  class.</li>
+<li><strong>precision / recall</strong> — of the cases we flagged, how many were real; and of the
+  real ones, how many we caught.</li>
+<li><strong>ROC-AUC</strong> — one number for how well the model ranks real positives above the
+  rest; 1.0 is perfect, 0.5 is guessing.</li>
+<li><strong>threshold</strong> — the cut-off probability at which we decide to call a case "yes".</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Three classifiers, one job — Logistic Regression, KNN and SVM</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S09/notebooks/01_three_classifiers.ipynb">Open in Colab</a>
+      <a class="btn" href="S09/notebooks/01_three_classifiers.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S09/notebooks/01_three_classifiers.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">When accuracy lies — judging any classifier honestly</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S09/notebooks/02_evaluating_classifiers.ipynb">Open in Colab</a>
+      <a class="btn" href="S09/notebooks/02_evaluating_classifiers.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S09/notebooks/02_evaluating_classifiers.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li><a href="S09/data/diabetes_prediction_dataset.csv" download><code>data/diabetes_prediction_dataset.csv</code></a> — 100,000 patient records for a diabetes-prediction lab: age, BMI, blood glucose, HbA1c and more, with a diabetes yes/no label</li>
+<li><a href="S09/data/knn_noisy_teaching_dataset.csv" download><code>data/knn_noisy_teaching_dataset.csv</code></a> — 600 rows of two measurements and a class, designed to show KNN&#x27;s neighbour voting on noisy data</li>
+<li><a href="S09/data/svm_teaching_dataset.csv" download><code>data/svm_teaching_dataset.csv</code></a> — 600 rows of two features and a class, designed to show SVM&#x27;s curved boundaries and kernel choice</li>
+<li>Iris flowers — real data built into scikit-learn (150 flowers, 4 measurements, 3 species)</li>
+<li>Imbalanced fraud-style dataset — generated in-code with scikit-learn&#x27;s make_classification</li>
+<li>Two interleaving moons — generated in-code with scikit-learn&#x27;s make_moons</li>
+<li>Breast cancer (malignant/benign) — real data built into scikit-learn</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>James, Witten, Hastie &amp; Tibshirani — <em>An Introduction to Statistical Learning</em>, ch. 4 (Classification) &amp; ch. 9 (SVM) — the pictures carry the idea even if you skip the maths</li>
+<li><a href="https://developers.google.com/machine-learning/crash-course/classification">Google Machine Learning Crash Course: Classification</a></li>
+<li><a href="https://scikit-learn.org/stable/modules/neighbors.html">scikit-learn user guide: Nearest Neighbors</a> and <a href="https://scikit-learn.org/stable/modules/svm.html">Support Vector Machines</a></li>
+</ul></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
