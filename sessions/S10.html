@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Flowcharts That Learn — Trees, Forests and Boosting · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 2 — Machine Learning for Industry</p>
+  <h1>S10 · Flowcharts That Learn — Trees, Forests and Boosting</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/impurity_and_information_gain.html">Impurity and information gain</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A lending app on your phone offers a small personal loan and promises a decision
+in ten seconds. Behind that promise is a model. It has seen lakhs of past
+borrowers, who repaid and who did not, and for each new applicant it predicts:
+will this person repay, or default? Approve the ones likely to repay, decline the
+rest.</p>
+<p>Two things make this hard. The pattern is not a straight line: a young applicant
+with a modest income but a spotless record can be safer than an older, richer one
+who is drowning in loans. And the decision affects real lives, so if the model
+quietly treats one group of people worse than another, that is not a bug to shrug
+off, it is the whole story. Today you build a model for exactly this, and then you
+audit it for fairness.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Start with one picture: a <strong>flowchart of yes/no questions</strong>. "Is the credit score
+above 650? If yes, is income above ₹30,000?" and so on, until you reach a verdict.
+That flowchart is a <strong>decision tree</strong>, and the computer learns the questions from
+past data. One tree is easy to read but a bit wobbly: change the data slightly and
+it draws a different flowchart.</p>
+<p>So we use many trees instead, in two clever ways.</p>
+<ul>
+<li><strong>Ask many trees and take a vote.</strong> Grow hundreds of slightly different trees
+  and let them vote on each applicant. The crowd is steadier than any one tree.
+  This is a <strong>Random Forest</strong>.</li>
+<li><strong>Let each new tree fix the last one's mistakes.</strong> Build trees one after
+  another, where every new tree focuses on the applicants the earlier trees got
+  wrong. This is <strong>boosting</strong>, and <strong>XGBoost</strong> is the famous tool that does it.</li>
+</ul>
+<p>That is the entire session in three sentences: one flowchart, a voting crowd of
+flowcharts, and a relay of flowcharts each correcting the one before.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Grow a single decision tree on a small loan dataset, draw it as a flowchart,
+   and watch it start memorising the data when you let it grow too deep.</li>
+<li>See overfitting happen live: as the tree is allowed more questions, its score
+   on data it has seen keeps rising while its score on new people peaks and falls.</li>
+<li>On a harder dataset, beat the single tree with a Random Forest and with
+   XGBoost, and read off which inputs mattered most.</li>
+<li>Build a credit-default classifier and run a <strong>bias audit</strong>: check whether it
+   approves one group less often than another, and whether it makes more mistakes
+   for one group, then write down honestly what you found.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of today's ideas from scratch, in plain steps:</p>
+<ul>
+<li>what a decision tree is and how it picks its questions,</li>
+<li>what "combine many models" means, and the two ways to do it,</li>
+<li>what a bias audit is and how to run one and read it.</li>
+</ul>
+<p>The little we lean on: how to run a notebook cell, and the habit of testing a
+model on data it has not seen (the train/test split). Both are covered here, and
+in the primers:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Curious how a tree decides which question to ask? Read
+  <a href="../primers/impurity_and_information_gain.html">Impurity and information gain</a>
+  for a ten-minute, picture-first version. It is optional.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code or already know trees and ensembles, skip ahead and look for
+the cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain a decision tree as a learned flowchart that splits to make tidier
+  groups.</li>
+<li>Recognise overfitting in a tree and control it by limiting how deep it grows.</li>
+<li>Tell a Random Forest (many trees vote) from boosting (each tree fixes the last)
+  and say why each one helps.</li>
+<li>Read a feature-importance chart and say which inputs drove the decision.</li>
+<li>Run a bias audit on a classifier and report the group differences honestly.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those
+who want it, and none of it is needed to finish.</p>
+<p>When a tree splits a group, it wants each side to be <strong>pure</strong>, all one class. It
+measures mixed-ness with an <strong>impurity</strong> number. Two standard choices: <strong>Gini
+impurity</strong>, <code>1 − (p² + q²)</code>, and <strong>entropy</strong>, borrowed from information theory,
+<code>−p·log₂p − q·log₂q</code>, where <code>p</code> and <code>q</code> are the fractions of the two classes.
+Both are <code>0</code> for a pure group and largest at a 50/50 mix. The drop in impurity
+after a split, weighted by group size, is the <strong>information gain</strong>, and the tree
+greedily picks the split that maximises it.</p>
+<p>Boosting has a tidy formal shape too. The final prediction is a sum of many small
+trees, <code>F(x) = Σ f_k(x)</code> — an <strong>additive model</strong> — where each new tree <code>f_k</code> is
+fitted to the leftover errors (the residuals, or more precisely the gradient of
+the loss) of the trees so far. That is where the name gradient boosting comes
+from. The notebooks show the picture; ISLR ch. 8 has the full derivation.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>decision tree</strong> — a model shaped like a flowchart of yes/no questions.</li>
+<li><strong>impurity</strong> — a number for how mixed a group of labels is; 0 means all one
+  class.</li>
+<li><strong>information gain</strong> — how much a question lowered the impurity; the tree picks
+  the biggest.</li>
+<li><strong>overfitting</strong> — learning the noise in the training data, so the model does
+  worse on new data.</li>
+<li><strong>bagging / Random Forest</strong> — grow many trees on random samples and let them
+  vote.</li>
+<li><strong>boosting / XGBoost</strong> — grow trees in sequence, each fixing the last one's
+  mistakes.</li>
+<li><strong>feature importance</strong> — how much each input contributed to the model's
+  decisions.</li>
+<li><strong>bias audit</strong> — checking whether a model treats groups of people differently.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">One decision tree, and how it overfits</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S10/notebooks/01_a_tree_of_yes_no_questions.ipynb">Open in Colab</a>
+      <a class="btn" href="S10/notebooks/01_a_tree_of_yes_no_questions.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S10/notebooks/01_a_tree_of_yes_no_questions.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Random Forest and XGBoost — many trees beat one</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S10/notebooks/02_many_trees_beat_one.ipynb">Open in Colab</a>
+      <a class="btn" href="S10/notebooks/02_many_trees_beat_one.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S10/notebooks/02_many_trees_beat_one.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">A credit-default model, with a bias audit</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S10/notebooks/03_credit_default_and_bias_audit.ipynb">Open in Colab</a>
+      <a class="btn" href="S10/notebooks/03_credit_default_and_bias_audit.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S10/notebooks/03_credit_default_and_bias_audit.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li><a href="S10/data/tree_loan_data.csv" download><code>data/tree_loan_data.csv</code></a> — 400 past loan applicants with income, credit score and whether they repaid, for the decision-tree lab</li>
+<li><a href="S10/data/forest_noise_data.csv" download><code>data/forest_noise_data.csv</code></a> — 600 noisy rows of two features and a class, designed to show the voting crowd beating one tree</li>
+<li><a href="S10/data/xgb_credit_data.csv" download><code>data/xgb_credit_data.csv</code></a> — 800 credit applicants with six inputs and a default label, for the boosting comparison and feature importance</li>
+<li><a href="S10/data/credit_bias_data.csv" download><code>data/credit_bias_data.csv</code></a> — 3000 credit applicants including a gender column and a baked-in income-recording flaw, for the bias audit</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>James, Witten, Hastie &amp; Tibshirani — <em>An Introduction to Statistical Learning</em>, ch. 8 (trees &amp; ensembles). The pictures carry the idea even if you skip the algebra.</li>
+<li><a href="https://xgboost.readthedocs.io/">XGBoost documentation</a></li>
+<li>Barocas, Hardt &amp; Narayanan — <em>Fairness and Machine Learning</em> (fairmlbook.org)</li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Decision Trees, Random Forests &amp; Boosting</h3><ul class="sbullets"><li>From one learned flowchart to a voting crowd and a correcting relay</li></ul><img class="sdiagram" src="S10/slides/1_0.png" alt="slide 1 diagram" loading="lazy"><p class="scaption">Module 2 · S10 · the models that win on everyday data</p></div><div class="slide"><h3 class="stitle">1 · One Flowchart That Learns</h3><ul class="sbullets"><li>a tree is just yes/no questions the computer learns</li></ul></div><div class="slide"><h3 class="stitle">What is a decision tree?</h3><ul class="sbullets"><li>A flowchart of yes/no questions.</li><li>The computer learns the questions from past data.</li><li>Start at the top; each answer sends you down a branch.</li><li>A leaf is where it stops and decides.</li><li>Easy to read, easy to explain — even to a manager.</li></ul><img class="sdiagram" src="S10/slides/3_0.png" alt="slide 3 diagram" loading="lazy"><p class="scaption">Each box asks one yes/no question; each leaf is a decision.</p></div><div class="slide"><h3 class="stitle">Decision Tree — watch it work</h3><ul class="sbullets"><li>A decision tree splits the data into subsets by asking one feature question at a time.</li><li>This 10-minute video explains the whole idea visually.</li><li>Press play, then we build the same thing in code.</li><li>Keep in mind: the tree is just asking 'does this group get tidier?'</li></ul><p class="snote">Video slide — press play during class.</p></div><div class="slide"><h3 class="stitle">2 · How a Tree Picks Its Questions</h3><ul class="sbullets"><li>it chooses the question that tidies the groups</li></ul></div><div class="slide"><h3 class="stitle">A good question tidies each side</h3><ul class="sbullets"><li>'Impurity' scores how mixed a group is.</li><li>The drop in impurity after a question is the 'gain'.</li><li>The tree picks the question with the biggest gain.</li><li>Pure group → 0; a 50/50 mix → most mixed-up.</li></ul><img class="sdiagram" src="S10/slides/6_0.png" alt="slide 6 diagram" loading="lazy"><p class="scaption">One messy group becomes two tidier ones — that tidy-up is the gain.</p></div><div class="slide"><h3 class="stitle">How mixed? Two recipes</h3><ul class="sbullets"><li>Gini impurity: 1 − Σ pᵢ²  (scikit-learn's default).</li><li>Entropy: − Σ pᵢ log₂ pᵢ  (borrowed from information theory).</li><li>Both score 0 for a pure group, highest at 50/50.</li><li>The maths is optional today — the picture is the point.</li></ul><img class="sdiagram" src="S10/slides/7_0.png" alt="slide 7 diagram" loading="lazy"><p class="scaption">Gini and entropy track each other closely; either picks almost the same questions.</p></div><div class="slide"><h3 class="stitle">3 · When a Tree Overfits</h3><ul class="sbullets"><li>left alone, it memorises the noise</li></ul></div><div class="slide"><h3 class="stitle">A deep tree memorises the noise</h3><ul class="sbullets"><li>Left alone, a tree fits every single point.</li><li>It aces studied data, stumbles on new people.</li><li>Hold it back: cap max_depth, or prune.</li><li>Always judge on the held-out test set.</li></ul><img class="sdiagram" src="S10/slides/9_0.png" alt="slide 9 diagram" loading="lazy"><p class="scaption">Left: a jagged boundary around every point. Right: shallow and sensible.</p></div><div class="slide"><h3 class="stitle">coding!</h3><ul class="sbullets"><li>Open notebook 01 — grow a single tree, draw it, and watch it overfit.</li></ul><img class="sdiagram" src="S10/slides/10_0.jpg" alt="slide 10 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">4 · Many Trees Beat One</h3><ul class="sbullets"><li>a voting crowd, then a correcting relay</li></ul></div><div class="slide"><h3 class="stitle">Why one tree isn't enough</h3><ul class="sbullets"><li>One tree is easy to read but wobbly.</li><li>Change a little data → a different tree.</li><li>So grow many trees and combine them.</li><li>Random Forest = many trees, each on a random sample AND a random subset of the inputs, then a majority vote.</li></ul><img class="sdiagram" src="S10/slides/12_0.png" alt="slide 12 diagram" loading="lazy"><p class="scaption">Bagging: resample the data, grow many trees, combine their votes.</p></div><div class="slide"><h3 class="stitle">Random Forest: many trees, then a vote</h3><ul class="sbullets"><li>A Random Forest is a voting crowd of trees.</li><li>Each tree is slightly different, so their mistakes differ.</li><li>The vote is steadier than any one tree.</li><li>Very hard to overfit — a safe default baseline.</li></ul><img class="sdiagram" src="S10/slides/13_0.png" alt="slide 13 diagram" loading="lazy"><p class="scaption">Each tree sees a random sample of people AND a random subset of their details.</p></div><div class="slide"><h3 class="stitle">5 · Boosting and XGBoost</h3><ul class="sbullets"><li>a relay of trees, each fixing the last</li></ul></div><div class="slide"><h3 class="stitle">Boosting fixes the leftovers</h3><ul class="sbullets"><li>Boosted trees are grown one after another.</li><li>Every new tree focuses on the cases the earlier ones got wrong.</li><li>The final prediction is a sum of many small corrections.</li><li>XGBoost is the famous, fast tool that does this.</li></ul><img class="sdiagram" src="S10/slides/15_0.png" alt="slide 15 diagram" loading="lazy"><p class="scaption">Each new tree corrects the errors the earlier ones left behind.</p></div><div class="slide"><h3 class="stitle">Random Forest vs Boosting — when to reach for which</h3><ul class="sbullets"><li>Random Forest: trees in parallel, then a vote — steadies a wobbly model.</li><li>Boosting/XGBoost: trees in a relay, each corrects — sharpens accuracy.</li><li>Forest is a safe default; XGBoost chases the last points of accuracy.</li><li>Watch overfitting with boosting — stop early.</li></ul><img class="sdiagram" src="S10/slides/16_0.png" alt="slide 16 diagram" loading="lazy"><p class="scaption">The boosted model is a running sum: a first guess plus many small corrections.</p></div><div class="slide"><h3 class="stitle">coding!</h3><ul class="sbullets"><li>Open notebooks 02–03 — beat one tree with a forest and XGBoost, then audit the model for bias.</li></ul><img class="sdiagram" src="S10/slides/17_0.jpg" alt="slide 17 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">6 · Which Inputs Mattered?</h3><ul class="sbullets"><li>and why that is not proof of cause</li></ul></div><div class="slide"><h3 class="stitle">Which inputs drove the decision?</h3><ul class="sbullets"><li>Trees and forests report how much each input mattered.</li><li>High importance = the split relied on it often.</li><li>Correlation is not causation — a proxy can stand in for a sensitive attribute.</li><li>So importance guides, but never excuses, a decision.</li></ul><img class="sdiagram" src="S10/slides/19_0.png" alt="slide 19 diagram" loading="lazy"><p class="scaption">Rank inputs by how much they helped — but that is not proof of cause.</p></div><div class="slide"><h3 class="stitle">7 · Responsible AI: the Bias Audit</h3><ul class="sbullets"><li>built into the project, not bolted on afterwards</li></ul></div><div class="slide"><h3 class="stitle">Why fairness matters in lending</h3><ul class="sbullets"><li>A credit model shapes real lives.</li><li>Rejecting one group far more often is discrimination.</li><li>RBI and Indian law expect fair, explainable decisions.</li><li>So audit outcomes across groups and document it.</li></ul><img class="sdiagram" src="S10/slides/21_0.png" alt="slide 21 diagram" loading="lazy"><p class="scaption">Compare approval rates across groups; large gaps are a red flag.</p></div><div class="slide"><h3 class="stitle">coding!</h3><ul class="sbullets"><li>Notebook 03 finishes with the bias audit — run it, read it, write down what you found.</li></ul><img class="sdiagram" src="S10/slides/22_0.jpg" alt="slide 22 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>A decision tree is a learned flowchart; its questions tidy the groups.</li><li>Left alone a tree memorises — hold it back, and prefer a team of trees.</li><li>Random Forest = a voting crowd (steadies); boosting = a correcting relay (sharpens).</li><li>Feature importance says which inputs mattered — not proof of cause.</li><li>Responsible AI is the job: audit outcomes across groups and document it.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; Reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S10_trees_boosting/</li></ul><p class="scaption">Notebooks 01_a_tree_of_yes_no_questions.ipynb 02_many_trees_beat_one.ipynb 03_credit_default_and_bias_audit.ipynb Data tree_loan_data.csv (decision tree lab) forest_noise_data.csv (random forest lab) xgb_credit_data.csv (XGBoost lab) Reading ISLR Ch. 8 (Trees &amp; Ensembles) primers/impurity_and_information_gain.md Fairness and Machine Learning — fairmlbook.org</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S11 — Unsupervised learning: finding groups and structure when there are no labels at all.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
