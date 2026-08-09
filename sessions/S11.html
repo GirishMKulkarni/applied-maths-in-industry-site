@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Letting the Data Group Itself (Clustering &amp; PCA) · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 2 — Machine Learning for Industry</p>
+  <h1>S11 · Letting the Data Group Itself (Clustering &amp; PCA)</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/distance_between_points.html">Distance between points</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/vectors_and_matrices.html">Vectors and matrices</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A shop has thousands of customers and wants to stop treating them all the same. Some
+buy every week and spend a lot; they should get early access to a sale. Some have not
+been seen in months; they should get a win-back coupon. Some drift in the middle. The
+trouble is nobody has ever tagged a customer as "loyal" or "lapsing". There is no
+label column. All the shop has is a table of numbers: how recently each person
+bought, how often, and how much they spent.</p>
+<p>The task today is to let those numbers sort the customers into a handful of natural
+groups on their own, then look at each group and give it a plain-English name. The
+same move groups localities by rent and amenities for a property site, or flags a
+payment that does not look like a customer's normal behaviour.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Put every customer as a dot on a chart, positioned by their numbers. Customers who
+behave alike land near each other; very different customers land far apart. So the
+groups are already there in the picture as clumps of dots. All the computer does is
+find the clumps and draw a ring around each one. That is <strong>clustering</strong>: letting the
+data group itself, with no answer key.</p>
+<p>There is one catch. A customer usually has more than two numbers, and you cannot draw
+a dot in five or fifty dimensions. So we use a second tool, <strong>PCA</strong>, to squash the
+many columns down to just two, keeping as much of the real spread as possible, so the
+clumps can be drawn on a flat chart and actually seen. Cluster to find the groups,
+PCA to look at them.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Make some blob-shaped data, group it with k-means, and plot the groups with their
+   centres marked.</li>
+<li>Learn two honest ways to decide how many groups to ask for: the elbow and the
+   silhouette.</li>
+<li>Make crescent-shaped data and watch DBSCAN find shapes that k-means gets wrong,
+   while labelling stray points as noise.</li>
+<li>Take four-column flower data, squash it to two columns with PCA, and plot it, then
+   confirm by hand what PCA is really doing under the bonnet.</li>
+<li>Run a full customer segmentation: build the customer table, scale it, cluster it,
+   name each segment in business terms, and plot the segments with PCA.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what "grouping by distance" means and how k-means, DBSCAN and hierarchical
+  clustering each do it,</li>
+<li>how to choose the number of groups instead of guessing,</li>
+<li>what PCA is for and how to read a scree plot.</li>
+</ul>
+<p>The little you may want in advance: how to run a notebook cell, how to read a scatter
+plot, and the idea of "how far apart are two dots". All are covered here first:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Want the one idea behind clustering in a page? Read
+  <a href="../primers/distance_between_points.html">Distance between two points</a>.</li>
+<li>Curious what a "covariance matrix" or "eigenvector" is? The optional box below
+  leans on <a href="../primers/vectors_and_matrices.html">Vectors and matrices</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code or already know clustering and PCA, skip ahead and look for the
+cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain unsupervised learning as "finding structure when there are no labels".</li>
+<li>Run k-means and choose the number of groups sensibly with the elbow and the
+  silhouette.</li>
+<li>Say when DBSCAN beats k-means (odd shapes, unknown number of groups, outliers).</li>
+<li>Use PCA to squash many columns to two and read a scree plot.</li>
+<li>Carry out a full customer segmentation: scale, cluster, profile, and visualise.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for anyone who
+wants it, and none of it is needed to finish.</p>
+<p>Today's two mathematical objects are <strong>distance</strong> and the <strong>eigen-decomposition</strong>,
+both doing a new job rather than being new maths.</p>
+<p>Clustering is built entirely on a <strong>distance metric</strong>: a rule that turns two points
+into a single "how far apart" number. The default is the straight-line (Euclidean, or
+L2 norm) distance; Manhattan (L1) and cosine (angle) are alternatives for grid-like
+or direction-only data. K-means specifically minimises the <strong>within-cluster sum of
+squares</strong>, the total squared distance from each point to its own centre. That is the
+same least-squares spirit as Session 7, squared distances made small, but with no
+labels involved, and it settles to a good (not always globally best) solution, which
+is why we run it from several random starts.</p>
+<p>PCA is literally the <strong>eigen-decomposition of the covariance matrix</strong> of the scaled
+data. Build the covariance matrix (how the columns vary together), take its
+eigenvectors and eigenvalues, and the eigenvectors are the principal axes: the
+directions along which the data spreads out most. The first principal component
+points along the biggest spread, the next is perpendicular to it, and so on. Each
+<strong>eigenvalue</strong> is the amount of variance along its axis, which is exactly what the
+scree plot shows. Notebook 2 computes this by hand with <code>numpy</code> and checks it matches
+<code>scikit-learn</code> to the decimal. This is the cleanest link between a linear-algebra
+course and machine learning, but it is a bonus, not a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>clustering</strong> — sorting unlabelled points into groups of similar ones.</li>
+<li><strong>k-means</strong> — a clustering method: pick a number of groups, then move each group's
+  centre to the average of its points, repeating until nothing moves.</li>
+<li><strong>centroid</strong> — the centre point of a cluster, the average of its members.</li>
+<li><strong>DBSCAN</strong> — a clustering method that groups by crowding, finds any shape, and
+  labels lonely points as noise.</li>
+<li><strong>elbow / silhouette</strong> — two ways to decide how many groups to use.</li>
+<li><strong>PCA</strong> — squashing many columns into a few that keep most of the spread, so you
+  can plot or de-noise the data.</li>
+<li><strong>standardise</strong> — rescale every column to the same footing before measuring
+  distance, so no single column dominates.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Find the groups (k-means, choosing how many, and DBSCAN)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S11/notebooks/01_find_the_groups.ipynb">Open in Colab</a>
+      <a class="btn" href="S11/notebooks/01_find_the_groups.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S11/notebooks/01_find_the_groups.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Squash many columns down to two so you can see the groups (PCA)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S11/notebooks/02_squash_to_two_columns.ipynb">Open in Colab</a>
+      <a class="btn" href="S11/notebooks/02_squash_to_two_columns.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S11/notebooks/02_squash_to_two_columns.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Customer segmentation lab (build, scale, cluster, profile, plot)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S11/notebooks/03_customer_segmentation.ipynb">Open in Colab</a>
+      <a class="btn" href="S11/notebooks/03_customer_segmentation.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S11/notebooks/03_customer_segmentation.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li><a href="S11/data/blobs_demo.csv" download><code>data/blobs_demo.csv</code></a> — 300 dots in three round clumps, for the k-means and choosing-k demo</li>
+<li><a href="S11/data/moons_demo.csv" download><code>data/moons_demo.csv</code></a> — two crescent shapes, for the DBSCAN vs k-means demo</li>
+<li><a href="S11/data/customer_rfm.csv" download><code>data/customer_rfm.csv</code></a> — 240 customers (recency, frequency, monetary) with three hidden segments, for the segmentation lab</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>James, Witten, Hastie &amp; Tibshirani — <em>An Introduction to Statistical Learning</em>, ch. 12 (the pictures are excellent even if you skip the maths)</li>
+<li><a href="https://scikit-learn.org/stable/modules/clustering.html">scikit-learn user guide: clustering</a> &amp; <a href="https://scikit-learn.org/stable/modules/decomposition.html">decomposition (PCA)</a></li>
+<li>StatQuest — PCA and t-SNE explained (YouTube)</li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Letting the Data Group Itself</h3><ul class="sbullets"><li>Clustering &amp; PCA — finding the groups when the data has no labels</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 2 — Machine Learning for Industry   ·   Session 11   ·   2 hours No answer key: the dots sort themselves into groups, and we name them.</p></div><div class="slide"><h3 class="stitle">Today's Plan</h3><ul class="sbullets"><li>1.  The Problem: No Labels, Just Dots</li><li>2.  K-Means: Send, Move, Repeat</li><li>3.  Hierarchical: A Family Tree</li><li>4.  DBSCAN: Let the Crowding Decide</li><li>5.  PCA: Squash Many Columns to Two</li><li>6.  Choosing the Right Method — and the Lab</li></ul></div><div class="slide"><h3 class="stitle">1 · The Problem</h3><ul class="sbullets"><li>No labels — just a table of numbers</li></ul></div><div class="slide"><h3 class="stitle">The Problem</h3><ul class="sbullets"><li>A shop treats every customer the same: same offer, same mail, same treatment.</li><li>Some buy weekly and spend a lot; some have not been seen in months.</li><li>To treat them differently you need groups — but nobody ever tagged a customer.</li><li>No label column. Just numbers: how recently, how often, how much.</li><li>Today the numbers sort themselves into groups; we name each one.</li></ul></div><div class="slide"><h3 class="stitle">The One Idea, in a Picture</h3><ul class="sbullets"><li>Each dot is one customer.</li><li>Customers who behave alike land near each other.</li><li>Groups show up as clumps of dots.</li><li>The computer just rings each clump. That is clustering.</li></ul><img class="sdiagram" src="S11/slides/5_0.png" alt="slide 5 diagram" loading="lazy"><p class="scaption">Alike customers land near each other — the groups are already there.</p></div><div class="slide"><h3 class="stitle">Supervised vs Unsupervised</h3></div><div class="slide"><h3 class="stitle">The Building Block Is Distance</h3><ul class="sbullets"><li>'Similar' means 'nearby' — everything today runs on distance between dots.</li><li>How far apart are two customers, across all their columns?</li><li>Scale first: income runs to lakhs, visits to tens — one column dominates.</li><li>Standardise every column so each counts equally. Non-negotiable.</li></ul></div><div class="slide"><h3 class="stitle">Rescale First, or the Biggest Column Wins</h3><ul class="sbullets"><li>Raw numbers: income swamps age → the grouping is just income.</li><li>Rescaled: both count equally → the real groups appear.</li></ul><img class="sdiagram" src="S11/slides/8_0.png" alt="slide 8 diagram" loading="lazy"><p class="scaption">Left alone, the biggest-numbered column decides every distance.</p></div><div class="slide"><h3 class="stitle">2 · K-Means</h3><ul class="sbullets"><li>send each dot to the nearest centre, move the centre, repeat</li></ul></div><div class="slide"><h3 class="stitle">The Core Idea</h3><ul class="sbullets"><li>Decide how many groups you want: k.</li><li>Think of k 'team leaders' (centres) placed on the chart.</li><li>Each dot joins its nearest leader.</li><li>Each leader moves to the middle of its team.</li><li>Repeat until nobody changes team — the groups settle.</li><li>Analogy: two friends split a crowd by 'whoever is closest', then re-centre, again and again.</li></ul></div><div class="slide"><h3 class="stitle">K-Means: How It Works, Step by Step</h3><ul class="sbullets"><li>Start from rough centres (✖).</li><li>Send each dot to its nearest centre.</li><li>Move each centre to its crowd.</li><li>Repeat until the centres stop moving.</li></ul><img class="sdiagram" src="S11/slides/11_0.png" alt="slide 11 diagram" loading="lazy"><p class="scaption">Start from rough centres (✖), then assign dots and move the centres until they settle.</p></div><div class="slide"><h3 class="stitle">What 'Best Grouping' Means</h3><ul class="sbullets"><li>The number k-means shrinks is 'inertia': total squared distance from every dot to its own centre.</li><li>Same least-squares spirit as Session 7 — centres instead of a line, no labels.</li><li>k-means can settle in a good-but-not-best place, so run it from several starts.</li><li>J  =  Σₖ  Σₓ∈Cₖ  ‖ x − μₖ ‖²</li></ul><p class="scaption">Total within-cluster spread — scikit-learn calls this 'inertia_'</p></div><div class="slide"><h3 class="stitle">Choosing k: The Elbow</h3><ul class="sbullets"><li>More groups always cut the spread.</li><li>The gains shrink past the real number.</li><li>The bend is the sweet spot.</li><li>Here: about 3 groups.</li></ul><img class="sdiagram" src="S11/slides/13_0.png" alt="slide 13 diagram" loading="lazy"><p class="scaption">Plot the leftover spread against k; look for the bend.</p></div><div class="slide"><h3 class="stitle">Choosing k: The Silhouette</h3><ul class="sbullets"><li>+1: snug, well inside its group.</li><li>Around 0: sitting on a border.</li><li>Below 0: probably mis-grouped.</li><li>Average over all dots; prefer the peak.</li></ul><img class="sdiagram" src="S11/slides/14_0.png" alt="slide 14 diagram" loading="lazy"><p class="scaption">How snug each dot sits in its group versus the next one. Higher is better.</p></div><div class="slide"><h3 class="stitle">K-Means — Hyperparameters to Set</h3><ul class="sbullets"><li>k (n_clusters): the number of groups — your main choice (elbow + silhouette).</li><li>n_init: run 10 random starts, keep the best (default 10).</li><li>max_iter: how many send/move rounds (default 300 is usually fine).</li><li>random_state: a seed so your answer reproduces.</li><li>ALWAYS scale the features first.</li></ul></div><div class="slide"><h3 class="stitle">K-Means — Strengths &amp; Weaknesses</h3><ul class="sbullets"><li>Strengths:</li><li>Fast, scales to big data (millions of rows), simple to explain.</li><li>Great when groups are round and similar in size.</li><li>Weaknesses:</li><li>You must choose k up front.</li><li>Assumes round, ball-like clusters — breaks on crescents.</li><li>Sensitive to scaling and to outliers.</li></ul></div><div class="slide"><h3 class="stitle">3 · Hierarchical Clustering</h3><ul class="sbullets"><li>a family tree you cut to pick groups</li></ul></div><div class="slide"><h3 class="stitle">The Core Idea</h3><ul class="sbullets"><li>Start with every dot as its own group.</li><li>Merge the two groups that are closest together.</li><li>Keep merging, nearest first, until one group remains.</li><li>The record of every merge is a family tree (a dendrogram).</li><li>No k up front — decide how many groups later, by cutting the tree.</li></ul></div><div class="slide"><h3 class="stitle">How It Works, Step by Step</h3><ul class="sbullets"><li>Each dot starts as its own group.</li><li>Merge the two groups that are closest.</li><li>Repeat, nearest first.</li><li>In the end: one family tree.</li></ul><img class="sdiagram" src="S11/slides/19_0.png" alt="slide 19 diagram" loading="lazy"><p class="scaption">Start alone, merge the nearest pair, keep merging until one tree.</p></div><div class="slide"><h3 class="stitle">Reading the Family Tree</h3><ul class="sbullets"><li>Bottom: each leaf is one dot.</li><li>Height = distance when they merged.</li><li>Cut across a tall gap to pick groups.</li><li>Here: cut the dashed line → 3 groups.</li></ul><img class="sdiagram" src="S11/slides/20_0.png" alt="slide 20 diagram" loading="lazy"><p class="scaption">Height = how far apart groups were when they merged.</p></div><div class="slide"><h3 class="stitle">Choosing How Many Groups</h3><ul class="sbullets"><li>Cut the tree at a tall vertical gap — the natural number appears.</li><li>Want 5 groups? Cut one notch lower; 2 groups? Cut higher.</li><li>You can decide AFTER clustering — no need to fix k first.</li><li>Pair it with the silhouette if you want a second opinion.</li></ul></div><div class="slide"><h3 class="stitle">Hierarchical — Hyperparameters to Set</h3><ul class="sbullets"><li>n_clusters: how many groups — OR a distance_threshold to cut the tree.</li><li>linkage: how distance between groups is measured (ward / average / complete).</li><li>metric: how distance between points is measured (Euclidean default).</li><li>Cut the dendrogram where a tall gap appears.</li></ul></div><div class="slide"><h3 class="stitle">Hierarchical — Strengths &amp; Weaknesses</h3><ul class="sbullets"><li>Strengths:</li><li>No k up front — decide later by cutting the tree.</li><li>A full family tree, great for small data.</li><li>Deterministic — no random starts.</li><li>Weaknesses:</li><li>O(n²) — slow beyond a few thousand rows.</li><li>Once merged, groups never split again.</li><li>Result depends on the linkage choice.</li></ul></div><div class="slide"><h3 class="stitle">4 · DBSCAN</h3><ul class="sbullets"><li>let the crowding decide</li></ul></div><div class="slide"><h3 class="stitle">The Core Idea</h3><ul class="sbullets"><li>Group by crowding (density), not by shape or by k.</li><li>Where dots sit close together, that is a group.</li><li>Dots that sit far from any crowd are flagged as noise.</li><li>No need to choose the number of groups.</li><li>Finds any shape — crescents, rings, whatever the data makes.</li></ul></div><div class="slide"><h3 class="stitle">How DBSCAN Decides: Core, Border, Noise</h3><ul class="sbullets"><li>Core (★): ≥ min_samples neighbours inside the eps circle.</li><li>Border (▲): joins the group, but has fewer neighbours.</li><li>Noise (✕): too far from any crowd — left out.</li><li>Groups grow out of connected cores.</li></ul><img class="sdiagram" src="S11/slides/26_0.png" alt="slide 26 diagram" loading="lazy"><p class="scaption">Within a radius eps, if a dot has enough neighbours it is a core point; the group grows from cores.</p></div><div class="slide"><h3 class="stitle">Why Bother? Shapes K-Means Cannot Do</h3><ul class="sbullets"><li>K-means cuts straight through the crescents.</li><li>DBSCAN follows the crowding — any shape.</li><li>Strays are flagged as noise (−1).</li><li>Struggles only with mixed densities.</li></ul><img class="sdiagram" src="S11/slides/27_0.png" alt="slide 27 diagram" loading="lazy"><p class="scaption">Left: k-means slices the crescents wrongly. Right: DBSCAN recovers the shapes.</p></div><div class="slide"><h3 class="stitle">DBSCAN — Hyperparameters to Set</h3><ul class="sbullets"><li>eps: how close 'nearby' means (the crowding radius). The main knob.</li><li>min_samples: the smallest crowd that counts as a group (start ≈ 2 × columns).</li><li>metric: distance type (Euclidean default).</li><li>ALWAYS scale the features first.</li></ul></div><div class="slide"><h3 class="stitle">Choosing eps (How to Set the Main Knob)</h3><ul class="sbullets"><li>Too small → everything becomes noise; too large → one giant group.</li><li>Rule of thumb: start with eps near the typical distance to the k-th neighbour.</li><li>k-distance plot: sort each dot's distance to its k-th nearest neighbour and look for the bend.</li><li>Sweep a few eps values and pick the one where the groups look sensible.</li></ul></div><div class="slide"><h3 class="stitle">DBSCAN — Strengths &amp; Weaknesses</h3><ul class="sbullets"><li>Strengths:</li><li>Finds any shape, not just round blobs.</li><li>No need to choose k.</li><li>Flags outliers as noise (−1).</li><li>Weaknesses:</li><li>Very sensitive to eps.</li><li>One global eps for all groups — mixed densities are hard.</li></ul></div><div class="slide"><h3 class="stitle">Which Clustering Method When?</h3></div><div class="slide"><h3 class="stitle">5 · PCA</h3><ul class="sbullets"><li>squash many columns to two, so you can SEE the groups</li></ul></div><div class="slide"><h3 class="stitle">The Problem PCA Solves</h3><ul class="sbullets"><li>Customers have many columns — you cannot draw a dot in fifty dimensions.</li><li>But columns usually move together (height and weight → one direction).</li><li>PCA squashes many columns into a few that keep most of the spread.</li><li>Then you can plot the groups and see them.</li><li>Cluster to group; PCA to look.</li></ul></div><div class="slide"><h3 class="stitle">The Core Idea: Directions of Widest Spread</h3><ul class="sbullets"><li>Find the direction the cloud spreads out most.</li><li>Then the next, at right angles.</li><li>Describe each dot by these two directions.</li><li>Two directions usually keep most of the spread.</li></ul><img class="sdiagram" src="S11/slides/34_0.png" alt="slide 34 diagram" loading="lazy"><p class="scaption">One arrow along the widest spread, a second across it.</p></div><div class="slide"><h3 class="stitle">How It Works, Step by Step</h3><ul class="sbullets"><li>Scale every column first (StandardScaler).</li><li>Find the direction of widest spread → PC1.</li><li>Then the next at right angles → PC2.</li><li>Describe each dot by its position along PC1 and PC2.</li></ul><img class="sdiagram" src="S11/slides/35_0.png" alt="slide 35 diagram" loading="lazy"><p class="scaption">Left: the raw columns. Right: the same dots in the new PC coordinates.</p></div><div class="slide"><h3 class="stitle">The Maths, in One Line</h3><ul class="sbullets"><li>Keep the direction the data spreads out most; then the next at right angles.</li><li>The new columns are called principal components.</li><li>For the curious: exactly the eigen-decomposition of the covariance matrix.</li><li>maximise  Var(Xw)   with   ‖w‖ = 1</li></ul><p class="scaption">PCA = the eigen-decomposition of the covariance matrix (optional maths)</p></div><div class="slide"><h3 class="stitle">How Many Columns to Keep: The Scree Plot</h3><ul class="sbullets"><li>The first new columns keep the most.</li><li>Watch the running-total line.</li><li>Here 2 columns ≈ 70%.</li><li>Stop where the bars go flat.</li></ul><img class="sdiagram" src="S11/slides/37_0.png" alt="slide 37 diagram" loading="lazy"><p class="scaption">Bars: spread each new column keeps. Line: the running total.</p></div><div class="slide"><h3 class="stitle">PCA — Hyperparameters to Set</h3><ul class="sbullets"><li>n_components: how many squashed columns to keep (read the scree).</li><li>whiten: optional — rescales the components to unit variance.</li><li>ALWAYS scale the features first (StandardScaler).</li><li>t-SNE / UMAP are for pictures only — never read distances off them.</li></ul></div><div class="slide"><h3 class="stitle">PCA — Strengths &amp; Weaknesses</h3><ul class="sbullets"><li>Strengths:</li><li>Fewer columns: faster models, easier plotting, de-noises the data.</li><li>Removes redundant, correlated columns.</li><li>Easy visual check of whether groups exist.</li><li>Weaknesses:</li><li>New columns have no plain meaning — hard to explain.</li><li>Only catches straight-line structure.</li><li>Variance kept ≠ importance.</li></ul></div><div class="slide"><h3 class="stitle">Now Open the Notebooks →</h3><ul class="sbullets"><li>Group real customers, choose k with the elbow and silhouette, then plot them with PCA — notebooks 01–03</li></ul></div><div class="slide"><h3 class="stitle">Key Takeaways</h3><ul class="sbullets"><li>Unsupervised = finding structure when there are no labels.</li><li>Everything runs on distance — scale every column first.</li><li>K-means: fast, round groups, needs k (elbow + silhouette).</li><li>Hierarchical: no k up front, a family tree, slow on big data.</li><li>DBSCAN: any shape, flags outliers, tune eps.</li><li>PCA: squash columns to see the groups — cluster to group, PCA to look.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; Reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S11_unsupervised/</li></ul><p class="scaption">Notebooks 01_find_the_groups.ipynb 02_squash_to_two_columns.ipynb 03_customer_segmentation.ipynb Data make_blobs &amp; make_moons — generated by scikit-learn Iris flowers — loaded from scikit-learn Seeded RFM customer table — built inside notebook 03 Reading primers/distance_between_points.md — today's core idea Intro to Statistical Learning, ch. 12 StatQuest — PCA and t-SNE explained (YouTube)</p></div><div class="slide"><h3 class="stitle">Next Session</h3><ul class="sbullets"><li>S12 — Feature Engineering</li><li>Turning raw, messy real-world data into clean columns a model can learn from.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
