@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Getting Messy Data Into Shape — Feature Engineering · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 2 — Machine Learning for Industry</p>
+  <h1>S12 · Getting Messy Data Into Shape — Feature Engineering</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/representation_and_features.html">Representation and features</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A bank wants to flag customers who might close their account, so it exports its
+customer table and hands it to your team. You open the file and your heart sinks.
+Ages are missing — hidden as the sentinel 999. Income has blanks in the middle of
+the numbers, and a couple of customers earn ten times everyone else. One column
+says "Mumbai" while another row says " mumbai " with stray spaces and lower-case
+letters. Rows are duplicated, every row says "West" for region, and there is a
+column that secretly contains the answer.</p>
+<p>No model can learn from this. Before anyone trains anything, someone has to get
+the data into a shape a model can actually use. That someone is you, and this is
+where working data scientists spend most of their time. Today is about that job,
+and it is one of the most useful days in the whole course, whatever your
+background.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>The same facts, written a different way, can turn an impossible problem into an
+easy one.</p>
+<p>Picture two groups of dots on a chart, arranged as two rings, one small ring
+sitting inside a bigger ring. You want a rule that tells the two groups apart. A
+straight line cannot do it: whichever way you draw the line, it slices through
+both rings. The problem looks hard.</p>
+<p>Now measure one new thing about each dot: its distance from the centre. The inner
+ring is close to the centre, the outer ring is far. So a single cut on that one
+number, "closer than this, or further" splits the two groups perfectly. Nothing
+about the dots changed. We just described each dot with a better number, and the
+hard problem dissolved.</p>
+<p>That is feature engineering. A "feature" is just a column you feed the model. When
+you choose good columns, even the simplest model wins. When you feed it raw mess,
+the fanciest model still fails. Choosing how to write the data down is choosing how
+hard the model's job will be.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<p>One deliberately ugly customer table and one model family. We leave the model alone
+and change only the features, step by step, and watch the score climb:</p>
+<ol>
+<li>Build the messy dataset in code and save it to <code>data/messy_customers.csv</code> —
+   missing values, disguised 999s, untidy city text, outliers, a correlated twin,
+   a leakage column, a constant column, a unique ID and duplicate rows.</li>
+<li>Look before touching anything: profile the table, count the blanks, spot the
+   sentinels and the duplicates.</li>
+<li>Fit a plain baseline model on the raw mess and record its accuracy — our
+   "before" number.</li>
+<li>Run the messy-data playbook: unmask 999, tidy the text, fill missing values,
+   drop dead weight, cap outliers and log the skewed income.</li>
+<li>Engineer features: split the date into month and weekday, build an interaction
+   and a polynomial column, then remove the correlated twin and the leakage column.</li>
+<li>One-hot the city, scale the numeric columns (fitting on the training split
+   only), and fit the same model again — and see the "after" number.</li>
+<li>Hold the model fixed and improve only its features, then watch the score climb.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach every idea here from scratch, in plain steps:</p>
+<ul>
+<li>what a "feature" is and why the choice of features matters more than the choice
+  of model,</li>
+<li>how to turn text categories into numbers without fooling the model,</li>
+<li>how to put columns on a common scale, and why some models care,</li>
+<li>a fixed, repeatable playbook for cleaning a messy table.</li>
+</ul>
+<p>This session is one of the most welcoming in the course. There is barely any maths
+in the main line. If you can read a table and press the play button on a notebook
+cell, you can do all of it.</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>
+  and then just run each cell top to bottom.</li>
+<li>Want the idea of today in one page? Read
+  <a href="../primers/representation_and_features.html">Representation and features</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>The whole session is a single notebook, <code>01_messy_data_to_model.ipynb</code>, run top to
+bottom. Each step is one short cell with a heading, so you can always see where
+you are.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain feature engineering as "choosing how to write the data down so the answer
+  becomes simple."</li>
+<li>Run a complete messy-data playbook: unmask sentinel values, tidy text, fill
+  missing values, drop dead weight, cap outliers and log skewed columns.</li>
+<li>Engineer features: dates, interactions and polynomials.</li>
+<li>Spot and remove redundant (correlated) and leaking columns.</li>
+<li>Turn a text category into numbers with one-hot encoding, and standardise numeric
+  columns onto a common scale — fitting the scaler on the training split only.</li>
+<li>Show that better features raise a model's score on the very same rows.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth, and none of
+it is needed to finish.</p>
+<p>Today's mathematical object is <strong>representation</strong>. A model can only fit the
+functions its shape allows. A linear model fits straight lines and flat planes and
+nothing else, so its reachable functions are exactly the linear ones in whatever
+coordinates you hand it. When you engineer a feature, you are applying a map
+<code>φ</code> that sends each input <code>x</code> to a richer description <code>φ(x)</code>, and then fitting a
+linear rule in that new space. The concentric rings are the clean example: in the
+raw coordinates <code>(x, y)</code> the two classes are not linearly separable, but under the
+map <code>φ(x, y) = (x, y, √(x²+y²))</code> a single hyperplane separates them exactly. The
+data never moved; the coordinate system did. This is the same idea a kernel makes
+implicit, and the same idea a neural network learns for itself in the next session.
+One-hot encoding is the special case of <code>φ</code> that sends a category to an indicator
+vector, and standardisation is the affine map <code>x ↦ (x − μ)/σ</code> that makes each
+coordinate comparable so a distance is fair. Choosing a representation is choosing
+which functions are reachable, and it is usually cheaper and more reliable than
+reaching for a fancier model.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>feature</strong> — an input column you feed a model. Its size and city are features
+  of a customer.</li>
+<li><strong>feature engineering</strong> — building better input columns so a simple model can
+  succeed.</li>
+<li><strong>representation</strong> — the particular way you write the data down; changing it
+  changes what the model can learn.</li>
+<li><strong>one-hot encoding</strong> — turning a text category into one 0/1 column per value, so
+  no fake order is implied.</li>
+<li><strong>standardisation (scaling)</strong> — shifting and stretching a column so it is centred
+  at 0 with spread about 1, putting all columns on a common footing.</li>
+<li><strong>missing value (NaN)</strong> — a blank cell; the honest way to record "we do not know".</li>
+<li><strong>sentinel value</strong> — a fake stand-in for missing, like 999 or "NA", that must be
+  unmasked to a real NaN.</li>
+<li><strong>interaction feature</strong> — a new column built from two others together (weekend
+  AND rain), carrying signal neither column holds alone.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">One messy dataset → one working model</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S12/notebooks/01_messy_data_to_model.ipynb">Open in Colab</a>
+      <a class="btn" href="S12/notebooks/01_messy_data_to_model.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S12/notebooks/01_messy_data_to_model.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li><a href="S12/data/messy_customers.csv" download><code>data/messy_customers.csv</code></a> — a deliberately ugly customer table with missing values, disguised 999s, untidy text, outliers, a correlated twin, a leakage column and duplicate rows (503 rows, 9 columns)</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Kuhn &amp; Johnson — <em>Feature Engineering and Selection</em> (free online)</li>
+<li><a href="https://scikit-learn.org/stable/modules/preprocessing.html">scikit-learn user guide: Preprocessing data</a></li>
+<li><a href="https://www.kaggle.com/learn/feature-engineering">Kaggle Learn: Feature Engineering</a></li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Getting Messy Data Into Shape</h3><ul class="sbullets"><li>Feature engineering: the columns you build beat the model you pick</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 2 — Machine Learning for Industry   ·   Session S12   ·   2 hours Module 2 — the realistic heart of doing ML in industry</p></div><div class="slide"><h3 class="stitle">Why features matter</h3></div><div class="slide"><h3 class="stitle">What is feature engineering?</h3><ul class="sbullets"><li>A 'feature' is just a column you feed the model.</li><li>Feature engineering = choosing good columns.</li><li>The same facts, written better, make a hard problem easy.</li><li>Good columns beat a fancy model on raw data.</li></ul></div><div class="slide"><h3 class="stitle">The one idea, in a picture</h3><img class="sdiagram" src="S12/slides/4_0.png" alt="slide 4 diagram" loading="lazy"><p class="scaption">Left: no straight line separates the rings. Right: add one column (distance from the centre) and a single cut does it.</p></div><div class="slide"><h3 class="stitle">Where the value is created</h3><ul class="sbullets"><li>Beginners obsess: which model?</li><li>Practitioners: which columns?</li><li>Good columns make a simple model shine.</li><li>Messy data sinks the fanciest model.</li></ul><img class="sdiagram" src="S12/slides/5_0.png" alt="slide 5 diagram" loading="lazy"><p class="scaption">Raw data in, prediction out — the value is in the middle box.</p></div><div class="slide"><h3 class="stitle">Scaling</h3><ul class="sbullets"><li>Put every column on one footing</li></ul></div><div class="slide"><h3 class="stitle">Before and after scaling</h3><ul class="sbullets"><li>Who needs it: distance models — k-means, kNN, SVM.</li><li>Who needs it too: gradient models — logistic regression, neural nets.</li><li>Who ignores it: trees (random forest, boosting) split one column at a time.</li></ul><img class="sdiagram" src="S12/slides/7_0.png" alt="slide 7 diagram" loading="lazy"><p class="scaption">Before: income dwarfs age. After scaling: both count equally.</p></div><div class="slide"><h3 class="stitle">Standardisation (z-score)</h3><ul class="sbullets"><li>Subtract the average, divide by the spread — centred at 0, spread ≈ 1.</li><li>μ — the mean;  σ — the spread (standard deviation)</li><li>z — how many spreads above or below the average</li><li>Fit μ and σ on the TRAIN rows only (leakage).</li></ul><img class="sdiagram" src="S12/slides/8_0.png" alt="slide 8 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Min-max scaling</h3><ul class="sbullets"><li>Subtract the min, divide by the range — every value squashed into 0 to 1.</li><li>x_min, x_max — smallest and largest in the column</li><li>One extreme value stretches the range — a known weakness</li><li>Take x_min and x_max from the TRAIN rows only (leakage).</li></ul><img class="sdiagram" src="S12/slides/9_0.png" alt="slide 9 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Taming skewed money with a log</h3><ul class="sbullets"><li>Who needs it: regressions on money — income, spend, amount.</li><li>Helps linear and neural-net models most.</li><li>Trees read rank only, so they barely feel the skew.</li></ul><img class="sdiagram" src="S12/slides/10_0.png" alt="slide 10 diagram" loading="lazy"><p class="scaption">Incomes and amounts have long right tails; a log pulls them into shape.</p></div><div class="slide"><h3 class="stitle">Encoding categories</h3><ul class="sbullets"><li>Turn words into numbers</li></ul></div><div class="slide"><h3 class="stitle">Models do sums; your data has words</h3><ul class="sbullets"><li>A model can only add and multiply numbers.</li><li>But columns hold 'Pune', 'Gold', 'Yes', dates, text.</li><li>Turn each into numbers — without inventing a fake order.</li><li>Numbering cities 1, 2, 3 tells the model a lie.</li></ul></div><div class="slide"><h3 class="stitle">One-hot encoding</h3><ul class="sbullets"><li>Who needs it: every scikit-learn model — numbers only.</li><li>Helps most: linear, logistic, kNN, neural nets.</li><li>Watch out: 500 cities → 500 columns — prefer target encoding.</li></ul><img class="sdiagram" src="S12/slides/13_0.png" alt="slide 13 diagram" loading="lazy"><p class="scaption">Each distinct value becomes its own 0/1 column. No fake order.</p></div><div class="slide"><h3 class="stitle">One-hot, written as maths</h3><ul class="sbullets"><li>A category becomes 0/1 switches — one column per value, exactly one is 1.</li><li>c — the category in this row;  v1 … vm — its possible values</li><li>1[c = vj] — 1 when c equals vj, else 0</li><li>No order implied — Delhi, Mumbai, Pune are separate switches</li></ul><img class="sdiagram" src="S12/slides/14_0.png" alt="slide 14 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Three ways to encode a category</h3></div><div class="slide"><h3 class="stitle">Dates become numbers</h3></div><div class="slide"><h3 class="stitle">One date unfolds into many columns</h3><ul class="sbullets"><li>Who reads it: any model — these are plain numbers.</li><li>Helps most: time-aware models — forecasting, sales.</li><li>Local knowledge (Diwali, salary week) is gold here.</li></ul><img class="sdiagram" src="S12/slides/17_0.png" alt="slide 17 diagram" loading="lazy"><p class="scaption">Day-of-week, month, is_weekend, is_holiday, days-to-festival, lagged sales.</p></div><div class="slide"><h3 class="stitle">Free text is a niche — and a deeper topic</h3><ul class="sbullets"><li>Dates and categories cover most business columns.</li><li>Free text (reviews, complaints) needs its own text pipeline first.</li><li>We keep text out of today's main line — see the reading list.</li><li>The techniques that follow matter far more in daily work.</li></ul></div><div class="slide"><h3 class="stitle">Build richer columns</h3><ul class="sbullets"><li>Interactions, polynomials, and domain knowledge</li></ul></div><div class="slide"><h3 class="stitle">Interaction features: one column × another</h3></div><div class="slide"><h3 class="stitle">Polynomial features: make the data richer</h3><ul class="sbullets"><li>Give the model x, x², x³ — a straight line becomes a curve.</li><li>Instead of making the model more complex, we make the data richer.</li><li>Who needs it: linear and logistic regression on curved truths.</li><li>Who ignores it: trees — splits already find curves on their own.</li></ul><img class="sdiagram" src="S12/slides/21_0.png" alt="slide 21 diagram" loading="lazy"><p class="scaption">Left: with only x, the best line can't bend. Right: add an x² column and the SAME model fits the curve.</p></div><div class="slide"><h3 class="stitle">Domain knowledge: columns the data never told you</h3></div><div class="slide"><h3 class="stitle">Feature selection</h3><ul class="sbullets"><li>You built 100 columns — now keep the good ones</li></ul></div><div class="slide"><h3 class="stitle">Drop the columns that add nothing</h3></div><div class="slide"><h3 class="stitle">Keep one of each pair of twins</h3><ul class="sbullets"><li>Two columns that move together carry the same information twice.</li><li>correlation(A, B) close to +1 or −1 → keep one, drop the other.</li><li>Redundant columns slow the model — and distance models double-count them.</li><li>Classic example: 'years of experience' and 'age' in the same dataset.</li><li>Rule of thumb: drop one of any pair with |corr| above ~0.9 — with domain judgement.</li></ul></div><div class="slide"><h3 class="stitle">Let the model rank your columns</h3><ul class="sbullets"><li>Let the model do the sorting, then fit your real model on the shortlist only.</li></ul><p class="scaption">CODE OUTPUT  ▸ # 1) Random Forest: rank columns by usefulness imp = pd.Series(rf.feature_importances_, index=X.columns) # 2) SelectKBest: score each column against the answer from sklearn.feature_selection import SelectKBest, f_regression sel = SelectKBest(f_regression, k=10).fit(X_train, y_train) keep = X.columns[sel.get_support()] age          0.41 income       0.33 city_rank    0.12 … SelectKBest: keep 10 of 47 columns</p></div><div class="slide"><h3 class="stitle">Cleaning a messy dataset</h3><ul class="sbullets"><li>A repeatable order, not guesswork</li></ul></div><div class="slide"><h3 class="stitle">The cleaning playbook</h3><img class="sdiagram" src="S12/slides/28_0.png" alt="slide 28 diagram" loading="lazy"><p class="scaption">Look → fix types → parse dates → drop dupes → missing → categories → validate.</p></div><div class="slide"><h3 class="stitle">Missing values wear disguises</h3><img class="sdiagram" src="S12/slides/29_0.png" alt="slide 29 diagram" loading="lazy"><p class="scaption">'NA', a dash, whitespace and 999 all mean 'missing'. Unmask them to a real blank first.</p></div><div class="slide"><h3 class="stitle">A checkpoint before the model</h3></div><div class="slide"><h3 class="stitle">Leakage</h3><ul class="sbullets"><li>Fit on the training split only</li></ul></div><div class="slide"><h3 class="stitle">Never leak the answer into your columns</h3><ul class="sbullets"><li>Fit every scaler and encoder on the TRAIN rows only.</li><li>Fitting on all the data lets the test set leak in.</li><li>Then your score looks great — and fails in production.</li><li>A scikit-learn Pipeline enforces train-only for you.</li></ul></div><div class="slide"><h3 class="stitle">Same model, three data states</h3><img class="sdiagram" src="S12/slides/33_0.png" alt="slide 33 diagram" loading="lazy"><p class="scaption">Raw → cleaned → good features. The model never changed; only the data did.</p></div><div class="slide"><h3 class="stitle">Pick the technique for the model</h3><ul class="sbullets"><li>Each transform answers a different model's need</li></ul></div><div class="slide"><h3 class="stitle">Which feature trick goes with which model</h3></div><div class="slide"><h3 class="stitle">Put it all together</h3><ul class="sbullets"><li>One map for the whole job — and proof it works</li></ul></div><div class="slide"><h3 class="stitle">The whole job on one map</h3><ul class="sbullets"><li>A fixed order turns 'oh no' into a checklist.</li><li>Clean first, then build columns, then choose columns.</li><li>Fit on TRAIN only; the last gate is evaluation.</li><li>Come back and repeat — the map loops.</li></ul><img class="sdiagram" src="S12/slides/37_0.png" alt="slide 37 diagram" loading="lazy"><p class="scaption">A repeatable order: clean, build, select, train, evaluate — then come back and repeat.</p></div><div class="slide"><h3 class="stitle">Proof: features, not the model</h3><ul class="sbullets"><li>Same model both times — only the columns changed.</li><li>Raw features: 65% accuracy.</li><li>Same model + engineered features: 84%.</li><li>Feature engineering often beats swapping the model on raw data.</li></ul><img class="sdiagram" src="S12/slides/38_0.png" alt="slide 38 diagram" loading="lazy"><p class="scaption">We didn't change the model. We changed the representation of the data.</p></div><div class="slide"><h3 class="stitle">Now open the notebook →</h3><ul class="sbullets"><li>Clean an ugly CSV, build good columns, watch the score climb — notebook 01</li></ul></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>A 'feature' is just a column you feed the model — choosing good ones is the real work.</li><li>The same facts, written better, turn a hard problem easy (rings → distance).</li><li>Turn words, dates and text into numbers: one-hot, scaling, calendar columns.</li><li>Build richer columns — interactions, polynomials, domain features — then SELECT: drop constant and twin columns, keep the ranked best.</li><li>Clean by a fixed playbook: look → types → dates → dupes → missing → categories → check.</li><li>Fit scalers and encoders on the TRAIN split only — never leak the answer.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S12_feature_engineering/</li><li>Notebooks for this session</li><li>Reading</li></ul><p class="scaption">01_messy_data_to_model.ipynb primers/representation_and_features.md Kuhn &amp; Johnson — Feature Engineering and Selection (free online) scikit-learn user guide: Preprocessing data Kaggle Learn: Feature Engineering</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S13 — Neural networks: instead of choosing the columns by hand, the model learns its own.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
