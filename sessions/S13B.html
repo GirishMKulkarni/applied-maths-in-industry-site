@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>SQL — Ask Questions of the Tables Where Industry Keeps Its Data · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 2.5 — Data Foundations for Industry</p>
+  <h1>S13B · SQL — Ask Questions of the Tables Where Industry Keeps Its Data</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>For twelve sessions you have loaded data from CSV files into pandas and got to
+work. Here is the thing nobody told you: in a real company, nobody emails you a
+CSV. When Flipkart records your order, when PhonePe moves ₹50, when an insurer
+pulls up your policy, that record goes into a <strong>database</strong>, on a server, being
+written and read by hundreds of other people and programs at the same moment.
+Your future analyst job starts with asking that database questions, in a language
+called SQL.</p>
+<p>Today is a short, one-hour session between the machine learning block and the
+finance block. No installs, no setup: we will work entirely in the browser on
+<a href="https://www.sql-practice.online/?mode=scenario&amp;category=select-statements&amp;engine=core-sql">SQL Practice Online</a>,
+on a small HR database (employees, departments, jobs) that looks exactly like
+the tables you would meet in a company.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>A database is a disciplined set of tables, and SQL is a language where you
+<strong>describe the answer you want, not the steps to get it</strong>.</p>
+<p>In pandas you write code that says how to walk through rows. In SQL you write one
+sentence: "from employees, show first_name and salary where salary is above
+80000." The database's job is to figure out how. That one switch, from <em>how</em> to
+<em>what</em>, is why SQL has survived fifty years of new technology, and why it is on
+almost every data-job interview sheet in India.</p>
+<p>Picture a company's data as a big, tidy library of ledgers. Every ledger is one
+table about one kind of thing: employees, departments, jobs. SQL is how everyone,
+from a Python program to a Power BI dashboard, asks those ledgers questions
+without ever touching the shelves themselves.</p>
+<h2 id="how-the-hour-runs">How the hour runs</h2>
+<p>This is a 60-minute session, half conversation and half live demo. You follow
+along on your own laptop; the only thing you need is the browser link above.</p>
+<ol>
+<li><strong>(5 min) Where industry keeps its data.</strong> Why CSVs die at company scale:
+   thousands of users writing at once, crores of rows, rules like "salary cannot
+   be negative" that must never break. A database server owns the data; analysts
+   query it over the network. UPI, IRCTC booking windows, telecom billing all
+   run this way.</li>
+<li><strong>(10 min) What SQL is and why it is required.</strong> Tables, rows, columns; the
+   core verbs <code>SELECT ... FROM ... WHERE</code>. Declarative vs step-by-step, shown by
+   comparing a pandas snippet with the same request as one SQL sentence. Then the
+   industry reasons: it is the shared language across tools (Python, Excel,
+   Tableau, any web app), it guards the data while many people use it at once,
+   and it scales from 10 rows to 10 billion.</li>
+<li><strong>(10 min) How data is stored in industry.</strong> Primary keys (the unique ID of a
+   row), foreign keys (an ID in one table pointing at a row in another). We open
+   the site's ER diagram and read its three tables: employees points at
+   departments and jobs. Also the honest map of where data really lives: the
+   operational database that runs the business, the warehouse that stores its
+   history for analysis, and plain files for everything else.</li>
+<li><strong>(12 min) Normalization, and why we normalize.</strong> We take one wide messy
+   sheet (employee name typed next to department name and location repeated on
+   every row) and try to update a department's location. It is wrong on some
+   rows now. That is an update anomaly, and it is why we split data so each fact
+   lives in exactly one place. Normal forms are just the rulebook for the split;
+   we also see when companies deliberately bend it back for speed (dashboards).</li>
+<li><strong>(8 min) Flavours of SQL.</strong> SQLite, PostgreSQL, MySQL, SQL Server, Oracle:
+   same standard sentence, slightly different accents. Who uses what (banks and
+   government on Oracle/SQL Server, startups on PostgreSQL/MySQL, every phone
+   app on SQLite). We switch engines in the site's dropdown and watch what
+   changes and what does not.</li>
+<li><strong>(12 min) Hands-on lab.</strong> On the Select Statements topic (12 guided
+   exercises) we solve together: pull all columns, pick columns, <code>DISTINCT</code>,
+   computed columns like <code>salary * 0.10</code>, aliases, then the capstone projection.
+   The same database ships with this session as <code>data/hr_database.sql</code>
+   (download below), so at home you can load it into <code>sqlite3</code> and keep
+   practising on your own machine. You keep going after
+   class; finishing all twelve is the homework.</li>
+<li><strong>(3 min) Wrap-up.</strong> Where SQL meets what you already know (pandas can talk
+   to databases too, via <code>read_sql</code>), and how the finance block starting next
+   week begins with pulling market data the same way.</li>
+</ol>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<p>Nothing to install, nothing to configure. By the end of the hour you will have:</p>
+<ol>
+<li>Run real queries against the browser database and read its three-table schema
+   from the ER diagram.</li>
+<li>Solved several of the twelve Select Statements exercises yourself, including
+   computed columns and distinct combinations.</li>
+<li>Converted a messy flat sheet into normalized tables on paper, and said in
+   one sentence per anomaly why the split prevents it.</li>
+<li>Collected a personal one-page list of the flavour differences (row limits,
+   text joining, case rules) to keep for interviews.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>This session assumes almost nothing:</p>
+<ul>
+<li>You do <strong>not</strong> need any database experience. We define table, row, key and
+  query from scratch.</li>
+<li>You do <strong>not</strong> need to install anything. The whole class runs in the browser
+  at <a href="https://www.sql-practice.online/?mode=scenario&amp;category=select-statements&amp;engine=core-sql">SQL Practice Online</a>.</li>
+<li>You do <strong>not</strong> need maths today beyond arithmetic like <code>salary / 12</code>.</li>
+<li>Comfortable with pandas DataFrames? You already understand tables better than
+  you think; SQL mostly renames things you know (<code>df[df.salary &gt; 80000]</code>
+  becomes <code>WHERE salary &gt; 80000</code>).</li>
+</ul>
+<p>If you have written SQL before, look for the <strong>Stretch</strong> moments below: the
+self-referencing <code>manager_id</code> column, and why <code>SELECT 1 + 1</code> needs no table in
+some flavours but does in others.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Say what a relational database is, and why industry trusts it with money
+  movements, orders and records instead of spreadsheets or CSVs.</li>
+<li>Write basic <code>SELECT</code> queries with filtering, distinct values, aliases and
+  computed columns, and check them instantly in the browser.</li>
+<li>Explain primary keys and foreign keys using the employees–departments–jobs
+  example.</li>
+<li>Take a redundant flat table, spot the anomalies, and explain what
+  normalization fixes (and when analysts deliberately denormalize).</li>
+<li>Name the main SQL flavours, who typically uses each, and the kinds of small
+  differences to expect between them.</li>
+</ul>
+<h2 id="stretch-moments-optional">Stretch moments (optional)</h2>
+<p>Two corners of today's database reward a second look.</p>
+<p><strong>The manager is also an employee.</strong> Look at <code>manager_id</code> in employees: it holds
+another employee's <code>employee_id</code>. One table pointing at itself, which is how
+reporting hierarchies are stored everywhere. Ask the ER diagram, then try to
+imagine drawing the org chart from it.</p>
+<p><strong>One query, five homes.</strong> In the editor, run <code>SELECT 1 + 1 AS result</code> with no
+table at all. SQLite accepts it happily. Oracle insists you add <code>FROM dual</code>, a
+one-row dummy table, which is why the site runs Oracle as a guided comparison
+instead of live execution. Small accent, big clue: dialects differ at the edges,
+and knowing the edges is what interviews test.</p>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough for the hour. This box adds the formal spine, and
+none of it is needed to finish.</p>
+<p>A relation is a <strong>set of tuples</strong>: a table is a set of rows, so order carries no
+meaning and duplicates are excluded by design (which is why <code>DISTINCT</code> feels
+natural). A <strong>key</strong> is a set of columns whose values identify a tuple uniquely;
+the primary key is the chosen identifier, and a foreign key asserts that values
+in one table must exist as keys in another, which is a constraint enforced at
+write time. <strong>Normalization</strong> is the theory of decomposition driven by
+<strong>functional dependencies</strong>: if column B is determined by column A (a
+department_id always yields the same location), storing B repeatedly alongside
+A invites contradiction, so A and B belong together in their own relation. Third
+normal form, informally: every non-key fact depends on the key, the whole key,
+and nothing but the key. Splitting relations this way is lossless (you can
+always reconstruct the original by joining), and the cost is paid at read time,
+which is exactly the trade dashboards reverse when they pre-join tables for
+speed.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>database</strong> — software that stores tables safely on a server and answers queries from many users at once.</li>
+<li><strong>SQL</strong> — Structured Query Language; the standard language for asking tables questions ("select this from there where that").</li>
+<li><strong>query</strong> — one SQL sentence describing the answer you want.</li>
+<li><strong>primary key</strong> — the column that uniquely identifies each row of a table, like employee_id.</li>
+<li><strong>foreign key</strong> — a column holding another table's primary key, stitching tables together.</li>
+<li><strong>ER diagram</strong> — a picture of a database's tables and the keys linking them.</li>
+<li><strong>normalization</strong> — designing tables so every fact is stored in exactly one place, avoiding contradictions.</li>
+<li><strong>denormalization</strong> — deliberately repeating facts (pre-joining tables) to make reads faster, common in analytics.</li>
+<li><strong>flavour (dialect)</strong> — a version of SQL such as SQLite, PostgreSQL, MySQL, SQL Server or Oracle; same core language, small differences.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li><a href="S13B/data/hr_database.sql" download><code>data/hr_database.sql</code></a> — the exact HR database we use on the practice site (employees, departments, jobs), as a loadable file. At home: sqlite3 class.db &lt; data/hr_database.sql</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li><a href="https://www.sql-practice.online/">SQL Practice Online</a> — the browser practice room we use in class. Nothing to install.</li>
+<li><a href="https://sqlbolt.com/">SQLBolt</a> — short interactive lessons if you want more reps after today</li>
+<li>W3Schools <a href="https://www.w3schools.com/sql/">SQL tutorial</a> — a plain lookup when you forget the words</li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">SQL</h3><ul class="sbullets"><li>Ask questions of the tables where industry keeps its data</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 2.5 — Data Foundations for Industry   ·   Session S13B   ·   1 hour</p></div><div class="slide"><h3 class="stitle">Where industry keeps its data</h3></div><div class="slide"><h3 class="stitle">The CSV you never get</h3><ul class="sbullets"><li>In class: pd.read_csv("nifty.csv") — the data arrives as a file</li><li>In industry nobody emails you a CSV</li><li>orders, payments and policies live on servers, written by thousands of programs at once</li><li>UPI settles ~15 crore transactions a day; IRCTC opens lakhs of bookings in minutes</li><li>That needs software whose whole job is safe shared data: a database</li></ul></div><div class="slide"><h3 class="stitle">What a database actually is</h3><ul class="sbullets"><li>A server program that owns the company's tables</li><li>Many people and programs read and write at the same moment, safely</li><li>Rules enforced at write time: salary cannot be negative, every order has a customer</li><li>Analysts never touch files; they send sentences over the network</li></ul><p class="scaption">You already know the shape: a pandas DataFrame is a table too.</p></div><div class="slide"><h3 class="stitle">What SQL is, and why it is required</h3></div><div class="slide"><h3 class="stitle">One sentence instead of a program</h3><ul class="sbullets"><li>SELECT first_name, salary</li><li>FROM   employees</li><li>WHERE  salary &gt; 80000;</li><li>You say WHAT you want, not HOW to walk the rows</li><li>pandas: df[df.salary &gt; 80000][["first_name", "salary"]] — same idea</li><li>The database plans the fastest route; your sentence stays the same from 10 rows to 10 billion</li></ul></div><div class="slide"><h3 class="stitle">The verbs you need today (and most days)</h3><ul class="sbullets"><li>SELECT — which columns</li><li>FROM — which table</li><li>WHERE — which rows</li><li>DISTINCT — drop repeats</li><li>AS — rename a column in the answer</li></ul><p class="scaption">That is genuinely most of analytical SQL; joins come next session's worth of practice.</p></div><div class="slide"><h3 class="stitle">Why every data job lists SQL</h3><ul class="sbullets"><li>The shared language: Python, Excel, Power BI and any web app can all speak it</li><li>Fifty years old and still at the top of developer-survey language rankings</li><li>Guards the data while hundreds of people use it at once</li><li>Interview round one for analyst, data engineering and data science roles</li></ul></div><div class="slide"><h3 class="stitle">How industry stores its data</h3></div><div class="slide"><h3 class="stitle">Our running example: an HR database</h3><img class="sdiagram" src="S13B/slides/10_0.png" alt="slide 10 diagram" loading="lazy"><p class="scaption">employees points at departments and jobs; manager_id points back into employees itself.</p></div><div class="slide"><h3 class="stitle">Keys: how tables point at each other</h3><ul class="sbullets"><li>Primary key — the unique ID of a row: employees.employee_id</li><li>Foreign key — a column holding another table's ID: employees.department_id</li><li>The database rejects a department_id that does not exist — integrity by construction</li><li>ER diagram: the map of tables and keys (open it on the practice site)</li></ul></div><div class="slide"><h3 class="stitle">Where data really lives</h3><ul class="sbullets"><li>Operational database — today's transactions: orders placed now, balances as of now</li><li>Warehouse — years of history arranged for analysis; what analysts usually query</li><li>Files and lakes — logs, images, everything that is not naturally a table</li><li>Your Module-2 models ate from copies of these; SQL is how copies are taken</li></ul></div><div class="slide"><h3 class="stitle">Normalization: why tables are split</h3></div><div class="slide"><h3 class="stitle">One big sheet, three ways it breaks</h3><ul class="sbullets"><li>emp_name | dept_name | dept_location | job_title | salary   ← repeated on every row</li><li>Update anomaly — HR moves floor; you edit 200 rows, forget 3, and the sheet lies</li><li>Delete anomaly — the last HR employee leaves and the department itself vanishes</li><li>Insert anomaly — cannot record a new department until someone is posted there</li></ul></div><div class="slide"><h3 class="stitle">The fix: each fact lives in exactly one place</h3><ul class="sbullets"><li>employees(employee_id, name, job_id, salary, department_id)</li><li>departments(department_id, department_name, location)</li><li>jobs(job_id, job_title, min_salary, max_salary)</li><li>Change a location once, in one row — no contradictions possible</li><li>Joins stitch the picture back together when you ask</li></ul></div><div class="slide"><h3 class="stitle">Normal forms, in plain words</h3><ul class="sbullets"><li>1NF — cells hold single values, not lists inside a cell</li><li>2NF — facts depend on the whole key</li><li>3NF — and nothing but the key</li><li>"the key, the whole key, and nothing but the key"</li><li>Dashboards deliberately denormalize: pre-joined wide tables trade storage for speed</li></ul></div><div class="slide"><h3 class="stitle">One language, five flavours</h3></div><div class="slide"><h3 class="stitle">The big five, and who runs them</h3><ul class="sbullets"><li>SQLite — phones, browsers, small apps; lives inside your device</li><li>PostgreSQL — startups and modern data platforms</li><li>MySQL — web giants and UPI-scale apps</li><li>SQL Server — Microsoft shops, many Indian banks and insurers</li><li>Oracle — large enterprises, government, core banking</li></ul></div><div class="slide"><h3 class="stitle">Same sentence, small accents</h3><ul class="sbullets"><li>row limit:  LIMIT 3   |   TOP 3   |   FETCH FIRST 3 ROWS ONLY   |   ROWNUM &lt;= 3</li><li>join text:  'a' || 'b'  vs  CONCAT('a', 'b')  vs  'a' + 'b'</li><li>Case rules, date arithmetic and auto-numbering also differ a little</li><li>Learn standard SQL once; pick up a workplace's accent in about a day</li></ul></div><div class="slide"><h3 class="stitle">Twelve exercises, nothing to install</h3><p class="scaption">LAB · S13B</p></div><div class="slide"><h3 class="stitle">Your workspace for the hour</h3><ul class="sbullets"><li>sql-practice.online/?mode=scenario&amp;category=select-statements&amp;engine=core-sql</li><li>Editor on the left, expected output on the right, ER button above the tables</li><li>Run with Ctrl/⌘ + Enter; switch engines in the dropdown to hear other accents</li><li>Oracle here is a guided comparison, not live execution</li><li>Solve: SELECT columns, DISTINCT, salary * 0.10, aliases, then the capstone projection</li></ul></div><div class="slide"><h3 class="stitle">By the end of the hour</h3><ul class="sbullets"><li>Say what a relational database is and why industry trusts it with money</li><li>Write SELECT queries with filtering, distinct values, aliases, computed columns</li><li>Read an ER diagram and explain primary and foreign keys</li><li>Explain normalization with one anomaly story per split</li><li>Homework: finish all twelve exercises before Session 14 — finance starts next</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

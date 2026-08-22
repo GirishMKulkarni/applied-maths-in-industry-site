@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Neural Networks — Teach a Computer to Read Handwritten Digits · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 2 — Machine Learning for Industry</p>
+  <h1>S13 · Neural Networks — Teach a Computer to Read Handwritten Digits</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/slopes_and_gradients.html">Slopes and gradients</a></li><li><a href="../primers/vectors_and_matrices.html">Vectors and matrices</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>India Post handles crores of letters. On every envelope is a six-digit PIN code,
+written by hand, and the sorting machines have to read those digits to send the
+letter the right way. Banks have the same headache with the amount written on a
+cheque. A human can glance at a scribbled "7" and know it at once. How do you get
+a computer to do the same, when no two people write a "7" the same way?</p>
+<p>You cannot write down a rule for it. There are too many styles of handwriting to
+list. So instead you show the computer thousands of examples of each digit and
+let it work out the pattern for itself. That is a neural network, and by the end
+of today you will have trained one that reads handwritten digits.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>A neural network is a flexible function with a lot of little dials on it. Feed a
+picture in one end, a guess comes out the other. At the start the dials are set
+randomly, so the guesses are nonsense. Then you show it an example, check how
+wrong it was, and nudge every dial a tiny bit in the direction that would have
+made it less wrong. Do that across thousands of examples, again and again, and
+the dials settle into a setting that reads digits well.</p>
+<p>That is the whole thing. A flexible function that learns from examples by nudging
+its dials to shrink its mistakes. The dials are called weights, the "how wrong"
+number is called the loss, and the nudging is the same downhill walk you may have
+seen in Session 7, just with far more dials at once.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Build the pieces of a network by hand in NumPy: one neuron, the "bend"
+   (activation) that lets a network fit curves, and a full pass from input to
+   prediction. You will see exactly what the dials do.</li>
+<li>Train a real neural network in PyTorch that reads the 8x8 handwritten digits,
+   watch its mistakes shrink epoch by epoch, and measure how often it is right on
+   digits it never saw. This is your portfolio piece: "I trained a neural network
+   end to end."</li>
+<li>Meet a network that keeps the picture as a grid instead of flattening it (a
+   convolutional network), and see the little pattern-detectors it slides over an
+   image.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what a neuron, a layer and an "activation" are, and why stacking them works,</li>
+<li>what "the network learns" actually means (nudging dials downhill),</li>
+<li>how to build and train a network in PyTorch and score it honestly.</li>
+</ul>
+<p>The little you may want in advance:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Want the picture behind "nudging dials downhill"? Read
+  <a href="../primers/slopes_and_gradients.html">Slopes and gradients</a>.</li>
+<li>A neuron's "weighted sum" is just a list of numbers times another list; if that
+  feels new, <a href="../primers/vectors_and_matrices.html">Vectors and matrices</a> has it
+  in one page.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code or already know some calculus, skip ahead and look for the
+cells marked <strong>Stretch (optional)</strong> in the notebooks. That is where backprop and
+the chain rule live.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain a neural network as a flexible function that learns by nudging its dials
+  to reduce its mistakes.</li>
+<li>Build, train and evaluate a small neural network in PyTorch, read its falling
+  loss curve, and report an honest test accuracy.</li>
+<li>Say why the "bend" (the activation) is what makes a deep network better than a
+  straight line.</li>
+<li>Say in one sentence what a convolution does and why it suits images.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth, and none of
+it is needed to finish.</p>
+<p>Today's mathematical object is a <strong>composition of linear maps with
+nonlinearities</strong>. One layer computes <code>h = f(Wx + b)</code>: a linear map <code>Wx + b</code>
+followed by a nonlinear "bend" <code>f</code> (such as ReLU). Stack a few of these and the
+whole network is <code>f₃(W₃ f₂(W₂ f₁(W₁x + b₁) + b₂) + b₃)</code>. The nonlinearity matters
+because a composition of purely linear maps is again a single linear map, so
+without the bend, depth would buy you nothing.</p>
+<p>Training minimises a loss <code>L</code> over all the weights by <strong>gradient descent</strong>: step
+each weight against its gradient <code>∂L/∂w</code>. Those gradients are found by
+<strong>backpropagation</strong>, which is nothing more than the <strong>chain rule</strong> applied along
+the computation graph: <code>∂L/∂w = ∂L/∂ŷ · ∂ŷ/∂h · ∂h/∂z · ∂z/∂w</code>, the product of the
+local derivatives along the path. Modern frameworks (here, PyTorch's autograd)
+compute this for you automatically, so you never hand-derive a gradient again. The
+first notebook does one such chain-rule calculation by hand and checks it
+numerically, so the word "backprop" stops being mysterious.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>neuron</strong> — one small step that multiplies inputs by weights, adds them up, and bends the result.</li>
+<li><strong>weight / bias</strong> — the dials of the network: the numbers it adjusts while learning.</li>
+<li><strong>activation</strong> — the "bend" (like ReLU) that lets a network fit curves, not just straight lines.</li>
+<li><strong>forward pass</strong> — sending an input through the network to get a prediction.</li>
+<li><strong>loss</strong> — one number saying how wrong the current predictions are; smaller is better.</li>
+<li><strong>backpropagation</strong> — working out how to nudge each weight; it is the chain rule, run automatically.</li>
+<li><strong>epoch</strong> — one full pass over the training data during training.</li>
+<li><strong>tensor</strong> — PyTorch's array of numbers, like a NumPy array that can also track gradients.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">A neural network, built by hand</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S13/notebooks/01_a_neural_network_by_hand.ipynb">Open in Colab</a>
+      <a class="btn" href="S13/notebooks/01_a_neural_network_by_hand.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S13/notebooks/01_a_neural_network_by_hand.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Train a neural network to read digits (PyTorch)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S13/notebooks/02_train_a_neural_network.ipynb">Open in Colab</a>
+      <a class="btn" href="S13/notebooks/02_train_a_neural_network.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S13/notebooks/02_train_a_neural_network.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">A network that keeps the picture (a tiny CNN)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S13/notebooks/03_a_network_that_reads_pictures.ipynb">Open in Colab</a>
+      <a class="btn" href="S13/notebooks/03_a_network_that_reads_pictures.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S13/notebooks/03_a_network_that_reads_pictures.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>scikit-learn load_digits — 1,797 small 8x8 handwritten digits, bundled with scikit-learn (no download, works offline)</li>
+<li>Small synthetic examples generated inside the notebooks</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>3Blue1Brown — <em>Neural Networks</em> (YouTube series, the best visual explanation of backprop)</li>
+<li><a href="https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html">PyTorch — Deep Learning with PyTorch: A 60 Minute Blitz</a></li>
+<li>Andrew Ng — Deep Learning Specialization (Coursera), Course 1</li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Neural Networks</h3><ul class="sbullets"><li>A flexible function that learns from examples</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 2 — Machine Learning for Industry   ·   Session S13   ·   2 hours Module 2 — the last ML session before we turn to finance</p></div><div class="slide"><h3 class="stitle">What is a neural network?</h3></div><div class="slide"><h3 class="stitle">The one idea</h3><ul class="sbullets"><li>A flexible function with many tunable dials (weights).</li><li>Feed inputs in one end; a guess comes out the other.</li><li>At the start the dials are random — guesses are nonsense.</li><li>Learning = nudge the dials until the guesses are good.</li></ul></div><div class="slide"><h3 class="stitle">The whole idea, in one picture</h3><ul class="sbullets"><li>A picture goes in; a guess comes out.</li><li>Inside: lots of little dials (weights).</li><li>Wrong guess? Nudge every dial a little.</li><li>Repeat thousands of times.</li></ul><img class="sdiagram" src="S13/slides/4_0.png" alt="slide 4 diagram" loading="lazy"><p class="scaption">A picture goes in, a guess comes out; nudge the dials until it's right.</p></div><div class="slide"><h3 class="stitle">One neuron: multiply, add, bend</h3></div><div class="slide"><h3 class="stitle">A single neuron, drawn out</h3><img class="sdiagram" src="S13/slides/6_0.png" alt="slide 6 diagram" loading="lazy"><p class="scaption">Multiply each input by its dial, add them up, add a bias, then bend.</p></div><div class="slide"><h3 class="stitle">One neuron, written out</h3><ul class="sbullets"><li>Multiply each input by its dial, add them up, add a bias — then bend.</li><li>xᵢ — one input (e.g. one pixel of the picture)</li><li>wᵢ — that input's dial (weight); training chooses it</li><li>b — the bias, a fixed baseline added to the sum</li><li>z — the weighted sum;  a — the output after the bend</li></ul><img class="sdiagram" src="S13/slides/7_0.png" alt="slide 7 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">The 'bend' — why a network needs it</h3></div><div class="slide"><h3 class="stitle">Without a bend, layers collapse</h3><img class="sdiagram" src="S13/slides/9_0.png" alt="slide 9 diagram" loading="lazy"><p class="scaption">Stacking 'multiply and add' with no bend is still one straight line.</p></div><div class="slide"><h3 class="stitle">Three common bends</h3><ul class="sbullets"><li>ReLU: keep positives, zero the rest — the default.</li><li>Sigmoid: squash to between 0 and 1.</li><li>Tanh: squash to between −1 and 1.</li><li>Last bend fits the task: softmax for the ten digits.</li></ul><img class="sdiagram" src="S13/slides/10_0.png" alt="slide 10 diagram" loading="lazy"><p class="scaption">ReLU is the modern default; sigmoid and tanh squash to a bounded range.</p></div><div class="slide"><h3 class="stitle">The default bend: ReLU</h3><ul class="sbullets"><li>Keep a positive value as it is; flatten anything negative to zero.</li><li>z — the weighted sum coming in</li><li>a — what comes out after the bend</li><li>one plain kink is all the nonlinearity a layer needs</li></ul><img class="sdiagram" src="S13/slides/11_0.png" alt="slide 11 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Stacking neurons into layers</h3></div><div class="slide"><h3 class="stitle">A small network</h3><ul class="sbullets"><li>Input → hidden layers → output.</li><li>Every arrow is a dial to be learned.</li><li>More hidden layers = 'deeper'.</li><li>Real networks have millions of dials.</li></ul><img class="sdiagram" src="S13/slides/13_0.png" alt="slide 13 diagram" loading="lazy"><p class="scaption">Input → a couple of hidden layers → output. Every arrow is a dial.</p></div><div class="slide"><h3 class="stitle">Making a guess, learning from a wrong one</h3></div><div class="slide"><h3 class="stitle">Making a guess (the forward pass)</h3><img class="sdiagram" src="S13/slides/15_0.png" alt="slide 15 diagram" loading="lazy"><p class="scaption">Push the picture through the layers, left to right; a guess comes out.</p></div><div class="slide"><h3 class="stitle">How wrong was it? The loss (cross-entropy)</h3><ul class="sbullets"><li>Reward the network for putting high probability on the correct digit.</li><li>yᵢ — 1 for the true digit, 0 for the rest</li><li>pᵢ — the probability the network gave digit i</li><li>only the true digit's term survives; smaller loss is better</li></ul><img class="sdiagram" src="S13/slides/16_0.png" alt="slide 16 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Learning: send the blame back (backprop)</h3><img class="sdiagram" src="S13/slides/17_0.png" alt="slide 17 diagram" loading="lazy"><p class="scaption">After a wrong guess, work out which way to nudge every dial.</p></div><div class="slide"><h3 class="stitle">Training: the downhill walk</h3></div><div class="slide"><h3 class="stitle">The same downhill walk as S7</h3><img class="sdiagram" src="S13/slides/19_0.png" alt="slide 19 diagram" loading="lazy"><p class="scaption">Find which way is downhill, take a step, repeat — just millions of dials.</p></div><div class="slide"><h3 class="stitle">The mistakes shrink, step by step</h3><img class="sdiagram" src="S13/slides/20_0.png" alt="slide 20 diagram" loading="lazy"><p class="scaption">Each step nudges the dials; the mistake count trends down over training.</p></div><div class="slide"><h3 class="stitle">Don't let it just memorise</h3></div><div class="slide"><h3 class="stitle">Judge on unseen digits, and stop early</h3><ul class="sbullets"><li>A big network can simply memorise the data.</li><li>Judge only on digits it never saw.</li><li>Early stopping: quit when unseen error turns up.</li><li>Dropout: switch off some neurons while training.</li></ul><img class="sdiagram" src="S13/slides/22_0.png" alt="slide 22 diagram" loading="lazy"><p class="scaption">Mistakes on studied digits keep falling; stop when unseen mistakes climb.</p></div><div class="slide"><h3 class="stitle">The digit-reader you'll build</h3></div><div class="slide"><h3 class="stitle">The digits, and how the network sees them</h3><ul class="sbullets"><li>Flatten each 8×8 image into 64 numbers.</li><li>Hidden layers with ReLU learn combinations of pixels.</li><li>Output: 10 scores → softmax → a probability each.</li><li>The guess is the digit with the highest probability.</li></ul><img class="sdiagram" src="S13/slides/24_0.png" alt="slide 24 diagram" loading="lazy"><p class="scaption">scikit-learn ships 1,797 tiny 8×8 handwritten digits — no download.</p></div><div class="slide"><h3 class="stitle">Now open the notebook →</h3><ul class="sbullets"><li>Build a neuron by hand, then train a digit-reader end to end — notebooks 01–03</li></ul></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>A neural network is a flexible function that learns from examples.</li><li>One neuron: multiply by dials, add them, add a bias, then bend.</li><li>The 'bend' (activation) is what makes stacking layers worth it.</li><li>It learns by the same downhill walk as S7; backprop finds the direction.</li><li>Judge only on unseen data; dropout and early stopping curb memorising.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S13_neural_networks/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_a_neural_network_by_hand.ipynb 02_train_a_neural_network.ipynb 03_a_network_that_reads_pictures.ipynb scikit-learn load_digits — 1,797 small 8×8 handwritten digits (no download, works offline) Small synthetic examples generated inside the notebooks New to code? primers/python_in_15_minutes.md The 'nudging downhill' picture: primers/slopes_and_gradients.md 3Blue1Brown — Neural Networks (YouTube): the best visual on backprop PyTorch — Deep Learning: A 60 Minute Blitz</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S14 — Finance 101 &amp; financial data. Module 3 begins: markets, log-returns, and pulling real data with yfinance and NSEpy.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
