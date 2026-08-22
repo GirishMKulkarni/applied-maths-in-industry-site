@@ -1,0 +1,254 @@
+# ======================================================================
+#  S12 · Getting Messy Data Into Shape — Feature Engineering
+#  Class teaching commands. Run top to bottom against:
+#      data/messy_customers.csv
+#  Same flow as the notebook 01_messy_data_to_model.ipynb.
+#  Story of the hour: SAME model, better features — 0.7152 -> 0.8533.
+# ======================================================================
+
+# ===== SETUP =====
+
+# fast maths on whole columns of numbers
+import numpy as np
+
+# tables and CSV reading
+import pandas as pd
+
+# a fixed seed so we all get the same 'random' split every time
+np.random.seed(42)
+
+# split rows into train/test honestly
+from sklearn.model_selection import train_test_split
+
+# the one model we keep fixed all session
+from sklearn.linear_model import LogisticRegression
+
+# how we score: share of correct predictions
+from sklearn.metrics import accuracy_score
+
+# puts all columns on one common scale (fit on train only!)
+from sklearn.preprocessing import StandardScaler, PolynomialFeatures
+
+
+# ===== STEP 1 — ALWAYS LOOK FIRST =====
+
+# load the bank's messy customer export into a DataFrame
+df = pd.read_csv("data/messy_customers.csv")
+
+# size of the table: 503 rows x 9 columns
+print(df.shape)
+
+# eyeball the first five customers
+print(df.head())
+
+# column types plus where values are missing
+df.info()
+
+# count blanks per column: Income has 48, City has 30
+print(df.isna().sum())
+
+# the largest age is 999 — nobody is 999 years old; that is disguised missing
+print("max age:", df["Age"].max())
+
+# three rows are exact copies of earlier rows
+print("duplicate rows:", df.duplicated().sum())
+
+
+# ===== STEP 2 — BASELINE: the same model on the raw mess =====
+
+# keep only columns a model can almost use right away
+temp = df[["Age", "Income", "Purchased"]].copy()
+
+# quick-and-dirty fill so the model can run at all
+temp["Income"] = temp["Income"].fillna(temp["Income"].median())
+
+# X = inputs (features), y = the answer we want to predict
+X = temp.drop("Purchased", axis=1)
+y = temp["Purchased"]
+
+# 70% train / 30% test, seeded so everyone gets the same split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42)
+
+# fit our fixed model on the messy features
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, y_train)
+
+# score on rows the model never saw: about 0.7152 — our 'before' number
+pred = model.predict(X_test)
+print("Baseline Accuracy:", round(accuracy_score(y_test, pred), 4))
+
+
+# ===== STEP 3 — UNMASK THE FAKE MISSING (sentinel 999) =====
+
+# replace the fake 999 ages with honest NaN so pandas knows they are missing
+df["Age"] = df["Age"].replace(999, np.nan)
+
+
+# ===== STEP 4 — TIDY THE TEXT BEFORE COUNTING IT =====
+
+# strip stray spaces and fix capitalisation: " mumbai " -> "Mumbai"
+df["City"] = df["City"].str.strip().str.title()
+
+# now each city is spelled one way only
+print(sorted(df["City"].dropna().unique()))
+
+
+# ===== STEP 5 — FILL THE REAL GAPS =====
+
+# fill missing income with the median (typical value, robust to crorepatis)
+df["Income"] = df["Income"].fillna(df["Income"].median())
+
+# fill missing city with the most common city
+df["City"] = df["City"].fillna(df["City"].mode()[0])
+
+# now fill the unmasked age gaps with the median age too
+df["Age"] = df["Age"].fillna(df["Age"].median())
+
+# confirm nothing is missing any more
+print(df[["Age", "Income", "City"]].isna().sum())
+
+
+# ===== STEP 6 — DROP THE DEAD WEIGHT =====
+
+# remove the three exact duplicate customers
+df = df.drop_duplicates()
+
+# Region says 'West' on every row (no information) and Customer_ID is unique per row (no pattern)
+df = df.drop(columns=["Region", "Customer_ID"])
+
+# 503 rows become 500 after removing duplicates
+print("rows after cleaning:", len(df))
+
+
+# ===== STEP 7 — CAP THE OUTLIERS (IQR rule) =====
+
+# first and third quartile of income
+q1 = df["Income"].quantile(0.25)
+q3 = df["Income"].quantile(0.75)
+
+# interquartile range: the spread of the middle half
+iqr = q3 - q1
+
+# anything beyond these fences is an outlier
+lower = q1 - 1.5 * iqr
+upper = q3 + 1.5 * iqr
+
+# show the cap we will clip at (about 146000)
+print("income cap:", round(upper, 0))
+
+# clip both income columns into the fences — no more crorepati incomes
+df["Income"] = np.clip(df["Income"], lower, upper)
+df["Income_Copy"] = np.clip(df["Income_Copy"], lower, upper)
+
+
+# ===== STEP 8 — LOG THE SKEWED MONEY =====
+
+# log(1+income): squashes huge values together, keeps order — money loves logs
+df["Income_Log"] = np.log1p(df["Income"])
+
+# compare raw vs logged side by side
+print(df[["Income", "Income_Log"]].head())
+
+
+# ===== STEP 9 — DATES UNFOLD INTO NUMBERS =====
+
+# make sure the column really is a date type
+df["Join_Date"] = pd.to_datetime(df["Join_Date"])
+
+# which month they joined (seasonality)
+df["Month"] = df["Join_Date"].dt.month
+
+# which day of the week (0 = Monday)
+df["Weekday"] = df["Join_Date"].dt.dayofweek
+
+
+# ===== STEP 10 — INTERACTION: two columns multiplied =====
+
+# age x log-income carries signal neither column holds alone
+df["Age_Income"] = df["Age"] * df["Income_Log"]
+
+
+# ===== STEP 11 — POLYNOMIAL: let a line bend =====
+
+# degree-2 expander builds Age^2 for us
+poly = PolynomialFeatures(degree=2, include_bias=False)
+
+# learn the expansion from the Age column alone
+poly.fit(df[["Age"]])
+
+# apply it and keep the squared term as a new feature
+df["Age_Squared"] = poly.transform(df[["Age"]])[:, 1]
+
+
+# ===== STEP 12 — DROP THE CORRELATED TWIN =====
+
+# Income_Copy is a near-copy of Income — check the correlation
+print(df[["Income", "Income_Copy"]].corr())
+
+# keep just one of the pair; twins add no new information
+df = df.drop(columns="Income_Copy")
+
+
+# ===== STEP 13 — SPOT AND DROP THE LEAK =====
+
+# build a feature set that includes Purchased_Copy (a disguised copy of the answer)
+leak = df[["Age", "Income_Log", "Age_Income", "Age_Squared", "Purchased_Copy"]].copy()
+ly = df["Purchased"]
+
+LX_train, LX_test, ly_train, ly_test = train_test_split(
+    leak, ly, test_size=0.3, random_state=42)
+
+# fit on the leaking features
+leak_model = LogisticRegression(max_iter=1000)
+leak_model.fit(LX_train, ly_train)
+
+# accuracy jumps to about 0.99 — too good to be true: the answer leaked in
+print("accuracy WITH leakage:", round(accuracy_score(ly_test, leak_model.predict(LX_test)), 4))
+
+# drop the cheat column; the answer must never be a feature
+df = df.drop(columns="Purchased_Copy")
+
+
+# ===== STEP 14 — ONE-HOT ENCODE THE CITY =====
+
+# turn the four cities into four 0/1 columns; drop_first avoids the dummy trap
+df = pd.get_dummies(df, columns=["City"], drop_first=True)
+
+
+# ===== STEP 15 — SCALE, FITTING ON TRAIN ONLY =====
+
+# drop the target and the raw date (models want numbers)
+X = df.drop(columns=["Purchased", "Join_Date"])
+y = df["Purchased"]
+
+# same honest split as the baseline
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42)
+
+# the numeric columns we will standardise
+numeric_features = ["Age", "Income_Log", "Age_Income", "Age_Squared"]
+
+# create the scaler
+scaler = StandardScaler()
+
+# fit means/spreads on TRAIN ONLY — the test set must stay a stranger
+scaler.fit(X_train[numeric_features])
+
+# apply the same transformation to both splits
+X_train[numeric_features] = scaler.transform(X_train[numeric_features])
+X_test[numeric_features] = scaler.transform(X_test[numeric_features])
+
+
+# ===== STEP 16 — FINAL MODEL: same model, better features =====
+
+# the identical LogisticRegression as Step 2 — untouched
+final_model = LogisticRegression(max_iter=1000)
+final_model.fit(X_train, y_train)
+
+# score on the test rows
+pred = final_model.predict(X_test)
+
+# the payoff: about 0.7152 before, about 0.8533 after — features did that
+print("Baseline Accuracy:", round(0.7152, 4))
+print("Final Accuracy:   ", round(accuracy_score(y_test, pred), 4))
