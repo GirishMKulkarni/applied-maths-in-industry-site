@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>The Plant&#x27;s Electricity Bill · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A steel plant</li><li><strong>Field:</strong> Heavy industry and energy</li><li><strong>Data:</strong> UCI Steel Industry Energy Consumption — 35,040 readings at 15-minute intervals through 2018</li><li><strong>Size:</strong> about 2 MB</li><li><strong>Licence:</strong> CC BY 4.0</li><li><strong>The catch:</strong> Midnight is next to 23:45, and half your columns are not available at the moment you have to forecast.</li></ul></section>
+<section class="body"><h1 id="p5-the-plants-electricity-bill">P5 · The Plant's Electricity Bill</h1>
+<h2 id="the-situation">The situation</h2>
+<p>A steel plant buys its electricity on an industrial tariff. Part of the bill is
+the energy it uses, which is unavoidable, and part is a demand charge based on
+the highest load it hits during the billing period. That second part is the one
+that can be managed, and at the moment nobody manages it, because nobody knows
+the peak is coming until it has come.</p>
+<p>The plant runs continuously, in shifts, with a mix of light finishing work and
+heavy melting that draws enormously more power. Operations can move some of the
+heavy work, within limits, if they know far enough in advance.</p>
+<p>The energy manager wants two things, and the plant engineer wants a third.</p>
+<p>The energy manager wants a forecast of consumption, so the plant can plan its
+purchases and see a peak coming.</p>
+<p>She also wants a warning classified in the plant's own language. Operations do
+not talk in kilowatt hours, they talk about whether the plant is on a light,
+medium or maximum load, and a warning has to arrive in those words to be acted
+on.</p>
+<p>The plant engineer has a different question. He thinks the plant really only has
+about four kinds of day, and that the shift roster does not match them. He wants
+to know if he is right.</p>
+<h2 id="the-three-questions">The three questions</h2>
+<p>As the energy manager and the plant engineer asked them.</p>
+<p><strong>1. "What are we going to draw in the next fifteen minutes, and am I heading into a peak?"</strong></p>
+<p><strong>2. "Warn me in our own words. Is the plant going into light, medium or maximum load?"</strong></p>
+<p><strong>3. "I reckon this plant really only has about four kinds of day. Am I right, and does the shift roster match them?"</strong></p>
+<details>
+<summary><strong>Stuck at the very start? Open this.</strong></summary>
+<p>The first move only.</p>
+<p><strong>Question 1 is a regression problem</strong>, predicting a number of kilowatt hours.
+Start with linear regression from Session 7. Before you do, deal with time: the
+plant runs on a daily and weekly rhythm, and if you hand a model an hour column
+running 0 to 23 you have told it that 23:45 and 00:00 are as far apart as it is
+possible to be. Session 12 is where the fix for that lives.</p>
+<p><strong>Question 2 is a multi-class classification problem</strong> with three classes, and
+the column is already there. Start with logistic regression from Session 9, then
+try the trees from Session 10, which tend to do well on this kind of data.</p>
+<p><strong>Question 3 is a clustering problem</strong> with an awkward first step. You have to
+decide what a "day" is as a row before you can cluster days at all. One natural
+choice is to turn each date into a row of ninety-six numbers, one per fifteen
+minute reading, so that a row is the shape of that day. Then k-means from
+Session 11. Whether you should scale each day first is a real decision with a
+real consequence, and it is yours to make.</p>
+</details>
+<h2 id="the-data">The data</h2>
+<p>Steel Industry Energy Consumption, from the UCI repository. Thirty-five thousand
+and forty readings taken every fifteen minutes through a full year of 2018 at a
+single plant. Consumption in kWh, reactive power both leading and lagging, the
+power factors, carbon dioxide, the number of seconds from midnight, the week
+status, the day of week, and the load type.</p>
+<pre><code>https://archive.ics.uci.edu/static/public/851/steel+industry+energy+consumption.zip
+</code></pre>
+<p>Licensed CC BY 4.0.</p>
+<h2 id="constraints-on-this-brief">Constraints on this brief</h2>
+<p><strong>Time is circular and your model does not know that.</strong> Fifteen minutes before
+midnight and fifteen minutes after are adjacent in the plant and twenty-three
+hours apart in an integer column. The same is true of Sunday and Monday, and of
+December and January. If you hand a model an hour column running 0 to 23 you have
+told it something false. Fixing that properly is the feature engineering lesson
+of this brief, and it is worth doing before anything else, because it changes
+every result that follows.</p>
+<p><strong>Test on the last two months, chronologically.</strong> The plant in November is not
+the plant in March.</p>
+<p><strong>Decide what you actually have at forecast time, and defend it.</strong> Reactive
+power, power factor and carbon dioxide are all measured at the same instant as
+the target. If you are forecasting the next interval, you do not have them yet.
+If you are estimating the current interval from cheaper instruments, you might.
+Those are two different products with two different sets of legal features.
+Choose one, say which, and be consistent. Teams that quietly use same-instant
+columns to predict the same instant will get a beautiful score and no marks.</p>
+<p><strong>The three load classes are not equally common, and not equally important.</strong>
+Missing the onset of a maximum-load period costs the demand charge for the whole
+billing period. A false alarm costs an unnecessary schedule change. Those are not
+the same number, and your threshold should not pretend they are.</p>
+<h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
+<p>This is the most tractable of the six, and that is a trap of a different kind.
+The scores come out high enough that it is tempting to stop. The marks here are
+not in the score, they are in the four decisions above, each of which can be made
+badly in a way that looks fine on a leaderboard.</p>
+<p>The genuinely difficult part is the clustering. You have three hundred and
+sixty-five days, each of which is a curve of ninety-six readings, and you have to
+decide what it means for two days to be similar before you can cluster them at
+all. Two days with the same shape shifted by an hour: same kind of day, or not?
+There is no right answer in the data. There is an answer that is useful to the
+plant engineer, and you have to argue for it.</p>
+<h2 id="what-to-do-next">What to do next</h2>
+<ol>
+<li>Read <a href="method.html">the method</a>. It lists the eight things every submission
+   contains, whichever brief you chose. It is the specification, not advice.</li>
+<li>Read <a href="rubric.html">the rubric</a> so you know where the hundred marks are, and
+   which four mistakes lose them.</li>
+<li>Before you write any modelling code, write the one-page cost note that stage 1
+   asks for and commit it. The timestamp on that commit is worth ten marks.</li>
+<li>Download the data with code, in a notebook, and answer your eight questions
+   about it.</li>
+<li>Split the test set off the way this brief tells you to, and do not look at it
+   again until the end.</li>
+</ol>
+<p>If you are stuck before any of that, open the nudge box above.</p></section>
+<p class="back"><a href="index.html">&larr; All projects</a> · <a href="method.html">The method</a> · <a href="rubric.html">The rubric</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

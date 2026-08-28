@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>The Number on the Screen · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A sports broadcaster</li><li><strong>Field:</strong> Sports analytics and live media</li><li><strong>Data:</strong> IPL ball-by-ball, 2008 to 2023 — one CSV, one row per delivery</li><li><strong>Size:</strong> about 25 MB</li><li><strong>Licence:</strong> Derived from Cricsheet, Open Data Commons Attribution 1.0. Credit Cricsheet.</li><li><strong>The catch:</strong> A row is one ball. An outcome is one match. And being right is not enough here.</li></ul></section>
+<section class="body"><h1 id="p6-the-number-on-the-screen">P6 · The Number on the Screen</h1>
+<h2 id="the-situation">The situation</h2>
+<p>You are working for a broadcaster covering the IPL. During the second innings
+the production team wants two numbers in the corner of the screen, updating
+every ball.</p>
+<p>A projected final score, so the commentary has something to argue about.</p>
+<p>And a win probability for each side, because that is the number viewers now
+expect and a rival broadcaster already has one.</p>
+<p>The head of production has been clear about one thing. The graphic will be on
+screen in front of tens of millions of people, and it cannot embarrass them. If
+it says a side has a seventy percent chance and that side loses, that is fine.
+If it says seventy percent about a hundred different situations and the side
+wins forty of them, the number is a lie and people on the internet will work
+that out within a season.</p>
+<p>The commentary team have asked for something else while you are at it. They want
+three or four types of batter, with names they can use on air, worked out from
+what players actually do rather than from reputation.</p>
+<h2 id="the-three-questions">The three questions</h2>
+<p>As the production team asked them.</p>
+<p><strong>1. "It is the end of over twelve. What score are they going to finish on?"</strong></p>
+<p><strong>2. "And what is the chance each side wins from here?"</strong></p>
+<p><strong>3. "Give the commentary team three or four types of batter, with names they can say on air."</strong></p>
+<details>
+<summary><strong>Stuck at the very start? Open this.</strong></summary>
+<p>The first move only.</p>
+<p><strong>Question 1 is a regression problem.</strong> Your rows are individual deliveries, but
+the thing you predict from is the state of the match at the end of an over, so
+your first job is to group the deliveries into one row per over: runs so far,
+wickets down, balls remaining, and the final score of that innings as the target.
+Then linear regression from Session 7.</p>
+<p><strong>Question 2 is a binary classification problem</strong>, one side wins or does not,
+and the winner is already in the data. Start with logistic regression from
+Session 9. Here is the thing that makes this brief different from the others:
+you do not really want the label, you want the <em>probability</em>, because that is
+what goes on the screen. Logistic regression is a good starting point precisely
+because the number it gives you is meant to be read as a probability.</p>
+<p><strong>Question 3 is a clustering problem.</strong> Build one row per batter out of their
+own deliveries, with a few numbers describing how they score, then k-means from
+Session 11. Set a minimum number of balls faced before you include a player, or
+somebody who faced four balls in 2011 will get their own cluster.</p>
+</details>
+<h2 id="the-data">The data</h2>
+<p>One CSV, <code>ball_by_ball_ipl.csv</code>, one row per delivery for every IPL season from
+2008 to 2023. Each row already carries the match it belongs to, the innings, the
+over and ball, the batter, the bowler, the runs scored, the wicket if there was
+one, the venue, the two teams, the target, and the eventual match winner.</p>
+<p>It downloads without a Kaggle account:</p>
+<pre><code>https://www.kaggle.com/api/v1/datasets/download/jamiewelsh2/ball-by-ball-ipl
+</code></pre>
+<p>The data derives from Cricsheet, which publishes under the Open Data Commons
+Attribution License 1.0, so credit Cricsheet clearly in your repo and your memo.</p>
+<p>You still have to turn deliveries into the thing you actually predict from,
+which is the state of the match at the end of an over: runs so far, wickets
+down, balls left, runs required. That is a group-and-aggregate on the ball rows,
+and it is modelling work rather than plumbing.</p>
+<h2 id="constraints-on-this-brief">Constraints on this brief</h2>
+<p><strong>Split by match, never by ball.</strong> Every delivery in a game shares that game's
+outcome, its pitch, its weather and its two teams. Put some balls from a match in
+training and some in testing and your model has effectively seen the answer. This
+is the single most common mistake made on this dataset, and it is invisible in
+the scores, which is what makes it dangerous. Later seasons should be your test
+set.</p>
+<p><strong>You are marked on calibration, not on accuracy.</strong> Report the Brier score and
+plot the reliability curve. Bucket your predictions by the probability you gave
+and show what fraction actually won in each bucket. A model with worse accuracy
+and honest probabilities beats a confident, badly calibrated one, because the
+first can go on television and the second cannot.</p>
+<p><strong>One model over all overs will disappoint you.</strong> The state at the end of over
+two and the state at the end of over eighteen are different problems. Runs
+required, balls remaining and wickets in hand interact completely differently at
+the two ends of an innings. Noticing this, and deciding what to do about it, is
+the modelling judgement in this brief.</p>
+<p><strong>Decide what you do about rain.</strong> Some matches are shortened and resolved by
+the Duckworth-Lewis-Stern method, some are abandoned, some have revised targets
+mid-innings. Every one of those distorts the relationship you are trying to
+learn. Drop them, model them or flag them, but say which and why.</p>
+<h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
+<p>The temptation is to add everything: player identities, venue, toss, head to
+head. Some of that helps and some of it is a route to memorising which teams
+were good in 2014. The test set is later seasons, and squads change completely
+between them, so a model that leans on player identity ages badly in a way your
+cross-validation will not show you until the final test.</p>
+<p>The second difficulty is the one the production head named. Being accurate and
+being honest about your uncertainty are different properties, most classifiers
+optimise the first, and the fix is not more searching. Session 9 gave you the
+tools to see the problem. What you do about it is yours to work out.</p>
+<h2 id="what-to-do-next">What to do next</h2>
+<ol>
+<li>Read <a href="method.html">the method</a>. It lists the eight things every submission
+   contains, whichever brief you chose. It is the specification, not advice.</li>
+<li>Read <a href="rubric.html">the rubric</a> so you know where the hundred marks are, and
+   which four mistakes lose them.</li>
+<li>Before you write any modelling code, write the one-page cost note that stage 1
+   asks for and commit it. The timestamp on that commit is worth ten marks.</li>
+<li>Download the data with code, in a notebook, and answer your eight questions
+   about it.</li>
+<li>Split the test set off the way this brief tells you to, and do not look at it
+   again until the end.</li>
+</ol>
+<p>If you are stuck before any of that, open the nudge box above.</p></section>
+<p class="back"><a href="index.html">&larr; All projects</a> · <a href="method.html">The method</a> · <a href="rubric.html">The rubric</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Projects · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="projects">Projects</h1>
+<p>Everything up to here has been a lab. The data was small, it was already clean,
+and the answer was somewhere on the page. A project is not that.</p>
+<p>You get a situation, a dataset nobody tidied for you, and three questions a real
+team would actually be asked. Nothing else. There is no starter notebook, no
+hint about which model to use, and no worked example to lean on. That is the
+point. By now you have met every tool you need, in sessions 7 to 13B. The work
+left is deciding which of them to reach for, and being able to say why.</p>
+<p>You will spend about eight weeks on this, alongside the finance and optimization
+modules. You present it in Session 29 and show it working in Session 30.</p>
+<h2 id="how-this-works">How this works</h2>
+<ol>
+<li>Read the six briefs below and pick the one you want. Your team is three or
+   four people, fixed in class.</li>
+<li>Open your brief. It gives you a real situation, three questions in the words
+   the client actually used, and the data.</li>
+<li>If you cannot tell what kind of problem a question is, open the nudge box in
+   your brief. It tells you which of the three kinds each question is and which
+   model to start with. Nothing more, on purpose.</li>
+<li>Follow <a href="method.html">the method</a>. Eight stages, the same for all six briefs.</li>
+<li>You are marked by <a href="rubric.html">the rubric</a>. Read it in week one, not week eight.</li>
+</ol>
+<h2 id="choose-one">Choose one</h2>
+<p>Six briefs, below. Pick the one you want. Teams are three or four people, fixed
+in class.</p>
+<p>If two teams pick the same brief, that is fine, but you may not share code,
+features or notebooks between teams. The datasets have public solutions online.
+You may read them the way you would read anything else, but a submission that is
+somebody else's notebook with the names changed gets nothing, and it will be
+obvious, because the parts we grade hardest are the parts nobody publishes: your
+cost matrix, your search budget, your error analysis.</p><div class="grid">
+  <a class="card" href="P1.html">
+    <span class="sid">P1</span>
+    <span class="ctitle">The Delivery Promise</span>
+    <span class="cmeta">An online marketplace · E-commerce and logistics</span>
+  </a>
+  <a class="card" href="P2.html">
+    <span class="sid">P2</span>
+    <span class="ctitle">Where the Marketing Budget Goes</span>
+    <span class="cmeta">An online gift wholesaler · Retail and customer analytics</span>
+  </a>
+  <a class="card" href="P3.html">
+    <span class="sid">P3</span>
+    <span class="ctitle">The Lot That Fails Final Test</span>
+    <span class="cmeta">A semiconductor fabrication plant · Manufacturing and process control</span>
+  </a>
+  <a class="card" href="P4.html">
+    <span class="sid">P4</span>
+    <span class="ctitle">Tomorrow&#x27;s Air</span>
+    <span class="cmeta">A city administration · Environment and public health</span>
+  </a>
+  <a class="card" href="P5.html">
+    <span class="sid">P5</span>
+    <span class="ctitle">The Plant&#x27;s Electricity Bill</span>
+    <span class="cmeta">A steel plant · Heavy industry and energy</span>
+  </a>
+  <a class="card" href="P6.html">
+    <span class="sid">P6</span>
+    <span class="ctitle">The Number on the Screen</span>
+    <span class="cmeta">A sports broadcaster · Sports analytics and live media</span>
+  </a>
+</div><p>Every brief asks for the same three kinds of question, because your submission
+has to cover the whole module: something you predict as a number, something you
+predict as a category, and something you find without any labels at all.</p>
+<p>All six arrive as CSV files you read straight into pandas. Nothing to install,
+no database to set up, no account to register for. The download is two lines and
+your brief gives you the address.</p>
+<h2 id="what-you-hand-in">What you hand in</h2>
+<p>Read <a href="method.html">The method</a>. It lists the eight things every submission
+contains, whichever brief you took. It is the specification, not advice, and the
+<a href="rubric.html">rubric</a> marks against it directly.</p>
+<p>In short: a GitHub repo with notebooks that run top to bottom on a fresh
+machine, a leaderboard of everything you tried, and a memo of no more than three
+pages that a manager could act on without opening a single notebook.</p>
+<h2 id="two-rules-that-decide-most-of-the-marks">Two rules that decide most of the marks</h2>
+<p><strong>Split the test set off first, and do not look at it again.</strong> Not after
+feature engineering, not to check a hunch, not once. Every brief tells you how
+to split, and it is never a random shuffle. In a 2025 study of students doing
+exactly this exercise, 40.5% preferred the model with the higher score on
+shuffled data, without noticing the score was higher only because the model had
+seen the future. Do not be in that 40.5%.</p>
+<p><strong>Choose your metric before you see any results.</strong> Write down what an error
+costs, in rupees, in the first hour of the project, and commit it to git so the
+timestamp proves when you wrote it. Then compute the full panel of metrics at
+the end and argue from your own cost numbers for the one that decides the
+winner. A metric picked after the results is not a metric, it is a
+justification.</p></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="method.html">The method</a> · <a href="rubric.html">The rubric</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

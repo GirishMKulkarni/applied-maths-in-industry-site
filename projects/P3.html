@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>The Lot That Fails Final Test · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A semiconductor fabrication plant</li><li><strong>Field:</strong> Manufacturing and process control</li><li><strong>Data:</strong> UCI SECOM — 1,567 production lots, 590 sensors, 104 failures</li><li><strong>Size:</strong> about 5 MB</li><li><strong>Licence:</strong> CC BY 4.0</li><li><strong>The catch:</strong> Predict pass for everything and you score 93.4% accuracy. This is the brief where accuracy is a lie.</li></ul></section>
+<section class="body"><h1 id="p3-the-lot-that-fails-final-test">P3 · The Lot That Fails Final Test</h1>
+<h2 id="the-situation">The situation</h2>
+<p>A semiconductor fab runs wafers through several hundred process steps. At the
+end of the line every lot goes through final electrical test, and a lot that
+fails is scrapped. Not reworked. Scrapped. A scrapped lot is worth more than a
+new engineer's annual salary, and by the time the test says so, six weeks of
+plant time have already been spent on it.</p>
+<p>The line is covered in sensors. Temperatures, pressures, flows, gas
+concentrations, timings, five hundred and ninety signals in all, recorded for
+every lot. The process engineers have a nagging feeling that the failures are
+visible in that data long before final test, but nobody has ever been able to
+show it, because nobody can look at five hundred and ninety charts.</p>
+<p>The plant manager wants three things.</p>
+<p>A warning, before final test, that a lot is heading for a fail, so it can be
+pulled and inspected rather than finished.</p>
+<p>A short list of the sensors that actually matter, small enough to fit on the
+screen above the line. Five hundred and ninety is not a dashboard.</p>
+<p>And, quietly, an answer to a question the engineers have been arguing about:
+whether one particular measurement, which requires stopping the tool and takes
+twenty minutes, could be inferred from the sensors that are free.</p>
+<h2 id="the-three-questions">The three questions</h2>
+<p>As the plant asked them.</p>
+<p><strong>1. "Before this lot goes to final test, can you tell me whether it is going to fail?"</strong></p>
+<p><strong>2. "Which of these five hundred and ninety sensors actually deserve a place on the screen above the line?"</strong></p>
+<p><strong>3. "That measurement that costs us twenty minutes and a tool stop — can you work it out from the sensors that are free?"</strong></p>
+<details>
+<summary><strong>Stuck at the very start? Open this.</strong></summary>
+<p>The first move only.</p>
+<p><strong>Question 1 is a binary classification problem</strong>, and it is the hardest one in
+the six briefs, because only 104 of the 1,567 lots failed. Start with logistic
+regression from Session 9, but expect your first attempt to predict "pass" for
+absolutely everything and look like it is doing well. That is not a bug in your
+code, it is the whole lesson. Look up what <code>class_weight="balanced"</code> does before
+you decide something is broken.</p>
+<p><strong>Question 2 is Session 11, twice over.</strong> PCA will squash the 590 sensors into
+a few components and tell you how much of the variation you kept. Separately,
+the tree models from Session 10 will rank the sensors by how much they actually
+help, and a clustering of the sensors themselves will show you which ones are
+near-copies of each other. Before any of that, throw out the 116 columns that
+hold the same value in every row: they cannot possibly carry information.</p>
+<p><strong>Question 3 is a regression problem.</strong> Pick one sensor column, take it out of
+the inputs, and predict it from the rest. With 590 columns and only 1,567 rows
+this is exactly the situation Session 8 was about, so start with Ridge rather
+than plain least squares and you will see why immediately.</p>
+</details>
+<h2 id="the-data">The data</h2>
+<p>The SECOM dataset from the UCI repository. One thousand five hundred and
+sixty-seven production lots, each with five hundred and ninety anonymised sensor
+readings and a timestamp. One hundred and four of them failed. The label is
+recorded as 1 for a failure and -1 for a lot that passed.</p>
+<pre><code>https://archive.ics.uci.edu/static/public/179/secom.zip
+</code></pre>
+<p>Licensed CC BY 4.0. The sensors are anonymised, so you will not know what any of
+them physically measures. That is normal in this industry and it is part of the
+exercise.</p>
+<h2 id="constraints-on-this-brief">Constraints on this brief</h2>
+<p><strong>Accuracy is banned unless you defend it.</strong> One hundred and four failures in
+one thousand five hundred and sixty-seven lots. A model that predicts "pass" for
+every lot, and is therefore completely useless, scores 93.4%. If the word
+accuracy appears anywhere in your conclusions you must justify it in the same
+paragraph.</p>
+<p><strong>Write the two costs first, in rupees.</strong> What does it cost to miss a failing
+lot? What does it cost to pull a good lot off the line for inspection? Those two
+numbers, and nothing else, decide your threshold. Show the curve of expected
+cost against threshold and mark where you set it.</p>
+<p><strong>Split by time.</strong> The lots are timestamped and the process drifts. Train on the
+earlier lots, test on the later ones. A random split lets your model learn a
+process condition from lots recorded on either side of it.</p>
+<p><strong>The data is a mess, and clearing it is the work.</strong> There are around forty-two
+thousand missing values. One hundred and sixteen columns hold the same value in
+every single row and carry no information at all. Around three hundred and forty
+of the five hundred and ninety have almost no variance. Many are near-duplicates
+of each other. All of that has to be dealt with inside a pipeline, which is
+harder than dealing with it in a notebook cell, and is the reason we require it.</p>
+<p><strong>Search harder here than anywhere else.</strong> This is the smallest dataset of the
+six by a wide margin. A cross-validated fit takes a second. You genuinely have
+the compute to explore the hyperparameter space properly, so your budget from
+stage 6 should be the largest of any team in the class, and your report should
+say so and show what the extra searching bought you. If it bought nothing, that
+is a finding worth more than a better score.</p>
+<h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
+<p>Five hundred and ninety columns and one thousand five hundred rows is the wrong
+way round. There are more things to measure than there are lots to learn from,
+and in that situation a model can find a pattern that is pure coincidence and be
+completely convinced by it. Everything you know about regularisation from
+Session 8, and everything about dimension reduction from Session 11, exists for
+exactly this.</p>
+<p>The other hard thing is that the gap between your tuned score and your nested
+cross-validation score will be embarrassing. It is meant to be. Explaining that
+gap honestly is the most valuable paragraph you will write in this course.</p>
+<h2 id="what-to-do-next">What to do next</h2>
+<ol>
+<li>Read <a href="method.html">the method</a>. It lists the eight things every submission
+   contains, whichever brief you chose. It is the specification, not advice.</li>
+<li>Read <a href="rubric.html">the rubric</a> so you know where the hundred marks are, and
+   which four mistakes lose them.</li>
+<li>Before you write any modelling code, write the one-page cost note that stage 1
+   asks for and commit it. The timestamp on that commit is worth ten marks.</li>
+<li>Download the data with code, in a notebook, and answer your eight questions
+   about it.</li>
+<li>Split the test set off the way this brief tells you to, and do not look at it
+   again until the end.</li>
+</ol>
+<p>If you are stuck before any of that, open the nudge box above.</p></section>
+<p class="back"><a href="index.html">&larr; All projects</a> · <a href="method.html">The method</a> · <a href="rubric.html">The rubric</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

@@ -263,7 +263,7 @@ a.card:hover::before { opacity: 1; }
 .slide .scaption { color: var(--ink-soft); font-size: .92rem; margin: 0; }
 .slide .snote {
   color: var(--accent-deep); background: var(--accent-tint);
-  border-radius: 8px; padding: .4rem .7rem; font-size: .9rem; margin: .3rem 0 .4rem;
+  border-radius: var(--radius, 8px); padding: .4rem .7rem; font-size: .9rem; margin: .3rem 0 .4rem;
 }
 
 /* ---- glossary search ----------------------------------------------------- */
@@ -306,3 +306,31 @@ a.card:hover::before { opacity: 1; }
   .nb { justify-content: flex-start; }
 }
 @media (max-width: 430px) { .grid { grid-template-columns: 1fr; } }
+
+/* --- Project briefs: the collapsible "first nudge" box ------------------- */
+.body details {
+  margin: 1.6rem 0;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius, 8px);
+  background: var(--surface);
+  padding: 0 1.1rem;
+}
+.body details[open] { padding-bottom: .4rem; }
+.body summary {
+  cursor: pointer;
+  padding: .85rem 0;
+  font-family: var(--font-body);
+  color: var(--accent-deep);
+  list-style: none;
+}
+.body summary::-webkit-details-marker { display: none; }
+.body summary::before {
+  content: "▸ ";
+  display: inline-block;
+  width: 1.1em;
+  color: var(--accent);
+}
+.body details[open] > summary::before { content: "▾ "; }
+.body summary:hover { color: var(--accent); }
+.body details > p:last-child { margin-bottom: .9rem; }

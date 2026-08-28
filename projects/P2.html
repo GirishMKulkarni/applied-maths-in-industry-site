@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Where the Marketing Budget Goes · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> An online gift wholesaler</li><li><strong>Field:</strong> Retail and customer analytics</li><li><strong>Data:</strong> UCI Online Retail II — 1,067,371 transactions, 5,943 customers, Dec 2009 to Dec 2011</li><li><strong>Size:</strong> about 45 MB</li><li><strong>Licence:</strong> CC BY 4.0</li><li><strong>The catch:</strong> There is no target column. You build both targets yourself, and where you cut the calendar decides everything.</li></ul></section>
+<section class="body"><h1 id="p2-where-the-marketing-budget-goes">P2 · Where the Marketing Budget Goes</h1>
+<h2 id="the-situation">The situation</h2>
+<p>A wholesaler sells occasion gifts online, mostly to small shops that buy in bulk
+and resell. Two years of every transaction it has ever made sit in one table.
+Until now nobody has done anything with them.</p>
+<p>The company has just hired its first marketing person. They have a budget for
+one campaign a quarter, and about six thousand customers. They cannot contact
+six thousand. They want to know who to spend it on, and they have asked you three
+questions in the language they actually used.</p>
+<p>"Who is about to stop buying from us?" Winning a customer back is cheap if you
+catch them early and nearly impossible once they have found another supplier.</p>
+<p>"Who is worth chasing?" Not everyone who is leaving is worth the postage. The
+marketing person wants an amount, per customer, not a ranking.</p>
+<p>"What kinds of customer do we even have?" Nobody in the company can answer this.
+There is a feeling that there are the big regulars, the seasonal ones who only
+appear before Christmas, and a long tail of shops that bought once. Nobody has
+checked.</p>
+<h2 id="the-three-questions">The three questions</h2>
+<p>In the marketing manager's own words.</p>
+<p><strong>1. "How much is each of these customers going to spend with us over the next three months?"</strong></p>
+<p><strong>2. "Which of them are about to stop buying from us altogether?"</strong></p>
+<p><strong>3. "What kinds of customer do we actually have, and what should I say to each kind?"</strong></p>
+<details>
+<summary><strong>Stuck at the very start? Open this.</strong></summary>
+<p>The first move only, so nobody loses a week on the wrong shape of problem.</p>
+<p><strong>Question 1 is a regression problem</strong>, and the awkward part is that nothing in
+the file is the answer. You make the answer. Pick a date, treat everything
+before it as what you know, and add up what each customer actually spent in the
+ninety days after it. That sum is your target. Start with linear regression from
+Session 7. Spend is very lopsided, a few customers are most of the money, so
+also try predicting the logarithm of spend and see what that does.</p>
+<p><strong>Question 2 is a binary classification problem</strong>, built from the same cut-off
+date: a customer who spent nothing in those ninety days is a 1, everyone else a
+0. Start with logistic regression from Session 9.</p>
+<p><strong>Question 3 is a clustering problem</strong>, and it is the classic one. For each
+customer work out three numbers: how recently they last bought, how often they
+buy, and how much they have spent. Scale them, then k-means from Session 11.
+Look at the average customer in each group and that is where the names come from.</p>
+</details>
+<h2 id="the-data">The data</h2>
+<p>Online Retail II, from the UCI repository. One million and sixty-seven thousand
+rows, every transaction of a UK-registered online gift wholesaler between 1
+December 2009 and 9 December 2011, from 5,943 customers. Invoice number, stock
+code, description, quantity, invoice date, unit price, customer ID, country.</p>
+<pre><code>https://archive.ics.uci.edu/static/public/502/online+retail+ii.zip
+</code></pre>
+<p>Licensed CC BY 4.0.</p>
+<h2 id="constraints-on-this-brief">Constraints on this brief</h2>
+<p><strong>There is no target column, and that is the brief.</strong> Nothing in this table says
+"churned" or "will spend". You choose a cut-off date, build every feature from
+transactions before it, and build both answers from transactions after it. Which
+date you choose changes your results substantially. Say what you chose, why, and
+what happened when you tried a different one.</p>
+<p><strong>One row per transaction is not one row per customer.</strong> Getting from a million
+transaction rows to a customer table with the features you want is the core work
+here, and it is the single most common thing an analyst is asked to do in a job.
+Group, aggregate, and think hard about which summaries of a customer's history
+actually carry a signal.</p>
+<p><strong>Split by customer, and by time.</strong> A customer must never appear in both your
+training and your test data. And your test period must come after your training
+period, because a model that learned Christmas 2010 to predict Christmas 2010 has
+learned nothing.</p>
+<p><strong>Decide what a cancellation is.</strong> Some invoice numbers begin with a C and carry
+negative quantities. Some rows have no customer ID at all. Some unit prices are
+zero, and a few are negative. Every one of those is a decision with a
+consequence, and the marks are in stating the decision, not in getting the same
+answer as everybody else.</p>
+<p><strong>Spend is savagely skewed.</strong> A handful of customers are most of the revenue,
+and the distribution has a tail that will wreck a naive regression. What you do
+about that, and what it does to your choice of error measure, is most of the
+thinking in this brief.</p>
+<h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
+<p>Percentage error. It is the metric a business person asks for by name, and on
+this data it is a trap: a customer who spends four hundred rupees when you
+predicted forty gives you a nine hundred percent error, and a customer who
+spends nothing gives you infinity. Working out what to report to a
+non-technical manager instead, and how to explain why you are not giving them
+the percentage they asked for, is a real part of this job.</p>
+<p>The second hard thing is that "will not buy in ninety days" is not the same
+question as "has left forever", and the marketing person does not know the
+difference. You will have to explain it to them in the memo.</p>
+<h2 id="what-to-do-next">What to do next</h2>
+<ol>
+<li>Read <a href="method.html">the method</a>. It lists the eight things every submission
+   contains, whichever brief you chose. It is the specification, not advice.</li>
+<li>Read <a href="rubric.html">the rubric</a> so you know where the hundred marks are, and
+   which four mistakes lose them.</li>
+<li>Before you write any modelling code, write the one-page cost note that stage 1
+   asks for and commit it. The timestamp on that commit is worth ten marks.</li>
+<li>Download the data with code, in a notebook, and answer your eight questions
+   about it.</li>
+<li>Split the test set off the way this brief tells you to, and do not look at it
+   again until the end.</li>
+</ol>
+<p>If you are stuck before any of that, open the nudge box above.</p></section>
+<p class="back"><a href="index.html">&larr; All projects</a> · <a href="method.html">The method</a> · <a href="rubric.html">The rubric</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

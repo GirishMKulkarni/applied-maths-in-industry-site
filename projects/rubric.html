@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>How the project is marked · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="how-the-project-is-marked">How the project is marked</h1>
+<p>One hundred marks, the same for all six briefs. Each block maps to a stage of
+<a href="method.html">the method</a>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Worth</th>
+<th>What earns it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>The decision and its cost</strong></td>
+<td>10</td>
+<td>A cost in rupees for each direction of error, committed to git before any modelling. Vague or written late scores nothing here.</td>
+</tr>
+<tr>
+<td><strong>Data work and the split</strong></td>
+<td>15</td>
+<td>Eight or more questions answered about the data before any modelling, with the one surprise written up. The split done the way the brief requires, locked before feature engineering, with a written note on what the easy split would have leaked.</td>
+</tr>
+<tr>
+<td><strong>Features and the leakage hunt</strong></td>
+<td>15</td>
+<td>Every learned transformation inside a pipeline. A written account of the leaking columns you found and what you did about them. Fitting a transformer before the split scores zero for this block.</td>
+</tr>
+<tr>
+<td><strong>The unsupervised pass</strong></td>
+<td>15</td>
+<td>Dimension reduction with variance reported. Cluster count chosen from four pieces of evidence, with the disagreement between them discussed. More than one clustering method. Groups given names a manager would use. The group label tested as a feature, with the result reported either way.</td>
+</tr>
+<tr>
+<td><strong>The model search</strong></td>
+<td>20</td>
+<td>Every family from the method covered or excused. Three-stage search. A leaderboard with scores, fold spread and training time. A stated fit budget with the reasoning for it. Nested cross-validation on the winner, with the gap to the tuned score explained.</td>
+</tr>
+<tr>
+<td><strong>The metric and the threshold</strong></td>
+<td>15</td>
+<td>The full panel computed. One metric defended from your own stage 1 costs, with an account of what the others would have chosen instead. Threshold from expected cost, not 0.5. Calibration checked if you report probabilities.</td>
+</tr>
+<tr>
+<td><strong>Error analysis and the memo</strong></td>
+<td>10</td>
+<td>The worst cases examined and characterised in sentences. A group-behaviour check. Three pages a manager could act on with no notebook open.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="marks-you-lose">Marks you lose</h2>
+<p>These are deductions from the total, not from a block.</p>
+<p><strong>Minus 25, a leaked test set.</strong> Any evidence that test rows influenced a
+choice: a scaler fitted before the split, a feature built from the full table,
+"we tried a few splits and this one worked". This is the one thing that makes an
+otherwise good project worthless in industry, so it is treated that way here.</p>
+<p><strong>Minus 15, a metric chosen after the results.</strong> If the git history shows your
+cost table arriving after your leaderboard, the argument in stage 7 is
+retrospective and does not count.</p>
+<p><strong>Minus 15, a notebook that does not run.</strong> We clone your repo onto a clean
+machine and run everything top to bottom. It must download its own data and
+finish without a manual step. Fix the seeds so we get your numbers.</p>
+<p><strong>Minus 10, an undeclared borrowed notebook.</strong> Reading what others have
+published on these datasets is allowed and sensible. Presenting it as your own
+is not. Cite what you read.</p>
+<h2 id="what-we-are-not-marking">What we are not marking</h2>
+<p>Not the score. A team that gets a worse number and knows exactly why beats a
+team with a better number and no explanation, every time. Three of these
+datasets have a ceiling that is nowhere near as high as beginners expect, and
+finding that ceiling honestly is a result.</p>
+<p>Not the length. Three pages means three.</p>
+<p>Not how many models you fitted. Ten thousand fits with no reasoning about the
+budget scores below fifteen hundred with a paragraph explaining the choice.</p></section>
+<p class="back"><a href="index.html">&larr; All projects</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>The method · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="the-method">The method</h1>
+<p>Eight stages. Every submission has all eight, whichever brief you took. This is
+the specification your work is marked against, so read it before you write a
+line of code, and read it again before you submit.</p>
+<h2 id="1-write-down-the-decision-and-what-a-mistake-costs">1. Write down the decision, and what a mistake costs</h2>
+<p>Before you open the data. In the first hour.</p>
+<p>One page. What decision does this model feed? Who acts on it? What happens when
+the model is wrong in each of the two directions, and what does each direction
+cost in rupees? For a delivery estimate: what does an hour of underestimate cost
+against an hour of overestimate. For a wafer test: what does a missed failure
+cost against a false alarm.</p>
+<p>Commit this page to git before you commit anything else. The timestamp is part
+of the evidence. Everything in stage 7 refers back to these numbers, and a cost
+table written after you saw your results is worth nothing.</p>
+<h2 id="2-get-the-data-and-look-at-it-properly">2. Get the data, and look at it properly</h2>
+<p>Your brief gives you a download that needs no account. Write the download as
+code in a notebook, not as a manual step, and make it work on a machine that has
+never seen the file. The data arrives as CSV files you can read straight into
+pandas. There is no database to set up and nothing to install.</p>
+<p>Then look at it before you model it. Answer at least eight questions about the
+table, and not the questions we would ask: the ones you personally need answered
+before you would trust this data enough to build on it. How many rows are
+actually usable. What the missing values look like and whether they are missing
+at random. What the target's distribution is. Which columns are near-duplicates
+of each other. What the oldest and newest rows are.</p>
+<p>Show the answers as numbers and charts, and write one paragraph on what you
+found that surprised you. Every one of these six datasets has something in it
+that does not match what the brief led you to expect.</p>
+<h2 id="3-split-the-test-set-off-and-lock-it">3. Split the test set off, and lock it</h2>
+<p>Your brief tells you how. It is never a random shuffle. It is by date, or by
+match, or by customer, and there is a reason in every case.</p>
+<p>Do this before feature engineering, before scaling, before you plot anything
+that includes the test rows. Then leave it alone until stage 7. You get one look
+at it, at the end, and you report what you saw whether it flatters you or not.</p>
+<p>Say in writing how many rows and what date range are in each part, and what
+would leak if you had split the easy way instead.</p>
+<h2 id="4-build-the-features-inside-a-pipeline">4. Build the features, inside a pipeline</h2>
+<p>Every transformation that learns anything from the data goes inside a scikit-learn
+<code>Pipeline</code> or <code>ColumnTransformer</code>. Imputation, scaling, encoding, selection, the
+lot. If you fit a scaler on the whole dataset and then split, you have leaked,
+and the mark for this stage is zero regardless of how good the rest is.</p>
+<p>Hunt for leakage on purpose and write up what you found. Every one of these six
+datasets contains at least one column that will not be available at the moment
+the prediction is actually needed, and at least one that quietly contains the
+answer. Finding them is a graded part of the work, not a preliminary.</p>
+<h2 id="5-do-the-unsupervised-pass">5. Do the unsupervised pass</h2>
+<p>Before the supervised models, not after, and it is not decoration.</p>
+<p>Reduce the dimensions and say how much of the variation you kept. Cluster, and
+choose the number of clusters from evidence, not by eye: report the elbow, the
+silhouette score, Davies-Bouldin and Calinski-Harabasz, and say what you did
+when they disagreed, because they will. Try a method that finds round clusters
+and one that does not, and one that can say "this point belongs to nothing".
+Look for the points that belong to nothing.</p>
+<p>Then do two things with what you found. Give every group a plain-English name
+and a one-line description a non-technical manager would recognise. And feed the
+group label back in as a feature in stage 6, then report whether it helped. Both
+answers are interesting. "It made no difference" is a finding, if you show it.</p>
+<h2 id="6-search-the-models">6. Search the models</h2>
+<p>You are comparing families of model, not tuning one. Every submission covers all
+of these, or explains in writing why one does not apply to its data:</p>
+<p>For a number: a baseline that ignores the features, ordinary least squares,
+Ridge, Lasso, ElasticNet, polynomial features with a penalty, k-nearest
+neighbours, a support vector regressor, a single decision tree, Random Forest,
+Extra Trees, gradient boosting, XGBoost or LightGBM, and a small neural network.</p>
+<p>For a category: a baseline that always guesses the common class, logistic
+regression with both penalties, k-nearest neighbours, a support vector
+classifier with more than one kernel, naive Bayes, a single decision tree,
+Random Forest, Extra Trees, gradient boosting, XGBoost or LightGBM, and a small
+neural network.</p>
+<p>Now the part people get wrong. You cannot try every hyperparameter of every one
+of those. A full grid over that list is millions of fits and several days of
+Colab, and chasing it is not thoroughness, it is a way of avoiding the thinking.
+What we want instead is a budget you can defend, spent in three stages:</p>
+<p><strong>Stage A, screen everything.</strong> Every family above, randomised search, a fixed
+number of candidates each, cross-validated. Roughly fifteen hundred fits, a few
+minutes. This tells you which families are even in the running.</p>
+<p><strong>Stage B, refine the top three.</strong> A tight grid around where stage A landed.
+Say how you chose the bounds of that grid.</p>
+<p><strong>Stage C, one honest number.</strong> Nested cross-validation on the winner. The inner
+loop picks the hyperparameters, the outer loop measures. Report both this number
+and the stage B number, and explain the gap between them, because there will be
+one, and it is the single most useful thing in your report.</p>
+<p>Log every run to a leaderboard: model, parameters, cross-validated score, the
+spread across folds, and how long it took. The leaderboard is a deliverable. A
+model that scores 0.02 better and takes forty times longer to train is not
+obviously the winner, and we want to see you make that call.</p>
+<p>Write down your total fit count and your reasoning for spending it the way you
+did. The smaller your dataset, the larger that budget should be, and one of the
+six briefs is small enough that you really can search hard. Notice if it is
+yours.</p>
+<h2 id="7-compute-every-metric-then-defend-one">7. Compute every metric, then defend one</h2>
+<p>Compute the whole panel. All of it, in a table, for your final model.</p>
+<p>For a number: mean absolute error, root mean squared error, median absolute
+error, mean absolute percentage error, symmetric MAPE, R squared, adjusted R
+squared, explained variance. If your cost from stage 1 is asymmetric, a pinball
+loss at the quantile that matches it.</p>
+<p>For a category: accuracy, balanced accuracy, precision, recall, F1 in macro,
+micro and weighted forms, Matthews correlation, Cohen's kappa, area under the
+ROC curve, area under the precision-recall curve, log loss, Brier score, and the
+confusion matrix itself.</p>
+<p>Then argue, from the rupee costs you committed in stage 1, which single number
+decides your winner. This paragraph is worth more marks than the models. Say
+what each of the others would have chosen if you had used it instead, and why
+that would have been the wrong call here. On at least one of these datasets,
+accuracy and precision-recall area disagree completely about which model is best,
+and if you cannot say which to believe you have not finished.</p>
+<p>Two things everybody forgets. If you predict a category, 0.5 is not your
+threshold. Choose it from the cost matrix and show the curve of expected cost
+against threshold. And if you report a probability, check it is honest: plot the
+reliability curve and report the Brier score, because a model that says 70% and
+is right 40% of the time is a worse product than a less accurate model that
+means what it says.</p>
+<h2 id="8-say-where-it-breaks-then-write-the-memo">8. Say where it breaks, then write the memo</h2>
+<p>Pull out the fifty worst predictions and look at them. What do they have in
+common? Answer this in sentences, not with a plot. This is what separates
+somebody who ran a library from somebody who understands their problem.</p>
+<p>Check the model does not behave very differently for one group than another, the
+way you did in Session 10. Say what you checked and what you found.</p>
+<p>Then the memo. Three pages, no more. Written for the manager in your brief, who
+will not open a notebook. What you would deploy, what it is worth in rupees a
+month, what it gets wrong, what would have to be true for it to keep working,
+and what you would do next with another month. If your memo needs a single line
+of code to make sense, rewrite it.</p></section>
+<p class="back"><a href="index.html">&larr; All projects</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
