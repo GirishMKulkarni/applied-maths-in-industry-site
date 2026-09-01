@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Meet the Market — Prices, Returns and the Shape of Financial Data · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 3 — Financial Mathematics &amp; Quant Analytics</p>
+  <h1>S14 · Meet the Market — Prices, Returns and the Shape of Financial Data</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/returns_and_log_returns.html">Returns and log returns</a></li><li><a href="../primers/what_is_a_distribution.html">What is a distribution</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A fintech app like Groww or a Zerodha-style broker wants to show you, every evening,
+how your money did today and how risky your holdings are. Somewhere behind that
+screen, an analyst has to pull the day's Nifty and stock prices into a computer,
+turn them into something comparable and steady, and check whether the numbers are
+well-behaved enough to say anything sensible about tomorrow. Before anyone forecasts
+a price, builds a portfolio, or quotes a risk number, they do exactly this first.</p>
+<p>That first step is today. We assume you know no finance at all. We start from "what
+even is a share", get real Indian market data into Python, and learn the small
+handful of ideas the rest of the finance block is built on.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Don't study the price. Study how much it changed.</p>
+<p>A price wanders up and down for years with no fixed level, and a ₹100 stock can't be
+compared to a ₹3,000 one. But the day-to-day <em>change</em>, written as a percentage, is
+fair across any stock and sits calmly around zero. That one switch, from price to
+<strong>return</strong>, is what makes markets analysable at all.</p>
+<p>Picture a stock's price as a line that drifts around the chart like a wandering
+walk. Now picture its daily returns as a cloud of small dots hovering around a flat
+line at zero. The wandering line is impossible to pin down; the hovering cloud is
+something you can actually measure, compare, and model. Everything today comes from
+looking at the cloud instead of the line.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Pull a real Indian market index into Python with <code>yfinance</code>, and watch a clean
+   synthetic fallback take over if there's no internet, so the notebook always runs.</li>
+<li>Learn the shape of market data (OHLCV) and plot a price series.</li>
+<li>Turn prices into returns and log-returns, and see why they nearly agree for
+   ordinary days.</li>
+<li>Reproduce two famous facts about real markets with your own eyes: fat tails and
+   volatility clustering.</li>
+<li>See the split at the heart of the finance block in two plots: a price wanders off
+   and never settles, while its day-to-day returns sit still around zero.</li>
+<li>Run one plain check, <code>is_it_steady(series)</code>, that gives a yes/no on whether a
+   series is steady enough to model, and watch the verdict flip from "no" for the
+   price to "yes" for its returns.</li>
+</ol>
+<p>The optional Stretch cells then open the box for anyone heading to ARIMA next
+session: the hypothesis test behind the check (its null and p-value), and the ACF
+and PACF plots you'll use to choose a model.</p>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>This session teaches everything from scratch. In particular:</p>
+<ul>
+<li><strong>No finance required.</strong> We explain every market word the first time it appears,
+  in one plain line: what a share, a bond, a derivative and an index are; what going
+  long or short means; and why "no return without risk" is the one rule of the game.</li>
+<li><strong>No statistics required.</strong> Words like <em>distribution</em>, <em>fat tails</em>, <em>stationary</em>
+  and <em>autocorrelation</em> are all introduced here with a picture, not a formula.</li>
+<li><strong>No heavy maths required.</strong> The formal side (log-returns as <code>ln</code>/<code>exp</code>, the
+  random-walk model, the ADF test) lives in a clearly optional box below and in the
+  Stretch cells. You can do the whole lab without it.</li>
+</ul>
+<p>The little you may want in advance:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Want today's key idea in one page? Read
+  <a href="../primers/returns_and_log_returns.html">Returns and log-returns</a>.</li>
+<li>Never met a histogram or a bell curve? Read
+  <a href="../primers/what_is_a_distribution.html">What is a distribution?</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already trade, already know finance, or already know time series, skip ahead
+and look for the cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain a market, OHLCV data, and the difference between a price and a return in
+  plain words.</li>
+<li>Compute simple and log-returns from a price series and say why quants prefer
+  log-returns.</li>
+<li>Recognise fat tails and volatility clustering in real return data.</li>
+<li>See that prices wander but returns sit still, and confirm with one plain check that
+  a series is steady enough to model. (The hypothesis test behind the check and the
+  ACF/PACF plots are there for anyone who wants them, but they are optional.)</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those who
+want it, and none of it is needed to finish.</p>
+<p>Today's mathematical object is the <strong>stochastic process</strong>: a random quantity that
+evolves over time. A stock price is the classic example — at each step there are
+many possible next values, and the market realises just one path out of countless
+possible futures. A common toy model is the <strong>geometric random walk</strong>, where each
+day the price is multiplied by <code>exp</code> of a small random shock; that keeps the price
+positive and makes it wander and trend like a real stock. It is exactly the process
+our offline fallback simulates.</p>
+<p>The <strong>log-return</strong> is <code>r_t = ln(P_t / P_{t-1})</code>, the same <code>ln</code> and <code>exp</code> from
+first-year calculus doing real work. Its two gifts are that it is additive over time
+(a week's log-return is the sum of its daily log-returns) and symmetric under sign
+flips. The reason we model returns and not prices is <strong>stationarity</strong>: loosely, a
+series is stationary if its statistics (mean, spread, dependence structure) don't
+drift with time. A price is non-stationary (it has a <em>unit root</em> — a random-walk
+trend); its returns are roughly stationary. The <strong>ADF test</strong> (Augmented
+Dickey–Fuller) makes this precise as a hypothesis test whose null is "there is a
+unit root, i.e. non-stationary", so a small p-value lets you reject that and call
+the series stationary. The <strong>ACF</strong> and <strong>PACF</strong> then summarise how a value depends
+on its own past, and become the fingerprints for choosing an ARIMA model next
+session. All of this is a bonus, not a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>share / equity</strong> — a share is a tiny slice of ownership of a company; equity is
+  the general word for it.</li>
+<li><strong>index</strong> — one number that tracks a whole basket of stocks; the Nifty 50 tracks
+  India's 50 biggest listed companies.</li>
+<li><strong>long / short</strong> — going long is buying now hoping the price rises; going short is
+  selling first (borrowed) hoping to buy back cheaper.</li>
+<li><strong>return</strong> — the percent change in price from one day to the next.</li>
+<li><strong>log-return</strong> — the same day-to-day change written with a logarithm, so the
+  numbers add up nicely over time.</li>
+<li><strong>volatility</strong> — how much the price swings; the size of the moves, ignoring
+  direction.</li>
+<li><strong>stationary</strong> — a series whose statistics stay steady over time, so the past can
+  teach us about the future.</li>
+<li><strong>fat tails</strong> — extreme days happen far more often than a plain bell curve would
+  predict.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Pull real market data (with an offline fallback)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S14/notebooks/01_pulling_market_data.ipynb">Open in Colab</a>
+      <a class="btn" href="S14/notebooks/01_pulling_market_data.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S14/notebooks/01_pulling_market_data.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">From prices to returns, and what real markets look like</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S14/notebooks/02_returns_and_stylized_facts.ipynb">Open in Colab</a>
+      <a class="btn" href="S14/notebooks/02_returns_and_stylized_facts.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S14/notebooks/02_returns_and_stylized_facts.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Is this series steady enough to model? (one plain check)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S14/notebooks/03_stationarity_acf_pacf.ipynb">Open in Colab</a>
+      <a class="btn" href="S14/notebooks/03_stationarity_acf_pacf.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S14/notebooks/03_stationarity_acf_pacf.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Nifty 50 / NSE stock prices — downloaded live with yfinance, with a seeded synthetic fallback so the notebooks always run offline</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Hull — <em>Options, Futures &amp; Other Derivatives</em>, ch. 1–3 (what markets are; the pictures and words, skip the maths)</li>
+<li>NSE India — investor education resources (free, India-specific, plain-English)</li>
+<li>Cont (2001), <em>Empirical properties of asset returns: stylized facts and statistical issues</em> (a readable catalogue; skim it)</li>
+<li><a href="https://www.statsmodels.org/stable/tsa.html">statsmodels: Time Series Analysis (tsa)</a></li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Meet the Market</h3><ul class="sbullets"><li>From a wandering price to a return you can actually measure</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 3 — Financial Mathematics &amp; Quant Analytics   ·   Session S14   ·   2 hours Module 3 begins — the quantitative-finance block</p></div><div class="slide"><h3 class="stitle">The problem: your money, summed up every evening</h3><ul class="sbullets"><li>Open Groww or a Zerodha-style app after market close. It tells you how your money did today, and how risky your holdings are.</li><li>Behind that screen, someone has to pull the day's Nifty and stock prices into a computer.</li><li>Then turn them into something comparable and steady, and check the numbers are well-behaved enough to say anything about tomorrow.</li><li>Before anyone forecasts a price, builds a portfolio or quotes a risk number, they do exactly this first. That first step is today.</li></ul></div><div class="slide"><h3 class="stitle">The one idea, in a single picture</h3><ul class="sbullets"><li>Top: the price drifts around for years.</li><li>You cannot compare a ₹100 stock to a ₹3,000 one this way.</li><li>Bottom: the daily change, as a percent, is fair across any stock.</li><li>It sits calmly around zero — something you can measure and compare.</li></ul><img class="sdiagram" src="S14/slides/3_0.png" alt="slide 3 diagram" loading="lazy"><p class="scaption">A price wanders with no fixed level; its daily change hovers at zero, and that is what we can actually measure.</p></div><div class="slide"><h3 class="stitle">Don't study the price. Study how much it changed. That change, written as a percentage, is called the return.</h3></div><div class="slide"><h3 class="stitle">What we'll cover</h3><ul class="sbullets"><li>1   The problem and the one idea (done — that was the big picture)</li><li>2   What a market is, and the four things that trade on it</li><li>3   Long vs short, and why there is no return without risk</li><li>4   Prices vs returns — and why quants prefer log-returns</li><li>5   Getting real Indian market data into Python</li><li>6   What real returns look like, and the language of time series</li><li>7   Lab: pull the Nifty, compute returns, run the diagnostics</li></ul></div><div class="slide"><h3 class="stitle">1 · What a market is, and what trades on it</h3></div><div class="slide"><h3 class="stitle">A market in one sentence</h3><ul class="sbullets"><li>A financial market is just a place where buyers and sellers agree on a price for something.</li><li>In India the big stock exchanges are the NSE and the BSE, both in Mumbai.</li><li>A buyer posts the price they will pay (a 'bid'); a seller posts the price they will accept (an 'ask').</li><li>When a bid meets an ask, a trade happens, and that becomes the latest price on your screen.</li></ul></div><div class="slide"><h3 class="stitle">Buyers, sellers, and the price between them</h3><img class="sdiagram" src="S14/slides/8_0.png" alt="slide 8 diagram" loading="lazy"><p class="scaption">The exchange matches bids and asks; the price is where supply meets demand.</p></div><div class="slide"><h3 class="stitle">Why do prices move at all?</h3><ul class="sbullets"><li>New information: company earnings, an RBI rate decision, the monsoon, the budget, global news.</li><li>Supply and demand shift as people change their minds about what something is worth.</li><li>Some moves are just noise: many small trades with no single cause.</li><li>Because the future is uncertain, tomorrow's price is genuinely random.</li><li>That randomness is exactly why finance reaches for probability — the same probability you may have met in stats.</li></ul></div><div class="slide"><h3 class="stitle">The four building blocks (learn these cold)</h3></div><div class="slide"><h3 class="stitle">The four building blocks, at a glance</h3><img class="sdiagram" src="S14/slides/11_0.png" alt="slide 11 diagram" loading="lazy"><p class="scaption">Equity, bonds, derivatives, indices — the vocabulary of the whole finance module.</p></div><div class="slide"><h3 class="stitle">Indices: the market's thermometer</h3><ul class="sbullets"><li>An index tracks the combined level of a basket of stocks with one number.</li><li>Nifty 50: the 50 largest, most-traded companies on the NSE.</li><li>Sensex: 30 large companies on the BSE, India's oldest index (since 1986).</li><li>You can't buy an index directly, but you can buy a fund or future that tracks it.</li><li>Perfect for learning: diversified, decades of history, and free data — which is why our labs use it.</li></ul></div><div class="slide"><h3 class="stitle">2 · Positions and the risk-return trade-off</h3></div><div class="slide"><h3 class="stitle">Long vs short: two ways to have a view</h3><ul class="sbullets"><li>Going LONG = you buy now, hoping the price rises. The default, intuitive trade.</li><li>Going SHORT = you sell first (borrowing the asset), hoping to buy it back cheaper later.</li><li>Long profits when the price goes UP; short profits when it goes DOWN.</li><li>Short selling lets you make money in a falling market, but the risk is larger.</li></ul></div><div class="slide"><h3 class="stitle">Long and short payoffs</h3><img class="sdiagram" src="S14/slides/15_0.png" alt="slide 15 diagram" loading="lazy"><p class="scaption">Mirror images: each is a straight line through your entry price.</p></div><div class="slide"><h3 class="stitle">There is no return without risk. If someone promises high returns with no risk, that is not finance — it is a fraud.</h3></div><div class="slide"><h3 class="stitle">Risk vs return: the central trade-off</h3><ul class="sbullets"><li>Cash: tiny return, tiny risk.</li><li>Bonds: modest, fairly safe.</li><li>Equity: higher, bumpier.</li><li>Derivatives: high, dangerous.</li><li>The dashed line is the trade-off.</li></ul><img class="sdiagram" src="S14/slides/17_0.png" alt="slide 17 diagram" loading="lazy"><p class="scaption">Cash, bonds, equity, derivatives — higher expected return sits up-and-right, with more risk.</p></div><div class="slide"><h3 class="stitle">Measuring risk and return — plain definitions</h3><ul class="sbullets"><li>Return: the percentage change in value over a period.</li><li>Expected return: the average return across many possible futures.</li><li>Risk, or volatility: how much returns swing around that average — the size of the moves, ignoring direction.</li><li>If you have met a mean and a standard deviation, that is exactly what these two are, applied to money.</li></ul></div><div class="slide"><h3 class="stitle">3 · Prices vs returns, and the log-return</h3></div><div class="slide"><h3 class="stitle">Why we model returns, not prices</h3><ul class="sbullets"><li>Prices have no natural scale: a ₹100 stock and a ₹1,00,000 stock are not comparable.</li><li>A ₹10 move means a lot for a ₹100 stock and nothing for a ₹1,00,000 one.</li><li>Returns (percentage changes) are comparable across stocks and across time.</li><li>And they are far better behaved statistically than prices — which is what lets us model them.</li></ul></div><div class="slide"><h3 class="stitle">A price series and its return series</h3><img class="sdiagram" src="S14/slides/21_0.png" alt="slide 21 diagram" loading="lazy"><p class="scaption">Top: the price trends and wanders. Bottom: the returns hover around zero.</p></div><div class="slide"><h3 class="stitle">Simple returns: the everyday definition</h3><ul class="sbullets"><li>Simple return = (price today − price yesterday) / price yesterday.</li><li>Example: ₹100 → ₹110 is a +10% simple return.</li><li>Easy to explain, and what most people mean by 'return'.</li><li>But they don't add up cleanly across days, which causes headaches.</li></ul></div><div class="slide"><h3 class="stitle">Log-returns: the quant's choice</h3><ul class="sbullets"><li>Log-return = ln(price today ÷ price yesterday), i.e. ln(1 + simple return).</li><li>For small daily moves it almost equals the simple return.</li><li>They ADD over time: a week's log-return is the sum of its days.</li><li>They are more symmetric: a +x and a −x move are mirror images.</li><li>This is the same ln and exp you may have met in calculus, doing real work.</li></ul></div><div class="slide"><h3 class="stitle">Simple vs log returns, side by side</h3><img class="sdiagram" src="S14/slides/24_0.png" alt="slide 24 diagram" loading="lazy"><p class="scaption">Left: they agree for small moves. Right: log-returns add to zero on a +10% / −10% round trip.</p></div><div class="slide"><h3 class="stitle">4 · Getting real market data</h3></div><div class="slide"><h3 class="stitle">Two tools to pull Indian (and global) data</h3><ul class="sbullets"><li>yfinance: a free Python library that downloads Yahoo Finance data worldwide.</li><li>NSEpy: a library aimed specifically at NSE India data.</li><li>Both hand you a tidy pandas DataFrame — exactly the skill from Module 0.</li><li>Our notebooks fall back to a seeded synthetic series if there's no internet, so they always run.</li><li>Concept on the slides; the actual code lives in the GitHub notebooks.</li></ul></div><div class="slide"><h3 class="stitle">What one row of market data looks like (OHLCV)</h3><img class="sdiagram" src="S14/slides/27_0.png" alt="slide 27 diagram" loading="lazy"><p class="scaption">Each day is an OHLC candle: Open, High, Low, Close — plus V for Volume.</p></div><div class="slide"><h3 class="stitle">OHLCV: the columns you'll get back</h3></div><div class="slide"><h3 class="stitle">5 · What real returns actually look like</h3></div><div class="slide"><h3 class="stitle">The stylised facts of returns</h3><ul class="sbullets"><li>Across markets and decades, returns share a few robust patterns.</li><li>These 'stylised facts' are what a good model must respect.</li><li>Three big ones today: fat tails, volatility clustering, and the autocorrelation pattern.</li><li>Ignore them and your risk estimates will be dangerously wrong.</li></ul></div><div class="slide"><h3 class="stitle">Fact 1 — fat tails</h3><img class="sdiagram" src="S14/slides/31_0.png" alt="slide 31 diagram" loading="lazy"><p class="scaption">Real returns produce extreme days far more often than a normal bell curve allows.</p></div><div class="slide"><h3 class="stitle">Fact 2 — volatility clustering</h3><img class="sdiagram" src="S14/slides/32_0.png" alt="slide 32 diagram" loading="lazy"><p class="scaption">Big moves follow big moves; calm follows calm. Volatility comes in waves.</p></div><div class="slide"><h3 class="stitle">Fact 3 — the autocorrelation signature</h3><img class="sdiagram" src="S14/slides/33_0.png" alt="slide 33 diagram" loading="lazy"><p class="scaption">Returns show almost no autocorrelation; the SIZE of returns shows a lot.</p></div><div class="slide"><h3 class="stitle">6 · The language of time series</h3></div><div class="slide"><h3 class="stitle">A stochastic process, intuitively</h3><ul class="sbullets"><li>A stochastic process is just a random quantity that changes over time.</li><li>At each step the next value is partly chance: it has a range of possibilities, not a fixed number.</li><li>A stock price is the classic example: many possible futures, one of which actually happens.</li><li>If you have met random variables, this is that idea stretched out along time.</li></ul></div><div class="slide"><h3 class="stitle">One rule, many possible futures</h3><img class="sdiagram" src="S14/slides/36_0.png" alt="slide 36 diagram" loading="lazy"><p class="scaption">Each line is a different random path the price could have taken from the same start.</p></div><div class="slide"><h3 class="stitle">Stationarity: why models need it</h3><ul class="sbullets"><li>A series is (roughly) stationary if its statistics don't drift over time.</li><li>Same average, same spread, same behaviour at the start, middle and end.</li><li>Most time-series models ASSUME this — otherwise the past can't teach the future.</li><li>Prices are not stationary (they trend); returns are roughly stationary.</li><li>So we turn prices into returns to get a series we can actually model.</li></ul></div><div class="slide"><h3 class="stitle">Stationary vs non-stationary</h3><img class="sdiagram" src="S14/slides/38_0.png" alt="slide 38 diagram" loading="lazy"><p class="scaption">A price drifts (non-stationary). A return sits around a stable mean (stationary).</p></div><div class="slide"><h3 class="stitle">The ADF test: is it steady enough to model?</h3><ul class="sbullets"><li>ADF = Augmented Dickey-Fuller, a standard statistical test.</li><li>It checks the idea 'this series is non-stationary'.</li><li>Read it like any hypothesis test: a small p-value (say under 0.05) lets you reject non-stationarity.</li><li>So a small p-value means 'looks stationary, good to model'.</li><li>statsmodels gives it to you in one line; we read the output, not the maths.</li></ul></div><div class="slide"><h3 class="stitle">Run the ADF test: price fails, returns pass</h3><ul class="sbullets"><li>The big p-value says the price is non-stationary; the tiny one says its returns are stationary.</li></ul><p class="scaption">CODE from statsmodels.tsa.stattools import adfuller # adfuller(...)[1] is the p-value; small (&lt; 0.05) means stationary. p_price   = adfuller(close_price.values)[1] p_returns = adfuller(log_returns.values)[1] print("ADF p-value, PRICE  :", round(p_price, 4),   "-&gt; &lt; 0.05?", p_price   &lt; 0.05) print("ADF p-value, RETURNS:", round(p_returns, 6), "-&gt; &lt; 0.05?", p_returns &lt; 0.05) OUTPUT  ▸ ADF p-value, PRICE  : 0.7744 -&gt; &lt; 0.05? False ADF p-value, RETURNS: 0.0 -&gt; &lt; 0.05? True</p></div><div class="slide"><h3 class="stitle">Reading ACF and PACF plots</h3><ul class="sbullets"><li>Bars beyond the dashed band are 'significant'.</li><li>ACF tailing off, PACF cutting off → an AR pattern.</li><li>They are the fingerprints for picking a model.</li><li>We use them properly in S15 (ARIMA).</li></ul><img class="sdiagram" src="S14/slides/41_0.png" alt="slide 41 diagram" loading="lazy"><p class="scaption">ACF = correlation with the past at each lag; PACF = the same but stripped of the in-between lags.</p></div><div class="slide"><h3 class="stitle">7 · Pitfalls, lab &amp; wrap-up</h3></div><div class="slide"><h3 class="stitle">Four traps that ruin a finance analysis</h3><ul class="sbullets"><li>Avoid</li><li>Modelling raw prices (they are non-stationary)</li><li>Assuming returns are normal (ignoring fat tails)</li><li>Studying only firms that survived (survivorship bias)</li><li>Mixing adjusted and unadjusted prices in one series</li><li>Do instead</li><li>Convert to returns; test with ADF first</li><li>Look at the histogram; respect the fat tails</li><li>Include delisted / failed firms in any backtest</li><li>Use adjusted close consistently, end to end</li></ul></div><div class="slide"><h3 class="stitle">Prices in, returns out — the finance starting point</h3><ul class="sbullets"><li>Almost every finance session starts here: download prices, convert to returns, annualise mean and vol.</li></ul><p class="scaption">CODE import yfinance as yf px = yf.download("RELIANCE.NS", start="2023-01-01")["Close"] ret = px.pct_change().dropna()          # simple daily returns ann_return = ret.mean() * 252            # 252 trading days a year ann_vol    = ret.std() * (252 ** 0.5) sharpe     = ann_return / ann_vol        # return per unit of risk</p></div><div class="slide"><h3 class="stitle">Lab: pull the Nifty, compute returns, run the diagnostics</h3><ul class="sbullets"><li>In the lab: download real Indian market data, turn it into returns, and reproduce the famous facts about markets with your own eyes.</li><li>1.  Notebook 01: pull the Nifty 50 plus two NSE stocks via yfinance — with an offline fallback so it always runs.</li><li>2.  Notebook 02: compute simple and log-returns from adjusted close; confirm they nearly match.</li><li>3.  Plot the price vs the return series; plot the fat-tailed histogram against a normal bell curve.</li><li>4.  Show volatility clustering, and the ACF of returns vs the ACF of |returns|.</li><li>5.  Notebook 03: run the ADF test on prices (non-stationary) and on log-returns (stationary), then read the ACF and PACF.</li><li>Deliverable:  a notebook on GitHub: Nifty + NSE returns, the stylised-fact plots, and an ADF / ACF / PACF read-out with a short written interpretation.</li></ul></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>A market is buyers and sellers agreeing a price; equity, bonds, derivatives and indices are the four building blocks.</li><li>Long profits when price rises, short when it falls — and there is no return without risk.</li><li>Don't study the price, study the return; log-returns add over time and tie back to ln / exp.</li><li>Real returns have fat tails and volatility clustering — never assume a clean bell curve.</li><li>A price is a wandering, non-stationary series; ADF, ACF and PACF are how we diagnose it.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S14_finance_101/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_pulling_market_data.ipynb 02_returns_and_stylized_facts.ipynb 03_stationarity_acf_pacf.ipynb Nifty 50 / NSE stocks via yfinance, with a seeded synthetic fallback so the notebooks always run offline New to code? primers/python_in_15_minutes.md Today's key idea in one page: primers/returns_and_log_returns.md Never met a bell curve? primers/what_is_a_distribution.md Hull — Options, Futures &amp; Other Derivatives, ch. 1-3 (markets, skip the maths) NSE India — investor education resources (free, India-specific) Cont (2001), Empirical properties of asset returns (skim the stylised facts) statsmodels documentation: tsa (time-series analysis)</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S15 — Forecasting with ARIMA &amp; exponential smoothing. We turn today's steady return series into actual forecasts, using the ACF/PACF fingerprints to pick the model.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
