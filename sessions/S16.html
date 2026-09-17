@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Spreading Your Money Well — Building the Best Portfolio · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../start-here.html">Start here</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 3 — Financial Mathematics &amp; Quant Analytics</p>
+  <h1>S16 · Spreading Your Money Well — Building the Best Portfolio</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/diversification_and_covariance.html">Diversification and covariance</a></li><li><a href="../primers/vectors_and_matrices.html">Vectors and matrices</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>You have saved ₹1 lakh and you want to put it to work in the share market. You
+open your broking app and see a hundred NSE names: TCS, Reliance, HDFC Bank, ITC,
+Maruti and the rest. The scary way to invest is to pick one, put the whole lakh
+in, and hope. If that one company has a bad year, so do you.</p>
+<p>Everyone sensible spreads the money instead. But across what, and how much in
+each? Fifty thousand in TCS and fifty in Reliance? A little in ten different
+names? There are endless ways to split ₹1 lakh across ten stocks, and they are
+not equally good. Today you build the small piece of maths that picks a genuinely
+good split, and you run it on a real basket of Indian stocks.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Don't put all your eggs in one basket. That old line is exactly right, and today
+you will see why it is right, in numbers.</p>
+<p>Here is the picture. Every stock has good days and bad days. If you own two stocks
+that tend to go up and down at the same time, a bad day hits both at once and you
+feel the full bump. But if you own two stocks that do <em>not</em> move together, then on
+a day one drops the other often holds up, and the bumps partly cancel. Your whole
+pile of money feels calmer than either stock on its own. That calming effect is
+called <strong>diversification</strong>, and it is the closest thing to a free lunch in
+finance: less risk for the same return, just by mixing well.</p>
+<p>So a portfolio is a mix: what fraction of your money goes into each stock. Two
+things follow from the mix. One is the return you can expect, which is just the
+weighted average of the stocks' returns. The other is the risk, the amount your
+money bounces around, and risk is the interesting one because a clever mix makes
+it small. The job today is to find the mix that gives you the most return for the
+least bounce.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Measure the return and the risk of a few NSE stocks, and build the table that
+   records how every pair of them moves together.</li>
+<li>See diversification with your own eyes: mix the stocks and watch the risk drop
+   below the risk of the typical single stock.</li>
+<li>Ask the computer for the calmest possible mix at each level of return, and join
+   those best mixes into one curve, the efficient frontier.</li>
+<li>Pick the two portfolios everyone talks about: the calmest one, and the one with
+   the best reward per unit of risk.</li>
+<li>Run the whole thing on a basket of ten NSE stocks and report the winning mix as
+   a bar chart, with its return, its risk, and its Sharpe ratio.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what "return" and "risk" mean for a stock, and how to measure each from prices,</li>
+<li>what it means for two stocks to move together, and why that is the whole game,</li>
+<li>how the computer searches through all the possible mixes and picks a good one.</li>
+</ul>
+<p>The little you may want in advance:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.
+  You can also just press play on each cell and read along.</li>
+<li>Never met "spread" or "moving together" as numbers? Read
+  <a href="../primers/diversification_and_covariance.html">Spread, moving together, and diversification</a>.
+  It is the one idea of today in ten picture-first minutes.</li>
+<li>Want to see why a list of weights and a table of numbers show up? Read
+  <a href="../primers/vectors_and_matrices.html">Vectors and matrices</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code, or already know mean-variance theory, skip ahead and look for
+the cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain a portfolio as a mix of stocks, and compute its return and its risk.</li>
+<li>Read the covariance table and say which stocks move together and which do not.</li>
+<li>Ask a solver for the least-risk mix at a target return, and trace the efficient
+  frontier of best mixes.</li>
+<li>Point to the calmest portfolio and the best reward-per-risk portfolio on that
+  curve.</li>
+<li>Report a portfolio's return, risk and Sharpe ratio, and show its weights.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is extra depth for those who
+want it, and none of it is needed to finish.</p>
+<p>Write the mix as a weight vector <code>w</code> whose entries sum to 1. The portfolio's
+expected return is the dot product <code>wᵀμ</code>, where <code>μ</code> lists each stock's expected
+return. Its risk, measured as variance, is the <strong>quadratic form</strong> <code>wᵀΣw</code>, where
+<code>Σ</code> is the covariance matrix that records how every pair of stocks moves together.
+Because covariance can be negative, <code>wᵀΣw</code> can be smaller than any single stock's
+variance, and that is diversification stated in algebra.</p>
+<p>Finding the least-risk mix for a demanded return is therefore: minimise <code>wᵀΣw</code>
+subject to <code>wᵀμ ≥ r*</code>, <code>Σ wᵢ = 1</code>, and (if we forbid short selling) <code>w ≥ 0</code>. A
+squared objective with straight-line constraints is exactly a <strong>Quadratic Program
+(QP)</strong>. The covariance matrix <code>Σ</code> is positive semi-definite, so <code>wᵀΣw</code> is a convex
+bowl with a single lowest point, which means the solver always finds the one best
+answer. Sweeping the target return <code>r*</code> traces the efficient frontier. This is
+Harry Markowitz's 1952 idea, the founding result of modern portfolio theory and a
+1990 Nobel Prize. The library <code>cvxpy</code> lets you write the QP almost exactly as it
+appears above and solves it for you.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>return</strong> — how much a stock earns over a period, as a percentage of its price.</li>
+<li><strong>risk (volatility)</strong> — how much the returns bounce around; the spread of the returns.</li>
+<li><strong>covariance</strong> — a number saying whether two stocks tend to move up and down together.</li>
+<li><strong>covariance matrix (Σ)</strong> — the table holding the covariance of every pair of stocks.</li>
+<li><strong>diversification</strong> — spreading money across stocks that don't move together, to lower risk.</li>
+<li><strong>efficient frontier</strong> — the curve of best portfolios: the most return for each level of risk.</li>
+<li><strong>Sharpe ratio</strong> — return above the safe rate, divided by risk; reward per unit of risk.</li>
+<li><strong>CVXPY</strong> — a Python library where you state an optimisation almost as you write it on paper, and it solves it.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Return, risk, and how stocks move together</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S16/notebooks/01_return_risk_and_moving_together.ipynb">Open in Colab</a>
+      <a class="btn" href="S16/notebooks/01_return_risk_and_moving_together.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S16/notebooks/01_return_risk_and_moving_together.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">The best portfolios — the efficient frontier</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S16/notebooks/02_the_efficient_frontier.ipynb">Open in Colab</a>
+      <a class="btn" href="S16/notebooks/02_the_efficient_frontier.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S16/notebooks/02_the_efficient_frontier.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">A 10-stock NSE portfolio, start to finish</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S16/notebooks/03_a_ten_stock_nse_portfolio.ipynb">Open in Colab</a>
+      <a class="btn" href="S16/notebooks/03_a_ten_stock_nse_portfolio.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S16/notebooks/03_a_ten_stock_nse_portfolio.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Daily prices for a small NSE basket — downloaded live with yfinance, with a seeded synthetic fallback so the notebooks always run offline</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Markowitz (1952), <em>Portfolio Selection</em>, Journal of Finance</li>
+<li><a href="https://www.cvxpy.org/examples/applications/portfolio_optimization.html">CVXPY portfolio optimization examples</a></li>
+<li>Columbia <em>Financial Engineering and Risk Management</em> Specialization (Coursera)</li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Spreading Your Money Well</h3><ul class="sbullets"><li>Get the most return for the least bounce — building the best portfolio</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 3 — Financial Mathematics &amp; Quant Analytics   ·   Session S16   ·   2 hours Module 3 — the maths of money, in plain steps</p></div><div class="slide"><h3 class="stitle">The problem: ₹1 lakh and a hundred names</h3><ul class="sbullets"><li>You have saved ₹1 lakh and want to put it to work in the share market.</li><li>You open your broking app and see a hundred NSE names: TCS, Reliance, HDFC Bank, ITC, Maruti, and the rest.</li><li>The scary way: pick one, put the whole lakh in, and hope. If that one company has a bad year, so do you.</li><li>The sensible way: spread the money. But across what, and how much in each? There are endless ways to split ₹1 lakh, and they are not equally good.</li></ul></div><div class="slide"><h3 class="stitle">The one idea, in a single picture</h3><ul class="sbullets"><li>Every stock has good days and bad days.</li><li>Own two that tend to move together and a bad day hits both at once.</li><li>Own two that move oppositely and, on a bad day for one, the other often holds up.</li><li>The bumps partly cancel, so the whole pile feels calmer than either stock alone.</li></ul><img class="sdiagram" src="S16/slides/3_0.png" alt="slide 3 diagram" loading="lazy"><p class="scaption">Two bumpy stocks that move oppositely. The 50/50 mix (green) barely wobbles — the bumps cancel.</p></div><div class="slide"><h3 class="stitle">The whole job today: find the mix that gives the most return for the least bounce. Mixing stocks that don't move together is what makes low bounce possible.</h3></div><div class="slide"><h3 class="stitle">What we'll cover</h3><ul class="sbullets"><li>1   The problem and the one idea (done — that was the big picture)</li><li>2   What a portfolio is: a mix of stocks</li><li>3   Return is easy; bounce is the interesting part</li><li>4   The table of how every pair of stocks moves together</li><li>5   Asking the computer for the best mix — the efficient frontier</li><li>6   Scoring a portfolio, real-world cautions, and the lab</li></ul></div><div class="slide"><h3 class="stitle">1 · What a portfolio is</h3></div><div class="slide"><h3 class="stitle">A portfolio is a recipe for your money</h3><ul class="sbullets"><li>A portfolio is just a recipe: how much of your money goes into each stock.</li><li>We write the recipe as shares (weights) — one number per stock.</li><li>The shares add up to 1: every rupee is placed somewhere.</li><li>A share of 0.20 for a stock means 20% of the money goes there.</li><li>A negative share would mean short selling — betting a stock falls; we will usually forbid it.</li></ul></div><div class="slide"><h3 class="stitle">A portfolio is a weighted recipe of stocks</h3><img class="sdiagram" src="S16/slides/8_0.png" alt="slide 8 diagram" loading="lazy"><p class="scaption">Choose the shares; the return and the bounce both follow from them.</p></div><div class="slide"><h3 class="stitle">The two numbers we care about</h3><ul class="sbullets"><li>Return: how much we expect the money to grow.</li><li>Bounce (risk): how much that growth swings around — the uncertainty.</li><li>Bounce is measured as the spread of the returns; finance calls it volatility.</li><li>Every investor wants high return and low bounce. The whole game is the trade-off between them.</li></ul></div><div class="slide"><h3 class="stitle">Each stock is a dot in the return-vs-bounce picture</h3><img class="sdiagram" src="S16/slides/10_0.png" alt="slide 10 diagram" loading="lazy"><p class="scaption">A toy 10-stock NSE basket. Higher up = more return; further right = more bounce.</p></div><div class="slide"><h3 class="stitle">2 · Return is easy; bounce is the interesting part</h3></div><div class="slide"><h3 class="stitle">Portfolio return is the easy part</h3><ul class="sbullets"><li>The expected return of the portfolio is just the weighted average of the stocks' returns.</li><li>Put 60% in something expected to make 10% and 40% in something making 15% → 0.6 × 10 + 0.4 × 15 = 12%.</li><li>That is all there is to return. Comfortingly simple.</li><li>Stretch (optional): stacked up, that weighted sum is a dot product, wᵀμ — the linear algebra from the vectors primer.</li></ul></div><div class="slide"><h3 class="stitle">Bounce is NOT a weighted average. Two bumpy stocks can combine into something far calmer than either one — if they don't move together.</h3></div><div class="slide"><h3 class="stitle">Why bounce is different: moving together</h3><ul class="sbullets"><li>The bounce of a mix depends on how the parts move together, not just on each part alone.</li><li>The number that captures 'do these two move together?' is called covariance.</li><li>It can be positive (move together), zero (unrelated) or negative (move oppositely).</li><li>Negative covariance literally subtracts bounce. That is the magic.</li><li>Stretch (optional): for two stocks the bounce is w₁²σ₁² + w₂²σ₂² + 2w₁w₂·cov — that cross term is the covariance.</li></ul></div><div class="slide"><h3 class="stitle">Mixing lowers the bounce — the closest thing to a free lunch</h3><img class="sdiagram" src="S16/slides/15_0.png" alt="slide 15 diagram" loading="lazy"><p class="scaption">Two stocks, different 'move together' amounts. Moving oppositely (green) bends the curve furthest left.</p></div><div class="slide"><h3 class="stitle">Split ₹1 lakh five ways: the bounce drops</h3><ul class="sbullets"><li>Same return as the average stock, but the bounce falls from 32.6% to 25.4% — over 7 points removed just by spreading.</li></ul><p class="scaption">CODE # put 20% in each of the five stocks w = np.ones(5) / 5 port_return = w @ mu.values port_risk   = np.sqrt(w @ Sigma.values @ w) avg_single_risk = yearly_volatility.mean() print("Equal-mix return :", round(port_return*100, 2), "%") print("Equal-mix bounce :", round(port_risk*100, 2), "%") print("Avg single-stock :", round(avg_single_risk*100, 2), "%") OUTPUT  ▸ Equal-mix return : 14.42 % Equal-mix bounce : 25.36 % Avg single-stock : 32.64 %</p></div><div class="slide"><h3 class="stitle">What diversification can and cannot do</h3><ul class="sbullets"><li>It removes the bounce that is specific to one company — a fraud, a product recall, one bad quarter.</li><li>It cannot remove the bounce shared by the whole market — a rate hike, a pandemic, a budget shock.</li><li>So spreading lowers bounce down to a floor; it does not reach zero.</li><li>That is why a crash hits everything at once — more on that next session.</li></ul></div><div class="slide"><h3 class="stitle">3 · The table of how stocks move together</h3></div><div class="slide"><h3 class="stitle">One table holds every pair</h3><ul class="sbullets"><li>With many stocks, we record how every pair moves together in one square table.</li><li>Finance calls it the covariance matrix, written Σ (capital sigma).</li><li>Down the diagonal sits each stock's own bounce; off the diagonal, each pair's 'move together' number.</li><li>It is symmetric — how A moves with B is the same as how B moves with A.</li><li>It has a special good property that keeps the bounce sensible; we unpack it in a moment.</li></ul></div><div class="slide"><h3 class="stitle">The 'move together' table as a heatmap</h3><img class="sdiagram" src="S16/slides/20_0.png" alt="slide 20 diagram" loading="lazy"><p class="scaption">Darker = the two stocks move together more. The diagonal is each stock's own bounce.</p></div><div class="slide"><h3 class="stitle">Print the 'move-together' table, Σ</h3><ul class="sbullets"><li>One .cov() call builds the whole square table: the diagonal is each stock's own bounce, every other cell a pair's move-together number.</li></ul><p class="scaption">CODE # annualised covariance of the daily returns Sigma = daily_returns.cov() * 252 Sigma.round(4) OUTPUT  ▸ TCS.NS  INFY.NS  RELIANCE.NS  ITC.NS  HDFCBANK.NS TCS.NS       0.1039   0.0438       0.0629  0.0824       0.0424 INFY.NS      0.0438   0.0765       0.0325  0.0545       0.0296 RELIANCE.NS  0.0629   0.0325       0.1419  0.0855       0.0431 ITC.NS       0.0824   0.0545       0.0855  0.1534       0.0544 HDFCBANK.NS  0.0424   0.0296       0.0431  0.0544       0.0701</p></div><div class="slide"><h3 class="stitle">The 'good property', in plain words</h3><ul class="sbullets"><li>A proper bounce table always gives a positive bounce for any real mix — never zero, never negative.</li><li>Bounce that came out negative would be nonsense, so this rule keeps the maths honest.</li><li>Maths name: the table is positive-definite (its eigenvalues are all positive — the linear-algebra test).</li><li>It also means the 'best mix' problem has exactly one answer, with no false traps to get stuck in.</li><li>A badly estimated table can fail this — and then the maths breaks (we return to it at the end).</li></ul></div><div class="slide"><h3 class="stitle">The total bounce curves like a bowl</h3><img class="sdiagram" src="S16/slides/23_0.png" alt="slide 23 diagram" loading="lazy"><p class="scaption">Because the table is a proper one, the bounce curves upward in every direction — one lowest point.</p></div><div class="slide"><h3 class="stitle">Give the computer the returns and the 'move together' table, and it can score any mix — one number for return, one for bounce.</h3></div><div class="slide"><h3 class="stitle">4 · Asking the computer for the best mix</h3></div><div class="slide"><h3 class="stitle">The question, in plain words</h3><ul class="sbullets"><li>Among all the ways to split the money, find the one with the least bounce for a return you are willing to demand.</li><li>Fix a target: 'I want at least this much return.'</li><li>Then make the bounce as small as possible, while using all the money.</li><li>Optionally add rules: no short selling, or no more than 20% in any one name.</li><li>Harry Markowitz worked this out in 1952 and won the 1990 Nobel Prize for it.</li></ul></div><div class="slide"><h3 class="stitle">Why this is a friendly problem to solve</h3><ul class="sbullets"><li>Bowl-shaped = one answer</li><li>Standard = well supported</li><li>It is a bowl</li><li>One lowest point, no false traps</li><li>A solver finds it fast and reliably</li><li>Scales to hundreds of stocks</li><li>It is a standard problem</li><li>Decades of solid, tested solver theory</li><li>The library CVXPY hands it to a solver for you</li><li>Same friendly family as the line-fitting in S7</li></ul></div><div class="slide"><h3 class="stitle">Ask CVXPY for the lowest-bounce mix</h3><ul class="sbullets"><li>You describe the goal (least bounce) and the rules; CVXPY returns the exact best split — here nothing in the fourth stock.</li></ul><p class="scaption">CODE w = cp.Variable(5)                 # the weights we solve for constraints = [ cp.sum(w) == 1,                # invest every rupee w &gt;= 0,                        # no short selling mu @ w &gt;= mu.mean(),           # hit at least the target return ] prob = cp.Problem(cp.Minimize(cp.quad_form(w, Sigma)), constraints) prob.solve() print("status :", prob.status) print("weights:", (w.value*100).round(2)) OUTPUT  ▸ status : optimal weights: [ 7.5  46.7  10.59  0.   35.21]</p></div><div class="slide"><h3 class="stitle">The shape of the answer: the efficient frontier</h3><ul class="sbullets"><li>Solve it once, for one target return, and you get one best mix — one point.</li><li>Sweep the target return from low to high and you trace out a whole curve of best mixes.</li><li>That curve is called the efficient frontier: the most return for each level of bounce.</li><li>Anything below the curve is achievable but wasteful; above it is impossible.</li></ul></div><div class="slide"><h3 class="stitle">5 · The best curve &amp; scoring a portfolio</h3></div><div class="slide"><h3 class="stitle">Thousands of random mixes, and the best-possible curve</h3><img class="sdiagram" src="S16/slides/31_0.png" alt="slide 31 diagram" loading="lazy"><p class="scaption">Each dot is a random split of the money; colour is its reward per unit of bounce. None beats the curve.</p></div><div class="slide"><h3 class="stitle">Reading the best curve</h3><ul class="sbullets"><li>The curve is the upper-left edge of everything achievable — up and left is good.</li><li>On the curve you cannot get more return without accepting more bounce.</li><li>The leftmost point is the calmest possible mix — the least-bounce portfolio.</li><li>Where you choose to sit on the curve depends on your appetite for bounce.</li></ul></div><div class="slide"><h3 class="stitle">Add a safe asset, and a straight line beats the curve</h3><img class="sdiagram" src="S16/slides/33_0.png" alt="slide 33 diagram" loading="lazy"><p class="scaption">Blend the best risky mix with a safe asset (an FD or T-bill) and you can do better than the curve.</p></div><div class="slide"><h3 class="stitle">The best reward-per-bounce mix</h3><ul class="sbullets"><li>The point where the straight line touches the curve is the best reward-per-bounce mix.</li><li>It gives the most extra return for each unit of bounce you take on.</li><li>Blend it with the safe asset for less bounce, or lean into it for more.</li><li>Its reward-per-bounce number has a name: the Sharpe ratio, coming up next.</li></ul></div><div class="slide"><h3 class="stitle">The Sharpe ratio: reward per unit of bounce</h3><img class="sdiagram" src="S16/slides/35_0.png" alt="slide 35 diagram" loading="lazy"><p class="scaption">Return above the safe rate, divided by bounce. The steepest line wins.</p></div><div class="slide"><h3 class="stitle">Sortino: count only the bad surprises</h3><img class="sdiagram" src="S16/slides/36_0.png" alt="slide 36 diagram" loading="lazy"><p class="scaption">Nobody complains about upside. Sortino divides by the bad-day bounce only.</p></div><div class="slide"><h3 class="stitle">Drawdown: the worst drop from a peak</h3><img class="sdiagram" src="S16/slides/37_0.png" alt="slide 37 diagram" loading="lazy"><p class="scaption">From the highest point to the lowest that follows — the fall that tests your nerve.</p></div><div class="slide"><h3 class="stitle">Three ways to score a portfolio</h3></div><div class="slide"><h3 class="stitle">6 · Doing it for real: the tool, the cautions, the lab</h3></div><div class="slide"><h3 class="stitle">CVXPY: describe the problem, get the answer</h3><ul class="sbullets"><li>CVXPY is a Python library for exactly this kind of 'find the best option' problem.</li><li>You describe three things: the mix you can choose, what to make small, and the rules to obey.</li><li>It checks the problem is a friendly bowl, then hands it to a solver.</li><li>You never write the solving algorithm yourself — you just state the problem.</li><li>(The actual code lives on the course GitHub, not on these slides.)</li></ul></div><div class="slide"><h3 class="stitle">You describe it in words; the library does the solving</h3><img class="sdiagram" src="S16/slides/41_0.png" alt="slide 41 diagram" loading="lazy"><p class="scaption">Each thing you want maps to one short CVXPY line. Schematic only — full code is in the notebook.</p></div><div class="slide"><h3 class="stitle">Cautions before you trust a best mix</h3><ul class="sbullets"><li>The return guesses come from noisy past data — small errors, big effects.</li><li>The best curve is sensitive: nudge the guesses a little and the winning mix jumps around.</li><li>The rules matter: forbidding short selling or capping any one name changes the answer a lot.</li><li>Left unchecked, the optimiser happily dumps almost everything into a couple of names.</li></ul></div><div class="slide"><h3 class="stitle">Small errors in the guesses wobble the whole curve</h3><img class="sdiagram" src="S16/slides/43_0.png" alt="slide 43 diagram" loading="lazy"><p class="scaption">Six curves from slightly different return guesses. The 'best' answer is not stable.</p></div><div class="slide"><h3 class="stitle">The bounce table has to be a proper one</h3><img class="sdiagram" src="S16/slides/44_0.png" alt="slide 44 diagram" loading="lazy"><p class="scaption">A proper table gives a sensible bounce shape; a broken one gives nonsense (negative bounce).</p></div><div class="slide"><h3 class="stitle">When it breaks: portfolio pitfalls</h3><ul class="sbullets"><li>Avoid</li><li>Trusting noisy return guesses blindly</li><li>Ignoring brokerage, taxes and trading costs</li><li>Letting the optimiser pile into a few names</li><li>Feeding in a broken 'move together' table</li><li>Believing the pretty curve is what you'll get</li><li>Do instead</li><li>Smooth the guesses; lean on the calmest mix</li><li>Add a cost, and rebalance less often</li><li>Cap each name and forbid short selling</li><li>Check the table is proper, and repair it</li><li>Always test on data you did not optimise on</li></ul></div><div class="slide"><h3 class="stitle">It looks great on old data; real life is humbler</h3><img class="sdiagram" src="S16/slides/46_0.png" alt="slide 46 diagram" loading="lazy"><p class="scaption">The mix you tuned on history is flattering. Next year's reality sits lower and to the right.</p></div><div class="slide"><h3 class="stitle">The winning mix: how much to buy of each</h3><img class="sdiagram" src="S16/slides/47_0.png" alt="slide 47 diagram" loading="lazy"><p class="scaption">The best reward-per-bounce mix for the toy basket. Notice how a few names dominate.</p></div><div class="slide"><h3 class="stitle">The best-Sharpe mix for the 10-stock basket</h3><ul class="sbullets"><li>The bar chart, as numbers: the best reward-per-bounce mix leans hard on a few names — over half in one stock.</li></ul><p class="scaption">CODE # best_* come from the highest-Sharpe point on the frontier print("Return:", round(best_return*100, 2), "%  ", "Risk:", round(best_risk*100, 2), "%  ", "Sharpe:", round(best_sharpe, 3)) weights = pd.Series(best_weights, index=stock_names) print((weights*100).round(1).sort_values(ascending=False).head(6)) OUTPUT  ▸ Return: 16.13 %   Risk: 19.77 %   Sharpe: 0.512 MARUTI.NS       55.2 INFY.NS         14.5 NESTLEIND.NS    14.3 LT.NS            9.1 ITC.NS           5.0 SUNPHARMA.NS     1.9</p></div><div class="slide"><h3 class="stitle">Mean-variance portfolio in a few lines of CVXPY</h3><ul class="sbullets"><li>Write the objective and constraints as maths; CVXPY finds the optimal weights. gamma sets risk appetite.</li></ul><p class="scaption">CODE import cvxpy as cp w = cp.Variable(n)                       # portfolio weights ret  = mu @ w                             # expected return risk = cp.quad_form(w, Sigma)             # variance prob = cp.Problem(cp.Maximize(ret - gamma * risk), [cp.sum(w) == 1, w &gt;= 0])   # fully invested, long-only prob.solve(); print(w.value.round(3))</p></div><div class="slide"><h3 class="stitle">Lab: build the best-mix curve for a 10-stock NSE basket</h3><ul class="sbullets"><li>In the lab: pull a basket of NSE stocks, measure their return and bounce and how they move together, then use CVXPY to find the best mixes — the calmest one and the best reward-per-bounce one.</li><li>1.  Notebook 01: measure each stock's return and bounce, and build the table of how every pair moves together.</li><li>2.  See diversification with your own eyes: mix stocks and watch the bounce drop below a single stock's.</li><li>3.  Check the table is a proper one (all eigenvalues positive) before trusting it.</li><li>4.  Notebook 02: ask CVXPY for the calmest mix at each target return → trace the best curve.</li><li>5.  Notebook 03: run it on 10 real NSE stocks; report return, bounce and Sharpe, and show the winning mix as a bar chart.</li><li>Deliverable:  a notebook on GitHub: the NSE best-mix curve, the calmest and best reward-per-bounce mixes, and the winning weights with their scores.</li></ul></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>A portfolio is a mix: shares of your money that add up to 1.</li><li>Return is the easy weighted average; bounce is not, because stocks move together.</li><li>Diversification lowers bounce for free — mix stocks that don't move together.</li><li>The efficient frontier is the curve of best mixes; a solver like CVXPY finds it.</li><li>Score a portfolio with Sharpe, Sortino and drawdown — no single number is enough.</li><li>Guesses are noisy and the table must stay proper — always test on unseen data.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S16_portfolio_optimization/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_return_risk_and_moving_together.ipynb 02_the_efficient_frontier.ipynb 03_a_ten_stock_nse_portfolio.ipynb Daily prices for a small NSE basket — downloaded live with yfinance, with a seeded synthetic fallback so the notebooks always run offline New to code? primers/python_in_15_minutes.md Today's idea in ten pictures: primers/diversification_and_covariance.md Why weights and a table? primers/vectors_and_matrices.md Markowitz (1952), Portfolio Selection — the founding paper CVXPY portfolio optimization examples (cvxpy.org) Columbia Financial Engineering &amp; Risk Management (Coursera)</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S17 — Risk: how much could you lose on a bad day? We measure the downside with Value-at-Risk and Monte Carlo, and watch diversification quietly fail just when a crisis makes everything move together.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
