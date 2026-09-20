@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>How Much Could We Lose Tomorrow? (Risk: VaR &amp; CVaR) · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 3 — Financial Mathematics &amp; Quant Analytics</p>
+  <h1>S17 · How Much Could We Lose Tomorrow? (Risk: VaR &amp; CVaR)</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/quantiles_and_tails.html">Quantiles and tails</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>We hold ₹10 lakh in five NSE stocks, ₹2 lakh in each: TCS, Infosys, Reliance, ITC and
+HDFC Bank, the basket from S16. A fund's risk desk faces the same situation with a few
+hundred crore, and every morning it has to answer one blunt question for the investment
+committee and for the regulator: if tomorrow goes badly, how much could this portfolio
+lose? Nobody is asking "will we lose money" — markets
+are uncertain and no one knows. The honest question is narrower: on a bad day, how
+bad could it get, and how likely is that?</p>
+<p>Every bank, fund and trading desk in the country answers some version of this every
+single day. It is not optional. The RBI, following the global Basel rules, requires
+them to put an actual rupee number on it and to hold spare capital against it. Today
+you learn how that number is made.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Picture every possible outcome of one day as a histogram: how much money you might
+lose, from a good gain on the left to a painful loss on the right. Most days huddle
+near the middle, close to zero. A few bad days trail off to the right.</p>
+<p>Now draw one vertical line so that only the worst 5% of days fall to its right. That
+line is the <strong>Value at Risk</strong>, or VaR. It is the loss you will not exceed on 95 days
+out of 100. In one plain sentence: "on a normal-to-bad day we lose less than ₹X, and
+only about one day in twenty is worse than that."</p>
+<p>VaR marks where the bad zone starts. It says nothing about how deep the zone goes. So
+we ask a second question: on those worst 5% of days, what is the average loss? That
+average is the <strong>CVaR</strong>, also called Expected Shortfall. If VaR is the edge of the
+cliff, CVaR is how far you fall once you go over.</p>
+<p>There is one catch. To draw that histogram you need many possible days, and the market
+only hands you one day per day. So we let the computer roll many possible futures for
+us, thousands of made-up but realistic days, and read the bad tail off those. Rolling
+many futures and looking at the tail is called <strong>Monte Carlo simulation</strong>.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<p>All three notebooks work on the same ₹10 lakh and the same three years of real prices,
+so each one picks up where the last left off.</p>
+<ol>
+<li>Download the prices, turn them into daily rupee losses, and compute the 1-day 95%
+   VaR two ways: by lining up the worst days, and from a bell curve. Then catch the bell
+   curve out: real markets have fatter tails than it allows.</li>
+<li>Compute CVaR, the average loss on the bad days, and see on real data why ITC and
+   HDFC Bank can have the <em>same</em> VaR but very different bad days.</li>
+<li>Roll 100,000 made-up days with Monte Carlo and read VaR and CVaR off them, replay the
+   COVID crash of 23 March 2020 on today's portfolio as a stress test, backtest the VaR,
+   and put everything into a one-screen risk report.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what a <strong>quantile</strong> is (the 95% mark on a pile of numbers),</li>
+<li>what "the loss distribution" and "the tail" mean,</li>
+<li>what Monte Carlo simulation is, and why rolling made-up futures is an honest way to
+  measure risk.</li>
+</ul>
+<p>The little we assume: you can run a notebook cell, and you know what an average is.
+Both are covered first.</p>
+<ul>
+<li>New to the idea of quantiles and tails? Read
+  <a href="../primers/quantiles_and_tails.html">Quantiles and tails</a> for a ten-minute,
+  picture-first version.</li>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already know some probability or already code, skip ahead and look for the
+cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Say what VaR means in one sentence, and compute it three different ways.</li>
+<li>Compute CVaR (Expected Shortfall) and explain why it sees the danger that VaR misses.</li>
+<li>Simulate a portfolio of stocks that move together and read VaR and CVaR off the
+  simulated losses.</li>
+<li>Stress-test a portfolio against a crisis day, and backtest a VaR to check it keeps its
+  promise.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those who
+want it, and none of it is needed to finish.</p>
+<p>Today's mathematical objects are three you have likely met before, pointed at one
+industrial question. VaR is a <strong>quantile</strong>. Write the loss over the horizon as a random
+variable <code>L</code>. The 95% VaR is the 0.95-quantile of <code>L</code>: the smallest number <code>ℓ</code> with
+<code>P(L ≤ ℓ) ≥ 0.95</code>. That is exactly the inverse of the cumulative distribution function,
+and on a finite sample it is an order statistic (<code>np.percentile</code> reads it off).</p>
+<p>CVaR is a <strong>conditional expectation</strong>: <code>CVaR₀.₉₅ = E[L | L ≥ VaR₀.₉₅]</code>, the average of
+the loss once it is already in the worst tail. This is the "expected shortfall". It is
+always at least as large as VaR, and it is a <em>coherent</em> risk measure (it is
+sub-additive, so combining two books can never make the total risk exceed the sum). VaR
+is not coherent, which is exactly why after 2008 the Basel Committee shifted market-risk
+capital from 99% VaR toward 97.5% Expected Shortfall.</p>
+<p>Monte Carlo is the <strong>law of large numbers</strong> put to work: the sample quantile of <code>N</code>
+simulated losses converges to the true quantile as <code>N</code> grows, with the wobble shrinking
+roughly like <code>1/√N</code>. That is why the estimate steadies as you add simulations, and why
+the tail (where samples are thinnest) is the noisiest part to pin down. All of this is a
+bonus, not a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>return</strong> — one day's gain or loss written as a fraction of what you invested (<code>+0.01</code> is up 1%).</li>
+<li><strong>loss distribution</strong> — the spread of all the day's outcomes, drawn with bigger losses on the right.</li>
+<li><strong>quantile</strong> — the value a given fraction of the numbers sit below; the 95% quantile has 95% below it.</li>
+<li><strong>Value at Risk (VaR)</strong> — the loss you won't exceed at a chosen confidence over a chosen horizon.</li>
+<li><strong>tail</strong> — the far end of the distribution, the rare extreme outcomes.</li>
+<li><strong>CVaR / Expected Shortfall</strong> — the average loss on the worst few percent of days, beyond the VaR.</li>
+<li><strong>Monte Carlo simulation</strong> — rolling many random possible futures and reading the answer off them.</li>
+<li><strong>stress test</strong> — asking what one specific named disaster (a 2008-style crash) would cost the book today.</li>
+<li><strong>backtest</strong> — checking a risk number against what actually happened next, by counting the days it was broken.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Value at Risk: from history and from a bell curve</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S17/notebooks/01_historical_and_parametric_var.ipynb">Open in Colab</a>
+      <a class="btn" href="S17/notebooks/01_historical_and_parametric_var.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S17/notebooks/01_historical_and_parametric_var.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">CVaR: how bad is a bad day, on average?</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S17/notebooks/02_cvar_expected_shortfall.ipynb">Open in Colab</a>
+      <a class="btn" href="S17/notebooks/02_cvar_expected_shortfall.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S17/notebooks/02_cvar_expected_shortfall.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Monte Carlo VaR, a stress test and a backtest</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S17/notebooks/03_monte_carlo_var_portfolio.ipynb">Open in Colab</a>
+      <a class="btn" href="S17/notebooks/03_monte_carlo_var_portfolio.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S17/notebooks/03_monte_carlo_var_portfolio.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li><a href="S17/data/nse_five_stocks_2023_2025.csv" download><code>data/nse_five_stocks_2023_2025.csv</code></a> — daily closing prices of TCS, Infosys, Reliance, ITC and HDFC Bank, January 2023 to December 2025. The notebooks download these live with yfinance and fall back to this saved copy when there is no internet.</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Hull — <em>Risk Management and Financial Institutions</em></li>
+<li>Jorion — <em>Value at Risk</em></li>
+<li>Rockafellar &amp; Uryasev (2000), <em>Optimization of Conditional Value-at-Risk</em></li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">How Much Could We Lose Tomorrow?</h3><ul class="sbullets"><li>VaR, CVaR and Monte Carlo on one real Nifty portfolio</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 3 — Financial Mathematics &amp; Quant Analytics   ·   Session S17   ·   2 hours Module 3 · measuring risk</p></div><div class="slide"><h3 class="stitle">How much could we lose tomorrow?</h3><ul class="sbullets"><li>We hold ₹10 lakh in five NSE stocks: TCS, Infosys, Reliance, ITC and HDFC Bank, ₹2 lakh in each.</li><li>Nobody knows whether tomorrow is an up day or a down day.</li><li>So a risk desk asks a narrower question: on a bad day, how much could we lose?</li><li>Today we answer it with one rupee number, then ask what that number misses.</li></ul></div><div class="slide"><h3 class="stitle">Return is only half the story</h3><ul class="sbullets"><li>An average day made us ₹370.</li><li>A typical swing is about ₹8,174 either way.</li><li>The worst day, 4 June 2024, cost ₹30,869.</li><li>Return tells you what you earn. Risk tells you how bad the bad days get.</li></ul><img class="sdiagram" src="S17/slides/3_0.png" alt="slide 3 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Why banks, funds and companies need a risk number</h3><ul class="sbullets"><li>Banks: the RBI, following the Basel rules, makes them hold capital against possible losses.</li><li>Mutual funds: report risk to investors and to their own risk committee.</li><li>Trading desks: get a daily loss limit; break it and positions are cut.</li><li>Company treasuries: size their currency and commodity risk.</li><li>A fear you cannot put a number on is a fear you cannot manage.</li></ul></div><div class="slide"><h3 class="stitle">Today: one portfolio, one pipeline</h3><img class="sdiagram" src="S17/slides/5_0.png" alt="slide 5 diagram" loading="lazy"><p class="scaption">Every step today works on the same ₹10 lakh basket.</p></div><div class="slide"><h3 class="stitle">Step 1: prices in, rupee losses out</h3><ul class="sbullets"><li>A loss is minus the return, times the money at risk. Positive = we lost money.</li></ul><p class="scaption">CODE import yfinance as yf tickers = ["TCS.NS", "INFY.NS", "RELIANCE.NS", "ITC.NS", "HDFCBANK.NS"] prices = yf.download(tickers, start="2023-01-01", end="2026-01-01", auto_adjust=True, progress=False)["Close"] returns = prices.pct_change().dropna()      # daily % change weights = np.array([0.2, 0.2, 0.2, 0.2, 0.2])  # ₹2 lakh in each investment = 1_000_000                      # ₹10 lakh losses = -(returns @ weights) * investment  # rupees lost each day print("days of data:", len(losses)) print("worst day   :", round(losses.max()), "rupees on", losses.idxmax().date()) OUTPUT  ▸ days of data: 739 worst day   : 30869 rupees on 2024-06-04</p></div><div class="slide"><h3 class="stitle">What does a bad day look like?</h3><ul class="sbullets"><li>Every one of our 739 days, piled into one picture.</li><li>Most days sit near zero. A few bad ones trail off to the right.</li><li>Draw one line so only the worst 5% of days (37) are past it.</li><li>That line is the 95% Value at Risk: ₹12,418.</li></ul><img class="sdiagram" src="S17/slides/7_0.png" alt="slide 7 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Value at Risk, defined</h3><ul class="sbullets"><li>95% VaR = the loss exceeded only 5% of the time.</li><li>Always give three things: the horizon (1 day), the confidence (95%) and the amount (₹12,418).</li><li>Ask for 99% instead and the line moves right: ₹19,886.</li><li>5% is one day in twenty, so roughly one trading day a month.</li></ul><img class="sdiagram" src="S17/slides/8_0.png" alt="slide 8 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Reading VaR correctly</h3><ul class="sbullets"><li>Say this</li><li>On 95 days out of 100, we lose less than ₹12,418.</li><li>About 1 day in 20, the loss is worse than ₹12,418.</li><li>VaR marks where the bad days start.</li><li>It is an estimate from past data, not a promise.</li><li>Not this</li><li>We can never lose more than ₹12,418.</li><li>VaR is the worst case. (Our worst day was ₹30,869.)</li><li>'95% VaR' and '5% VaR' are different numbers. (They usually name the same one.)</li><li>A lower VaR means a safer portfolio, full stop.</li></ul></div><div class="slide"><h3 class="stitle">Historical VaR by hand: line up the worst days</h3></div><div class="slide"><h3 class="stitle">Historical VaR in one line</h3><ul class="sbullets"><li>No shape assumed: the 95th percentile of the losses we actually had.</li><li>Weakness: it only knows the days in our window.</li></ul><p class="scaption">CODE var_hist = np.percentile(losses, 95) print("Historical 95% VaR:", round(var_hist), "rupees") print("days worse than that:", (losses &gt; var_hist).sum(), "of", len(losses)) OUTPUT  ▸ Historical 95% VaR: 12418 rupees days worse than that: 37 of 739</p></div><div class="slide"><h3 class="stitle">Parametric VaR: assume a bell curve</h3><ul class="sbullets"><li>average loss  +  1.645 × the typical swing</li><li>μ = average daily loss = -₹370   (negative: on average we gained)</li><li>σ = standard deviation of the daily loss = ₹8,174</li><li>By hand: -₹370 + 1.645 × ₹8,174 ≈ ₹13,075</li><li>1.645 is where 95% of any bell curve sits (2.326 for 99%)</li></ul><img class="sdiagram" src="S17/slides/12_0.png" alt="slide 12 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Parametric VaR in code</h3><ul class="sbullets"><li>Fast, and needs only two numbers. Close to the historical answer at 95%.</li></ul><p class="scaption">CODE mu = losses.mean()      # average daily loss sigma = losses.std()    # typical swing var_param = mu + 1.645 * sigma print("mu:", round(mu), "  sigma:", round(sigma)) print("Parametric 95% VaR:", round(var_param), "rupees") print("Historical 95% VaR:", round(var_hist), "rupees") OUTPUT  ▸ mu: -370   sigma: 8174 Parametric 95% VaR: 13075 rupees Historical 95% VaR: 12418 rupees</p></div><div class="slide"><h3 class="stitle">The catch: real markets have fat tails</h3><ul class="sbullets"><li>At 95% the bell curve is close: ₹13,075 vs ₹12,418.</li><li>At 99% it falls short: ₹18,642 vs ₹19,886.</li><li>It calls 4 June 2024 a once-in-60-years day. We saw it within three.</li><li>Fast, but it assumes normality.</li></ul><img class="sdiagram" src="S17/slides/14_0.png" alt="slide 14 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Monte Carlo: why simulate?</h3><ul class="sbullets"><li>We only have 739 real days, and just 37 of them in the tail.</li><li>So make 100,000 realistic days that behave like the real ones.</li><li>Keep how the stocks move together, using the covariance from S16.</li><li>Then draw the same 95% line on the big pile.</li><li>It works for any portfolio, even options (S18).</li></ul><img class="sdiagram" src="S17/slides/15_0.png" alt="slide 15 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Monte Carlo step 1: roll 100,000 made-up days</h3><ul class="sbullets"><li>Each row is one made-up day: five stock returns that move together like the real ones.</li></ul><p class="scaption">CODE np.random.seed(0)                    # same random days for everyone mean_returns = returns.mean()        # one average per stock cov_matrix = returns.cov()           # how the stocks move together sim_returns = np.random.multivariate_normal(mean_returns, cov_matrix, size=100_000) print("made-up days:", sim_returns.shape) print("real average daily swing     :", returns.std().mean().round(4)) print("made-up average daily swing  :", sim_returns.std(axis=0).mean().round(4)) OUTPUT  ▸ made-up days: (100000, 5) real average daily swing     : 0.0125 made-up average daily swing  : 0.0125</p></div><div class="slide"><h3 class="stitle">Monte Carlo step 2: rupee losses, then VaR</h3><ul class="sbullets"><li>The first line is Step 1 again, on made-up days. The second is historical VaR again.</li></ul><p class="scaption">CODE sim_losses = -(sim_returns @ weights) * investment var_mc = np.percentile(sim_losses, 95) print("Monte Carlo 95% VaR:", round(var_mc), "rupees") print("Parametric  95% VaR:", round(var_param), "rupees") print("Historical  95% VaR:", round(var_hist), "rupees") OUTPUT  ▸ Monte Carlo 95% VaR: 12974 rupees Parametric  95% VaR: 13075 rupees Historical  95% VaR: 12418 rupees</p></div><div class="slide"><h3 class="stitle">VaR from 100,000 made-up days</h3><ul class="sbullets"><li>Green: the made-up days. Blue outline: the real ones.</li><li>Same 95% line, bigger pile: ₹12,974.</li><li>Our recipe was a bell curve, so it agrees with parametric VaR.</li><li>Want fat tails? Put them in the recipe.</li></ul><img class="sdiagram" src="S17/slides/18_0.png" alt="slide 18 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Monte Carlo: strengths and limits</h3><ul class="sbullets"><li>Good at</li><li>Any portfolio: many assets, options, loans</li><li>Keeps how assets move together</li><li>As many days as you like, so a well-filled tail</li><li>What-if recipes: calmer, wilder, correlated</li><li>Watch out for</li><li>Garbage in, garbage out: our bell-curve recipe missed fat tails</li><li>Answers wobble run to run: fix the seed</li><li>More days means a steadier answer, but slower</li><li>A precise-looking number can still be wrong</li></ul></div><div class="slide"><h3 class="stitle">VaR's blind spot</h3><ul class="sbullets"><li>VaR says: 1 day in 20 is worse than ₹12,418.</li><li>It says nothing about how much worse.</li><li>Here the 37 bad days range from ₹12,508 to ₹30,869.</li><li>We need a second number for the depth of the bad days.</li></ul><img class="sdiagram" src="S17/slides/20_0.png" alt="slide 20 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">CVaR: the average loss on the bad days</h3><ul class="sbullets"><li>If VaR is the edge of the cliff, CVaR is how far you fall.</li><li>Also called Expected Shortfall (ES). Same thing.</li><li>By hand: the 37 worst losses add up to ₹6,33,506; divide by 37: ₹17,122</li><li>Always at least as big as VaR, because it averages days past VaR</li></ul><img class="sdiagram" src="S17/slides/21_0.png" alt="slide 21 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">CVaR in code</h3><ul class="sbullets"><li>Keep the losses at or past VaR, then average them.</li></ul><p class="scaption">CODE tail = losses[losses &gt;= var_hist]   # the worst 5% of days cvar_hist = tail.mean()             # their average print("days in the tail:", len(tail)) print("95% VaR :", round(var_hist), "rupees") print("95% CVaR:", round(cvar_hist), "rupees") OUTPUT  ▸ days in the tail: 37 95% VaR : 12418 rupees 95% CVaR: 17122 rupees</p></div><div class="slide"><h3 class="stitle">VaR vs CVaR on our portfolio</h3><ul class="sbullets"><li>VaR ₹12,418: where the bad days start.</li><li>CVaR ₹17,122: what a bad day costs on average.</li><li>CVaR always sits to the right of VaR.</li><li>After 2008, the Basel rules moved bank capital from VaR to Expected Shortfall.</li></ul><img class="sdiagram" src="S17/slides/23_0.png" alt="slide 23 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Same VaR, different CVaR</h3><ul class="sbullets"><li>Put all ₹10 lakh in one stock instead.</li><li>ITC: VaR ₹16,438, CVaR ₹21,781.</li><li>HDFC Bank: VaR ₹16,137, CVaR ₹28,088.</li><li>VaR calls HDFC Bank a little safer. CVaR says its bad days are ₹6,307 worse.</li></ul><img class="sdiagram" src="S17/slides/24_0.png" alt="slide 24 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Stress test: replay 23 March 2020 on today's portfolio</h3><ul class="sbullets"><li>On 23 March 2020 our five stocks fell 7% to 13% in one day.</li><li>Apply those moves to today's ₹10 lakh: a loss of ₹1,10,000.</li><li>That is 9 times our 95% VaR.</li><li>Our 2023–25 data never saw a day like it.</li></ul><img class="sdiagram" src="S17/slides/25_0.png" alt="slide 25 diagram" loading="lazy"><p class="scaption">VaR predicts normal bad days. Stress testing sizes crisis days.</p></div><div class="slide"><h3 class="stitle">Diversification fails when you need it</h3><ul class="sbullets"><li>In calm times our five stocks barely move together.</li><li>In the COVID crash they moved almost as one.</li><li>Spreading money is weakest exactly in a crisis.</li><li>So stress tests assume everything falls together.</li></ul><img class="sdiagram" src="S17/slides/26_0.png" alt="slide 26 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Backtesting: did our VaR keep its promise?</h3><ul class="sbullets"><li>Each day, compute VaR from the previous 250 days only.</li><li>Then check: did the next day's loss break the line?</li><li>A 95% VaR should break about 24 times in 489 days.</li><li>It broke 26 times. Far more: VaR too low. Far fewer: too cautious.</li></ul><img class="sdiagram" src="S17/slides/27_0.png" alt="slide 27 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">The whole pipeline, one portfolio</h3><p class="scaption">CODE var_hist  = np.percentile(losses, 95) var_param = losses.mean() + 1.645 * losses.std() var_mc    = np.percentile(sim_losses, 95) cvar_hist = losses[losses &gt;= var_hist].mean() covid_day = np.array([-0.071, -0.100, -0.132, -0.121, -0.126])  # 23 Mar 2020 stress = -(covid_day @ weights) * investment print("Historical  VaR:", round(var_hist)) print("Parametric  VaR:", round(var_param)) print("Monte Carlo VaR:", round(var_mc)) print("CVaR           :", round(cvar_hist)) print("COVID-day loss :", round(stress)) OUTPUT  ▸ Historical  VaR: 12418 Parametric  VaR: 13075 Monte Carlo VaR: 12974 CVaR           : 17122 COVID-day loss : 110000</p></div><div class="slide"><h3 class="stitle">Lab: a risk report for our Nifty basket</h3><ul class="sbullets"><li>In the lab: download the five stocks and build this deck's pipeline yourself, one notebook at a time, on the same ₹10 lakh.</li><li>1.  Notebook 01: download prices, make rupee losses, compute historical and parametric VaR, and see the fat tails.</li><li>2.  Notebook 02: compute CVaR, and compare ITC with HDFC Bank: same VaR, different bad days.</li><li>3.  Notebook 03: roll 100,000 days with Monte Carlo, replay 23 March 2020, and backtest the VaR.</li><li>4.  Your turn: repeat the report at 99% and with your own weights.</li><li>Deliverable:  the notebook with all five numbers and three sentences explaining what they mean for the ₹10 lakh.</li></ul></div><div class="slide"><h3 class="stitle">Before you leave: can you answer these four?</h3><ul class="sbullets"><li>What is VaR?  The loss we beat on 19 days out of 20: var95 = np.percentile(losses, 95)</li><li>What is CVaR?  The average loss on the other 1 day in 20: cvar95 = losses[losses &gt;= var95].mean()</li><li>What is Monte Carlo?  Make many realistic days, then read the answer off the pile.</li><li>Why is CVaR better for extreme risk?  It measures how deep the bad days go, not just where they start.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S17_risk_var_cvar/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_historical_and_parametric_var.ipynb 02_cvar_expected_shortfall.ipynb 03_monte_carlo_var_portfolio.ipynb Five NSE stocks, daily prices 2023–2025, downloaded with yfinance (a saved copy is in data/ for offline use). New to quantiles and tails? primers/quantiles_and_tails.md Any unfamiliar word: primers/glossary.md Hull, Risk Management and Financial Institutions Jorion, Value at Risk</p></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

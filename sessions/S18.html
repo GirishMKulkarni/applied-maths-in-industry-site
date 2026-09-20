@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>The Right to Choose — Options &amp; Black-Scholes · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 3 — Financial Mathematics &amp; Quant Analytics</p>
+  <h1>S18 · The Right to Choose — Options &amp; Black-Scholes</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/distributions_and_the_bell_curve.html">Distributions and the bell curve</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>You have found a 2BHK in Pune you love, priced at ₹80 lakh, but your home loan will
+not clear for two months. Prices are rising and you are worried the flat will cost
+more by then. So you pay the builder a small booking amount, say ₹1 lakh, and in
+return the builder holds the ₹80 lakh price for you for two months. If the market
+jumps, you still buy at ₹80 lakh and you are delighted. If you change your mind, you
+simply walk away and lose only the ₹1 lakh booking amount.</p>
+<p>That booking amount bought you a <strong>right without a duty</strong>: the right to buy at a
+fixed price, with no obligation to go through with it. On a share or the Nifty index,
+that exact contract is called an <strong>option</strong>, and it is one of the biggest markets in
+the world. It is not only for traders. An airline buys the right to buy fuel at a fixed
+price, an exporter the right to sell dollars at a fixed rate, a farmer the right to sell
+a crop at a fixed price, much like an MSP they paid for, and a fund manager the right to
+sell the Nifty before a Budget or an election.</p>
+<p>Today we work out what such a right is fairly worth, on one real example that runs
+through the slides and all three notebooks: the right to buy <strong>Reliance</strong> shares at
+<strong>₹1,560</strong> at any time in the month after 31 December 2025, when Reliance closed at
+about ₹1,563.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>An option is the right, but not the obligation, to buy or sell at a fixed price.</p>
+<p>Because you are never forced through a bad deal, your loss is capped at the small amount
+you paid up front, while your gain can keep growing. Draw that on a chart and you get the
+famous bent "hockey-stick" shape. From that one idea comes the key sentence for pricing:</p>
+<p><strong>price = discounted average future payoff.</strong></p>
+<p>Average what the option might pay over all the prices Reliance could have in a month,
+then bring that average back to today's money. One formula, <strong>Black-Scholes</strong>, does the
+average exactly. Think of it as a calculator: five inputs in (the price today, the strike,
+the time left, the interest rate and the volatility), a call price and a put price out.
+We use it; we do not derive it, because the derivation needs a separate course. To be
+sure the formula is not magic, we also price the same option by simulating 100,000
+possible futures, and watch the two answers land on the same number.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Draw the call and put payoffs of the Reliance option side by side, and see the buyer's
+   capped loss next to the writer's open risk.</li>
+<li>Add payoffs together to build a protective put (insurance), a covered call (renting out
+   your shares) and a straddle (a bet on a big move, like an election result).</li>
+<li>Show that two portfolios, a call plus cash and a put plus a share, always pay the same,
+   and so must cost the same today: put-call parity.</li>
+<li>Measure Reliance's volatility from its real 2025 prices (19.5% a year) and price the
+   one-month call (₹40.81) and put (₹29.86) with a ready-made Black-Scholes calculator.</li>
+<li>Turn the volatility dial, read the Greeks as everyday sentences, and watch time value
+   melt as expiry comes closer.</li>
+<li>Price the same call by Monte Carlo simulation and watch it settle onto the formula price.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what an option, a call, a put, a strike and a premium are,</li>
+<li>how to read a payoff diagram and add two of them into a strategy,</li>
+<li>what "in the money" means, and what each Greek measures, in words,</li>
+<li>what a "fair price" for the right even means.</li>
+</ul>
+<p>The little you may want in advance: how to run a notebook cell, and the picture of a
+bell curve, because the pricing formula uses the area under one.</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Never met the bell curve, or the word "lognormal"? Read
+  <a href="../primers/distributions_and_the_bell_curve.html">Distributions and the bell curve</a>.
+  Ten minutes there makes the formula feel friendly.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>We <strong>state</strong> the Black-Scholes formula and use it. We do not derive it, so no
+stochastic calculus is needed to follow along. If you already know options, skip
+ahead and look for the cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Read and draw call and put payoff diagrams, and explain who pays whom and why the
+  writer's risk is larger than the buyer's.</li>
+<li>Say whether an option is in, at or out of the money, and split its price into intrinsic
+  value and time value.</li>
+<li>Explain put-call parity with two portfolios, before writing the formula.</li>
+<li>Price a call and a put with a Black-Scholes calculator, estimating volatility from real
+  prices, without deriving the formula.</li>
+<li>Explain in plain words why a jumpier stock makes both calls and puts worth more.</li>
+<li>Read Delta, Gamma, Theta and Vega as the option's sensitivities.</li>
+<li>Name where Black-Scholes breaks (the volatility smile, fat tails, jumps) and check a
+  price two ways, by formula and by simulation.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those who
+want it, and none of it is needed to finish.</p>
+<p>Today's mathematical object is the <strong>lognormal distribution</strong> and the
+<strong>risk-neutral expectation</strong>. The fair price of an option is a discounted expected
+payoff:</p>
+<pre><code>price = e^(-rT) × E[ payoff at expiry ]
+</code></pre>
+<p>The expectation <code>E[·]</code> is an ordinary probability-weighted average, but taken over a
+special spread of possible final prices. That spread is <strong>lognormal</strong>: the stock
+price at expiry is modelled as <code>exp</code> of a normal quantity,
+<code>S_T = S × exp((r − σ²/2)T + σ√T × Z)</code> with <code>Z</code> a standard bell-curve draw, which keeps
+the price positive and leans its spread to the right (a stock can multiply but can only
+fall to zero). The average is computed under <strong>risk-neutral</strong> probabilities, a
+bookkeeping device in which every asset is assumed to grow at the risk-free rate <code>r</code>, so
+no one's view of the market's direction sneaks into the price. It works because an
+option can be copied by continuously adjusting a holding of shares and cash (Delta
+hedging), and the copy's cost does not depend on anyone's forecast.</p>
+<p>The <strong>Black-Scholes formula</strong> is that discounted expectation worked out exactly:</p>
+<pre><code>C = S·N(d1) − K·e^(−rT)·N(d2)
+d1 = [ln(S/K) + (r + σ²/2)T] / (σ√T),   d2 = d1 − σ√T
+</code></pre>
+<p>where <code>N</code> is the standard-normal CDF and <code>N(d2)</code> is the risk-neutral chance that the call
+ends in the money. Deriving it needs stochastic calculus (Itô's lemma), so we state it and
+use it. One identity needs no model at all, only the rule that there is no free money:
+<strong>put-call parity</strong>, <code>C + K·e^(−rT) = P + S</code>. The third notebook replaces the pen and paper
+with a Monte Carlo simulation and recovers the same price, which is the cleanest way to
+see that the formula is just a careful average. Its last Stretch cell shows why the
+lognormal model is only a first answer: Reliance's real daily moves have far fatter tails.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>option</strong> — a contract giving the right, not the duty, to trade at a fixed price.</li>
+<li><strong>call / put</strong> — the right to buy (call) or to sell (put) at the fixed price.</li>
+<li><strong>strike</strong> — the fixed price written into the option, written <code>K</code>.</li>
+<li><strong>expiry</strong> — the deadline by which the right must be used.</li>
+<li><strong>premium</strong> — the price the buyer pays up front to own the option.</li>
+<li><strong>writer</strong> — the seller of an option, who collects the premium and takes on the duty.</li>
+<li><strong>payoff</strong> — what the option is worth at expiry, given the final stock price.</li>
+<li><strong>in / at / out of the money</strong> — whether using the option right now would pay something.</li>
+<li><strong>intrinsic value / time value</strong> — what using it now pays, and the rest of its price.</li>
+<li><strong>volatility</strong> — how jumpy the stock is; the yearly spread of its returns, written <code>σ</code>.</li>
+<li><strong>implied volatility</strong> — the <code>σ</code> that makes Black-Scholes match a market price.</li>
+<li><strong>the Greeks</strong> — how much the option price moves when one input moves (Delta,
+  Gamma, Theta, Vega, Rho).</li>
+<li><strong>put-call parity</strong> — a fixed relationship linking a call, a put, the stock and
+  cash, true with no model at all.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Payoff diagrams and put-call parity</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S18/notebooks/01_payoffs_and_parity.ipynb">Open in Colab</a>
+      <a class="btn" href="S18/notebooks/01_payoffs_and_parity.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S18/notebooks/01_payoffs_and_parity.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Black-Scholes: price the Reliance option</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S18/notebooks/02_black_scholes_pricer_greeks.ipynb">Open in Colab</a>
+      <a class="btn" href="S18/notebooks/02_black_scholes_pricer_greeks.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S18/notebooks/02_black_scholes_pricer_greeks.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Monte Carlo check: price the Reliance call by simulation</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S18/notebooks/03_monte_carlo_check.ipynb">Open in Colab</a>
+      <a class="btn" href="S18/notebooks/03_monte_carlo_check.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S18/notebooks/03_monte_carlo_check.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li><a href="S18/data/reliance_2023_2025.csv" download><code>data/reliance_2023_2025.csv</code></a> — Reliance&#x27;s daily closing prices, January 2023 to December 2025, the same NSE data as S16 and S17. Notebooks 2 and 3 use it to measure how jumpy Reliance is; they load this saved copy, so nothing needs to download.</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Hull — <em>Options, Futures, and Other Derivatives</em> (the standard text)</li>
+<li>Natenberg — <em>Option Volatility &amp; Pricing</em></li>
+<li><a href="https://www.quantstart.com/">QuantStart: Black-Scholes intro</a></li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Options &amp; Black-Scholes</h3><ul class="sbullets"><li>Pricing the right to choose, on one real Reliance option</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 3 — Financial Mathematics &amp; Quant Analytics   ·   Session S18   ·   2 hours Module 3 · pricing the right to choose</p></div><div class="slide"><h3 class="stitle">The problem: locking a price you are not sure you will take</h3><ul class="sbullets"><li>You have found a 2BHK in Pune you love, priced at ₹80 lakh. Your home loan will not clear for two months.</li><li>Prices are rising. You worry the flat will cost more by then, or sell to someone else.</li><li>So you pay the builder a booking amount of ₹1 lakh, and the builder holds the ₹80 lakh price for you for two months.</li><li>Prices jump: you still buy at ₹80 lakh and you are delighted. You change your mind: you walk away and lose only the ₹1 lakh.</li></ul></div><div class="slide"><h3 class="stitle">The one idea, in one picture</h3><ul class="sbullets"><li>An option is the RIGHT, not the obligation, to trade at a fixed price.</li><li>Never forced into a bad deal, so the loss stops at what you paid.</li><li>On the winning side, the gain keeps growing.</li><li>That bent line is the famous hockey stick. Today is about putting a fair price on it.</li></ul><img class="sdiagram" src="S18/slides/3_0.png" alt="slide 3 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Call, put, and the words around them</h3></div><div class="slide"><h3 class="stitle">Not just for traders: who buys options, and why</h3></div><div class="slide"><h3 class="stitle">What the option pays on expiry day</h3><ul class="sbullets"><li>Use the right only when it helps you. Otherwise the payoff is zero.</li><li>S_T = Reliance's price on expiry day,  K = ₹1,560</li><li>Reliance ends at ₹1,700:  call = max(140, 0) = ₹140,  put = max(−140, 0) = ₹0</li><li>Reliance ends at ₹1,450:  call = max(−110, 0) = ₹0,  put = max(110, 0) = ₹110</li><li>Profit = payoff − premium. The call cost ₹41, so at ₹1,700 the buyer is ₹99 ahead.</li></ul><img class="sdiagram" src="S18/slides/6_0.png" alt="slide 6 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Call and put, side by side</h3><img class="sdiagram" src="S18/slides/7_0.png" alt="slide 7 diagram" loading="lazy"><p class="scaption">Solid: payoff on expiry day. Dashed: profit after the premium. The two worked numbers are marked.</p></div><div class="slide"><h3 class="stitle">The payoff rules in code</h3><ul class="sbullets"><li>np.maximum keeps the bigger of the two, price by price: that is the kink in the hockey stick.</li></ul><p class="scaption">CODE K = 1560                                  # strike, in rupees S_T = np.array([1450, 1560, 1700])        # three possible prices in a month call_payoff = np.maximum(S_T - K, 0)      # right to BUY at 1,560 put_payoff = np.maximum(K - S_T, 0)       # right to SELL at 1,560 print("Reliance on expiry:", S_T) print("call payoff       :", call_payoff) print("put payoff        :", put_payoff) print("call profit       :", call_payoff - 41) OUTPUT  ▸ Reliance on expiry: [1450 1560 1700] call payoff       : [  0   0 140] put payoff        : [110   0   0] call profit       : [-41 -41  99]</p></div><div class="slide"><h3 class="stitle">Who pays whom</h3><ul class="sbullets"><li>Every option has two sides.</li><li>The buyer pays the premium and gets a right.</li><li>The writer (the seller) collects the premium and takes on a duty.</li><li>The buyer's worst case is known on day one. The writer's is not.</li></ul><img class="sdiagram" src="S18/slides/9_0.png" alt="slide 9 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Buyer vs writer: loss limited vs risk that can be large</h3><ul class="sbullets"><li>Buyer: pays ₹41; the loss can never be bigger than that.</li><li>Writer: earns ₹41 in most months, which feels like free income.</li><li>But if Reliance jumps 10%, the writer loses about ₹118 a share.</li><li>Writing options without owning the shares is how beginners blow up accounts.</li></ul><img class="sdiagram" src="S18/slides/10_0.png" alt="slide 10 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">In, at or out of the money</h3></div><div class="slide"><h3 class="stitle">Protective put: insurance for a share you own</h3><ul class="sbullets"><li>Share + put = stock + insurance.</li><li>You own Reliance at ₹1,563 and buy the ₹1,560 put for ₹30.</li><li>However far Reliance falls, you lose at most ₹33 a share.</li><li>If it rises, you keep the rise, less the ₹30.</li></ul><img class="sdiagram" src="S18/slides/12_0.png" alt="slide 12 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Covered call: renting out your shares</h3><ul class="sbullets"><li>Share + sold call = renting out what you own.</li><li>Like renting out a flat you own: steady rent now, but you have agreed to sell at ₹1,560 if asked.</li><li>The ₹41 premium cushions small falls.</li><li>Above ₹1,560 the gain stops at ₹38 a share.</li></ul><img class="sdiagram" src="S18/slides/13_0.png" alt="slide 13 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Straddle: a bet on a big move, direction unknown</h3><ul class="sbullets"><li>Buy a call AND a put at ₹1,560: cost about ₹71.</li><li>Think of election results: a big move is certain, its direction is not.</li><li>On 4 June 2024 Reliance fell 7.5% in one day.</li><li>A quiet month loses both premiums.</li></ul><img class="sdiagram" src="S18/slides/14_0.png" alt="slide 14 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Two portfolios: do they pay the same in a month?</h3></div><div class="slide"><h3 class="stitle">Same payoff, so same price: put-call parity</h3><ul class="sbullets"><li>If two portfolios pay the same in every future, they must cost the same today.</li><li>Left: portfolio A today. The call C, plus cash K·e^(−rT) = ₹1552.22 (grows to ₹1,560 in a month).</li><li>Right: portfolio B today. The put P, plus one share S = ₹1563.17.</li><li>Check with today's prices (from Black-Scholes, later):  40.81 + 1552.22 = 1593.03  and  29.86 + 1563.17 = 1593.03</li><li>No model needed: if they differed, buy the cheap side, sell the dear one, keep free money.</li></ul><img class="sdiagram" src="S18/slides/16_0.png" alt="slide 16 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">What is a fair price for the right?</h3><ul class="sbullets"><li>Price = discounted average future payoff.</li><li>Average: over all the prices Reliance might have in a month, weighted by how likely each is.</li><li>Discounted: a rupee next month is worth a bit less today, so multiply by e^(−rT).</li><li>By hand, in a toy world with only two futures, ₹1,450 or ₹1,700, equally likely: average payoff (0 + 140) / 2 = ₹70, today ₹69.65.</li><li>Black-Scholes does this average exactly, over every possible future.</li></ul><img class="sdiagram" src="S18/slides/17_0.png" alt="slide 17 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Think of Black-Scholes as a calculator</h3><ul class="sbullets"><li>Five inputs in, two prices out.</li><li>Four you read off a screen: price, strike, time, interest rate.</li><li>One you must estimate: σ, how jumpy Reliance is. Its 2025 daily moves give 19.5% a year.</li><li>Nobody prices options by hand. Traders type in five numbers.</li></ul><img class="sdiagram" src="S18/slides/18_0.png" alt="slide 18 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Inside the calculator: the formula, once</h3><ul class="sbullets"><li>Value of the shares you expect to get, minus today's value of the cash you pay.</li><li>N(·) = area under the bell curve (scipy's norm.cdf). N(d₂) ≈ the chance the call ends in the money.</li><li>d₁ and d₂ are helper numbers the computer works out. No need to compute them by hand.</li><li>We use this formula; we do not derive it (that needs stochastic calculus).</li></ul><img class="sdiagram" src="S18/slides/19_0.png" alt="slide 19 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Press the button: price the Reliance call and put</h3><ul class="sbullets"><li>Using the call today pays only ₹3. The other ₹38 of its price is time value: the chance Reliance climbs further this month.</li></ul><p class="scaption">CODE prices = pd.read_csv("reliance_2023_2025.csv", index_col=0, parse_dates=True) daily = prices["Close"].loc["2025"].pct_change().dropna() S = prices["Close"].iloc[-1]          # price on 31 Dec 2025 K = 1560                              # strike T = 1 / 12                            # one month, in years r = 0.06                              # 6% a year sigma = daily.std() * np.sqrt(252)    # yearly volatility from 2025 call = black_scholes_price(S, K, T, r, sigma, kind="call") put = black_scholes_price(S, K, T, r, sigma, kind="put") print("S =", round(S, 2), "  sigma =", round(sigma, 3)) print("call price:", round(call, 2), "  put price:", round(put, 2)) OUTPUT  ▸ S = 1563.17   sigma = 0.195 call price: 40.81   put price: 29.86</p></div><div class="slide"><h3 class="stitle">Which option is worth more?</h3></div><div class="slide"><h3 class="stitle">Why: the downside is capped, the upside is not</h3><ul class="sbullets"><li>Every bad outcome counts as zero: the buyer walks away.</li><li>Every good outcome counts in full.</li><li>A wider spread reaches bigger payoffs and costs nothing on the left.</li><li>More uncertainty = more option value, for calls and puts.</li></ul><img class="sdiagram" src="S18/slides/22_0.png" alt="slide 22 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Turn only the volatility dial</h3><ul class="sbullets"><li>Same Reliance, same strike, same month. Double the jumpiness and the call is worth about double.</li></ul><p class="scaption">CODE for vol in [0.10, 0.20, 0.30, 0.40]: price = black_scholes_price(S, K, T, r, vol, kind="call") print("volatility", vol, " -&gt;  call price", round(price, 2)) OUTPUT  ▸ volatility 0.1  -&gt;  call price 23.94 volatility 0.2  -&gt;  call price 41.61 volatility 0.3  -&gt;  call price 59.45 volatility 0.4  -&gt;  call price 77.32</p></div><div class="slide"><h3 class="stitle">The Greeks: how the price reacts when one input moves</h3></div><div class="slide"><h3 class="stitle">The Greeks of our Reliance call</h3><ul class="sbullets"><li>Reliance up ₹10: the call gains about ₹5.6. A quiet day: it loses about 71 paise.</li><li>Volatility from 19.5% to 20.5%: the call gains about ₹1.78.</li></ul><p class="scaption">CODE g = greeks(S, K, T, r, sigma, kind="call") print("Delta:", round(g["delta"], 2)) print("Gamma:", round(g["gamma"], 4)) print("Theta:", round(g["theta_per_day"], 2), "rupees a day") print("Vega :", round(g["vega_per_1pct"], 2), "rupees per 1% more volatility") print("Rho  :", round(g["rho_per_1pct"], 2), "rupees per 1% higher interest rate") OUTPUT  ▸ Delta: 0.56 Gamma: 0.0045 Theta: -0.71 rupees a day Vega : 1.78 rupees per 1% more volatility Rho  : 0.7 rupees per 1% higher interest rate</p></div><div class="slide"><h3 class="stitle">Where Black-Scholes breaks</h3><ul class="sbullets"><li>It assumes</li><li>Volatility is one fixed number, the same for every strike</li><li>Daily moves follow a bell curve</li><li>Prices glide smoothly from one moment to the next</li><li>Trading is free and never stops</li><li>Reality</li><li>Volatility changes, and differs by strike: the smile</li><li>Fat tails: Reliance had 9 days beyond 3σ in three years; a bell curve expects 2</li><li>Prices jump on news: Reliance +5.6%, then -7.5%, on 3 and 4 June 2024</li><li>Spreads, brokerage, and a market closed at night and on holidays</li></ul></div><div class="slide"><h3 class="stitle">Assumption 1 fails: the volatility smile</h3><ul class="sbullets"><li>Take a market price and ask: which σ makes Black-Scholes match it? That is the implied volatility.</li><li>If the model were right, every strike would give the same σ: a flat line.</li><li>Real markets give a curve, highest for low strikes.</li><li>Traders still use Black-Scholes, with a different σ for each strike.</li></ul><img class="sdiagram" src="S18/slides/27_0.png" alt="slide 27 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Assumptions 2 and 3 fail: fat tails and jumps</h3><ul class="sbullets"><li>Left: Reliance jumped 5.6% on exit-poll day and fell 7.5% the next day.</li><li>No smooth path in between, so no chance to adjust a hedge.</li><li>Right: 4 June 2024 was a 6-sigma day. A bell curve says it should almost never happen.</li><li>So a bell curve underprices protection against big moves.</li></ul><img class="sdiagram" src="S18/slides/28_0.png" alt="slide 28 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Can we trust the formula? Price it a second way</h3><ul class="sbullets"><li>Formula route: five inputs into Black-Scholes. Instant.</li><li>Simulation route: roll 100,000 possible Reliance prices in a month, take each payoff, average, discount.</li><li>That is the fair-price sentence, done by brute force.</li><li>Same engine as S17's Monte Carlo. If both routes are right, they must agree.</li></ul><img class="sdiagram" src="S18/slides/29_0.png" alt="slide 29 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Simulation route: 100,000 futures for Reliance</h3><ul class="sbullets"><li>More futures, closer answer. The error shrinks like 1/√n: 100 times the futures, 10 times closer.</li></ul><p class="scaption">CODE np.random.seed(0)                      # same random futures for everyone for n in [1_000, 10_000, 100_000, 1_000_000]: Z = np.random.standard_normal(n)   # n bell-curve draws S_T = S * np.exp((r - 0.5 * sigma**2) * T + sigma * np.sqrt(T) * Z) payoffs = np.maximum(S_T - K, 0)   # call payoff in each future mc_price = np.exp(-r * T) * payoffs.mean()   # average, then discount print(n, "futures  -&gt;  call price", round(mc_price, 2)) print("formula route      -&gt;  call price", round(call, 2)) OUTPUT  ▸ 1000 futures  -&gt;  call price 37.99 10000 futures  -&gt;  call price 39.9 100000 futures  -&gt;  call price 40.91 1000000 futures  -&gt;  call price 40.86 formula route      -&gt;  call price 40.81</p></div><div class="slide"><h3 class="stitle">Lab: price one real option three ways</h3><ul class="sbullets"><li>In the lab: take the one-month Reliance call from today's slides and price it yourself: by its payoff, with Black-Scholes, and by simulation.</li><li>1.  Notebook 01, payoff diagrams: draw the call and put, buyer vs writer, the three strategies, and the two parity portfolios.</li><li>2.  Notebook 02, Black-Scholes: measure Reliance's volatility, price the call and put, turn the volatility dial, read the Greeks.</li><li>3.  Notebook 03, Monte Carlo check: simulate Reliance's next month and land on the formula price.</li><li>4.  Your turn: price the put by simulation and check it against ₹29.86.</li><li>Deliverable:  the three notebooks, run top to bottom, with one sentence under each result saying what it means for the Reliance call.</li></ul></div><div class="slide"><h3 class="stitle">Before you leave: can you answer these five?</h3><ul class="sbullets"><li>What is an option?  The right, not the obligation, to buy (call) or sell (put) at a fixed price.</li><li>Why is the buyer safer than the writer?  The buyer's loss stops at the premium; the writer's does not.</li><li>What is a fair price?  The average future payoff, discounted to today. Black-Scholes computes it from S, K, T, r and σ.</li><li>Why does volatility raise the price?  Bad outcomes count as zero, so wider swings only add upside.</li><li>How do we check the formula?  Simulate many futures, average the payoffs, and compare.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S18_options_black_scholes/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_payoffs_and_parity.ipynb 02_black_scholes_pricer_greeks.ipynb 03_monte_carlo_check.ipynb Reliance daily closing prices 2023–2025, the same NSE data as S16 and S17 (data/reliance_2023_2025.csv). New to code? primers/python_in_15_minutes.md New to the bell curve? primers/distributions_and_the_bell_curve.md Any unfamiliar word: primers/glossary.md Hull, Options, Futures, and Other Derivatives Natenberg, Option Volatility &amp; Pricing</p></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

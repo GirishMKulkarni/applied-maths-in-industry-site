@@ -16,7 +16,6 @@
   <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
   <nav>
     <a href="../index.html">Sessions</a>
-    <a href="../start-here.html">Start here</a>
     <a href="../primers/index.html">Primers</a>
     <a href="../projects/index.html">Projects</a>
     <a href="../primers/glossary.html">Glossary</a>
@@ -181,6 +180,8 @@ example finding the average of a thousand numbers in one step.</p>
 measure with a ruler; the default distance KNN uses.</p>
 <h3 id="executive-summary-one-pager">executive summary / one-pager</h3>
 <p>the whole decision on a single page: answer, a little evidence, a caveat, a next step.</p>
+<h3 id="expiry">expiry</h3>
+<p>the deadline in an option contract: after it, the right can no longer be used.</p>
 <h3 id="facility-location">facility location</h3>
 <p>choose which sites to open and who each serves, cheapest overall.</p>
 <h3 id="f1-score">F1 score</h3>
@@ -225,8 +226,12 @@ find the slope and starting value that match the data best.</p>
 <p>the cost of stock sitting idle, and of running out.</p>
 <h3 id="hypothesis-test">hypothesis test</h3>
 <p>the honest procedure for deciding whether a difference is real or just luck.</p>
+<h3 id="implied-volatility">implied volatility</h3>
+<p>the volatility you must feed Black-Scholes so that its price matches the price the market is actually paying.</p>
 <h3 id="impurity">impurity</h3>
 <p>a number for how mixed a group of labels is; 0 means all one class.</p>
+<h3 id="in-at-out-of-the-money">in / at / out of the money</h3>
+<p>whether using an option right now would pay something: a call is in the money when the share is above the strike, out of the money when below, at the money when equal.</p>
 <h3 id="index">index</h3>
 <p>the row labels down the left of a table; the address of each row.</p>
 <h3 id="information-gain">information gain</h3>
@@ -238,6 +243,8 @@ find the slope and starting value that match the data best.</p>
 <h3 id="intercept">intercept</h3>
 <p>The starting value of a straight line, the prediction when the input is zero. In
 <code>y = slope × x + intercept</code> it is the second number.</p>
+<h3 id="intrinsic-value-time-value">intrinsic value / time value</h3>
+<p>an option's price split in two: what using it right now would pay (intrinsic value), and the extra paid for the chance it gets better before expiry (time value).</p>
 <h3 id="join">join</h3>
 <p>combining two tables by matching on a shared column (a key).</p>
 <h3 id="k-means">k-means</h3>
@@ -534,12 +541,14 @@ check honestly how well the model does on cases it never saw (test).</p>
 <p>an on-screen control (a slider, a box, a dropdown) that collects one input.</p>
 <h3 id="window-function">window function</h3>
 <p>a calculation that adds a column (like a running total) while keeping every row.</p>
+<h3 id="writer">writer</h3>
+<p>the seller of an option: collects the premium now and must deliver if the buyer uses the right.</p>
 <h3 id="z-score">z-score</h3>
 <p>how many standard deviations a value sits from its mean; it turns the spread into a same-scale signal.</p></section><p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">All primers</a></p><script>(function(){var q=document.getElementById('gloss-search');if(!q)return;var body=document.getElementById('glossary');var terms=[].slice.call(body.querySelectorAll('h3'));var empty=document.getElementById('gloss-empty');q.addEventListener('input',function(){var v=q.value.trim().toLowerCase(),shown=0;terms.forEach(function(h){var d=h.nextElementSibling;var t=h.textContent.toLowerCase()+' '+((d&&d.textContent)||'').toLowerCase();var ok=!v||t.indexOf(v)>-1;h.style.display=ok?'':'none';if(d&&d.tagName==='P')d.style.display=ok?'':'none';if(ok)shown++;});empty.style.display=shown?'none':'block';});})();</script>
 </main>
 <footer class="foot">
   <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
-  <p><a href="../start-here.html">Start here</a> · <a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
 </footer>
 </body>
 </html>
