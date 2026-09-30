@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>The Problems a Computer Can Always Solve — Convex Optimization with CVXPY · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 4 — Optimization &amp; Operations Research</p>
+  <h1>S22 · The Problems a Computer Can Always Solve — Convex Optimization with CVXPY</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/convex_sets_and_functions.html">Convex sets and functions</a></li><li><a href="../primers/least_squares_and_lines.html">Lines and least squares</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A fund desk at a Mumbai asset manager has ₹100 crore to spread across a basket of
+Nifty stocks. They want the split that keeps the risk as low as possible for the
+return they are targeting. A computer searches through the possible splits and
+hands back an answer: "put this much in each stock". But the desk has to defend
+that number to a client and to a regulator. So there is one uncomfortable question
+behind every such answer. Is this genuinely the best split, or is it just where the
+search happened to stop?</p>
+<p>That same question sits behind almost every "find the best setting" task in
+industry: the cheapest delivery routing, the line that best fits past sales, the
+boundary a bank draws between safe and risky loans. Today you meet the single
+property that decides whether you can answer that question with confidence.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Picture the problem as a landscape and the answer as the lowest point. If the
+landscape is a smooth bowl, there is exactly one bottom. Drop a marble anywhere and
+it rolls to that same lowest point every time. So when the computer stops, you know
+for certain it found the best answer. Nothing better is hiding elsewhere.</p>
+<p>If instead the landscape is wobbly, full of little dips, the marble settles in
+whichever dip it happens to be near. That might be far from the true bottom, and
+worse, you cannot tell from inside the dip. A bowl-shaped problem is called
+<strong>convex</strong>, and it is the kind a computer can always solve to the genuine best.</p>
+<p>Here is the warm surprise waiting in this session. A whole family of models you have
+already built are secretly bowls: fitting a line, Ridge and Lasso, the support
+vector machine, the Nifty portfolio. Once a problem is a bowl, you only have to
+<strong>describe your goal and the rules you must obey</strong>, and a solver returns the
+guaranteed best answer. You describe the problem; the solver solves it. (A tool
+called <strong>CVXPY</strong> lets the confident write these problems out in maths notation, but
+you never have to in order to get the answer.)</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Draw the two pictures that decide everything: a shape with no dents (convex) and
+   a bowl-shaped cost, and see why a bowl has one bottom while a wobbly landscape
+   has traps.</li>
+<li>Hand a solver a real money problem, a Pune bakery's week, by describing only two
+   things: the goal (most profit) and the rules (limited flour and oven time). Read
+   the guaranteed-best plan straight off in rupees.</li>
+<li>Let scikit-learn draw a bank's dividing line between safe and risky loan
+   applicants, see the widest "street" it leaves as a safety buffer, and find the
+   handful of applicants that fix the whole boundary (the support vectors).</li>
+<li>In optional stretch cells, write line-fitting, Lasso, Ridge, the SVM's margin and
+   a Nifty portfolio in CVXPY yourself and check them against NumPy and scikit-learn.
+   This is the maths way, and it is never needed to finish the lab.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach every new piece from scratch today, in plain steps:</p>
+<ul>
+<li>what "convex" (bowl-shaped) means, and why a bowl is the easy case,</li>
+<li>how a solver takes a goal and some rules and hands back the best plan (the tool is
+  called CVXPY),</li>
+<li>how a support vector machine draws its dividing line.</li>
+</ul>
+<p>The little you may want in advance: how to run a notebook cell, and the picture of a
+straight line. Both are covered here first:</p>
+<ul>
+<li>New to the whole "bowl vs wobbly" idea? Read
+  <a href="../primers/convex_sets_and_functions.html">Convex sets and functions</a> for a
+  ten-minute, picture-first version.</li>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Want the line-fitting background these problems build on? Read
+  <a href="../primers/least_squares_and_lines.html">Lines and least squares</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code or already know convex optimisation, skip ahead and look for the
+cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain in pictures what "convex" means, and why it is the property that decides
+  whether a problem is reliably solvable.</li>
+<li>Take a real "goal plus rules" problem, hand it to a solver, and read the
+  guaranteed-best plan back in plain words and rupees.</li>
+<li>Recognise that line-fitting, Ridge, Lasso, the SVM and the Nifty portfolio are all
+  the same bowl-shaped kind of problem a solver can always solve.</li>
+<li>Read an SVM's dividing line, the widest "street" (its margin), and the support
+  vectors that hold the boundary in place.</li>
+<li>Optionally, write any of these convex problems in CVXPY by hand and check it
+  against NumPy and scikit-learn (the maths way, never required).</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those who
+want it, and none of it is needed to finish.</p>
+<p>Today's mathematical objects are the <strong>convex set</strong> and the <strong>convex function</strong>. A
+set is convex if, for any two points <code>x</code> and <code>y</code> inside it, the whole segment
+<code>t·x + (1−t)·y</code> for <code>t</code> in <code>[0, 1]</code> stays inside. A function is convex if every
+chord lies on or above its graph, equivalently <code>f(t·x + (1−t)·y) ≤ t·f(x) + (1−t)·f(y)</code>.
+Their payoff is one sentence: in a convex problem, any local optimum is the global
+optimum, which is exactly why such problems are considered "solved".</p>
+<p>The problems in the lab are all convex for a reason you can name. Least squares
+minimises the squared norm <code>‖Xw − y‖²</code>, a bowl. Ridge adds <code>λ‖w‖₂²</code> and Lasso adds
+<code>λ‖w‖₁</code>, both convex, so the sum stays a bowl. The SVM minimises <code>½‖w‖²</code> subject to
+one linear constraint per point, a <strong>convex quadratic program</strong>. The Markowitz
+portfolio minimises <code>wᵀΣw</code>, convex because the covariance matrix <code>Σ</code> is positive
+semidefinite.</p>
+<p>The <strong>KKT conditions</strong> are the calculus of the optimum, and we treat them as
+intuition only, never as a theorem to prove. At the best point the objective's
+downhill direction is exactly balanced by the active constraints, <code>∇f = −Σ λᵢ ∇gᵢ</code>;
+each price <code>λᵢ ≥ 0</code>; and a constraint either binds or its price is zero
+(complementary slackness). For a convex problem, a point meeting these conditions is
+certified globally optimal. CVXPY automates all of this through <strong>Disciplined Convex
+Programming (DCP)</strong>: you assemble the objective from known convex building blocks,
+CVXPY checks it really is convex, then a solver returns the global answer along with
+those prices. All of this is a bonus, not a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>convex set</strong> — a shape with no dents: the line between any two inside points
+  stays inside.</li>
+<li><strong>convex function</strong> — a bowl-shaped cost: every chord lies on or above the curve.</li>
+<li><strong>convex optimization</strong> — finding the lowest point of a bowl-shaped problem, which
+  a computer can always do reliably.</li>
+<li><strong>global optimum</strong> — the genuinely best answer, not just the best nearby.</li>
+<li><strong>local optimum</strong> — a dip that beats its neighbours but is not the overall best; a
+  trap that only wobbly problems have.</li>
+<li><strong>CVXPY</strong> — a Python library where you write a convex problem as algebra and it
+  returns the best answer.</li>
+<li><strong>quadratic program (QP)</strong> — a bowl-shaped objective with straight-line fences; the
+  SVM is one.</li>
+<li><strong>support vector</strong> — a data point sitting right on the edge of an SVM's margin; a
+  handful of these fix the whole boundary.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Why a bowl is easy — convex sets and functions, by picture</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S22/notebooks/01_why_a_bowl_is_easy.ipynb">Open in Colab</a>
+      <a class="btn" href="S22/notebooks/01_why_a_bowl_is_easy.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S22/notebooks/01_why_a_bowl_is_easy.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">A solver finds the best plan — describe the goal and the rules</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S22/notebooks/02_familiar_problems_in_cvxpy.ipynb">Open in Colab</a>
+      <a class="btn" href="S22/notebooks/02_familiar_problems_in_cvxpy.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S22/notebooks/02_familiar_problems_in_cvxpy.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">The SVM — the widest street that separates two groups</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S22/notebooks/03_svm_the_widest_street.ipynb">Open in Colab</a>
+      <a class="btn" href="S22/notebooks/03_svm_the_widest_street.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S22/notebooks/03_svm_the_widest_street.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Small synthetic datasets generated inside the notebooks (seeded NumPy)</li>
+<li>Seeded synthetic loan applicants (income vs existing EMIs), safe vs risky (no download needed)</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Boyd &amp; Vandenberghe — <em>Convex Optimization</em> (free at web.stanford.edu/~boyd/cvxbook), ch. 2–3 and 5</li>
+<li><a href="https://www.cvxpy.org/examples/index.html">CVXPY documentation and example gallery</a></li>
+<li>Stanford EE364a lecture notes</li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">The Problems a Computer Can Always Solve</h3><ul class="sbullets"><li>Convex optimization with CVXPY: spot the bowl, get the best answer</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 4 — Optimization &amp; Operations Research   ·   Session S22   ·   2 hours Module 4 · the session that ties the whole course together</p></div><div class="slide"><h3 class="stitle">The problem: is this really the best answer?</h3><ul class="sbullets"><li>A fund desk in Mumbai has ₹100 crore to spread across a basket of Nifty stocks.</li><li>They want the split that keeps risk as low as possible for the return they are targeting.</li><li>A computer searches the possibilities and hands back an answer: 'put this much in each stock'.</li><li>But they must defend that number to a client and a regulator. So one uncomfortable question hangs over it:</li><li>Is this genuinely the best split, or just where the search happened to stop?</li></ul></div><div class="slide"><h3 class="stitle">The one idea, in a single picture</h3><ul class="sbullets"><li>Picture the problem as a landscape; the answer is the lowest point.</li><li>If the landscape is a smooth bowl, there is exactly one bottom.</li><li>Drop a marble anywhere and it rolls to that same point, every time.</li><li>So when the computer stops, you know it found the best. Nothing better is hiding.</li></ul><img class="sdiagram" src="S22/slides/3_0.png" alt="slide 3 diagram" loading="lazy"><p class="scaption">A bowl has exactly one lowest point, so a marble dropped anywhere rolls to the same bottom. A wobbly land has traps.</p></div><div class="slide"><h3 class="stitle">What we'll cover</h3><ul class="sbullets"><li>1   The problem, and the one idea (done — that was the big picture)</li><li>2   What 'convex' means, in two pictures — and why it's the easy case</li><li>3   The bowls you've already built — one surprising family</li><li>4   The SVM: drawing the widest street between two groups</li><li>5   CVXPY: the five-line recipe for the whole family</li><li>6   Which tool for which problem — PuLP, CVXPY, or neural nets</li><li>7   Lab: rebuild three familiar models as CVXPY programs</li></ul></div><div class="slide"><h3 class="stitle">1 · What 'convex' means — and why it's the easy case</h3><ul class="sbullets"><li>Two pictures, then the payoff</li></ul></div><div class="slide"><h3 class="stitle">A shape with no dents: a convex set</h3><ul class="sbullets"><li>First picture: the SHAPE of the allowed answers.</li><li>A convex set is a shape with no dents.</li><li>Left: a disc. Any two points, the line between them stays inside.</li><li>Right: a crescent. Pick two points and the line pokes outside — so it has a dent.</li></ul><img class="sdiagram" src="S22/slides/6_0.png" alt="slide 6 diagram" loading="lazy"><p class="scaption">Pick any two points in the shape; the whole segment joining them stays inside too.</p></div><div class="slide"><h3 class="stitle">A convex function is a bowl</h3><ul class="sbullets"><li>Second picture: the COST over the allowed answers.</li><li>A convex function curves like a bowl.</li><li>Join two points on it with a straight line (a 'chord').</li><li>For a bowl, the chord always sits on or above the curve — no hidden humps.</li></ul><img class="sdiagram" src="S22/slides/7_0.png" alt="slide 7 diagram" loading="lazy"><p class="scaption">Join two points on the curve; the straight chord never dips below it.</p></div><div class="slide"><h3 class="stitle">Quick check: is my problem a bowl?</h3><ul class="sbullets"><li>Signs it IS a bowl</li><li>Warning signs (probably NOT)</li><li>Is the allowed region dent-free?</li><li>— straight-line limits are fine</li><li>— overlaps of dent-free shapes are fine</li><li>Is the cost a bowl over that region?</li><li>— built only from bowls we know</li><li>Yes to both means: solve it to the genuine best.</li><li>A cost with several dips</li><li>Multiplying two unknowns together (x times y)</li><li>'Pick exactly 3 of these' rules</li><li>Whole-number-only decisions (S21)</li><li>Many 'if this, then that' rules</li><li>Anything that puts a dent in the shape</li></ul></div><div class="slide"><h3 class="stitle">Bowl vs wobbly: the picture that matters most</h3><img class="sdiagram" src="S22/slides/9_0.png" alt="slide 9 diagram" loading="lazy"><p class="scaption">Left: one bottom, always reachable. Right: many traps, and no way to know you found the best.</p></div><div class="slide"><h3 class="stitle">Bowl vs wobbly: local best = global best</h3><ul class="sbullets"><li>Bowl-shaped problem</li><li>The best nearby is the best anywhere</li><li>The solver returns a guarantee it's optimal</li><li>Scales to thousands of unknowns</li><li>Same answer every run — no luck involved</li><li>Wobbly problem</li><li>Can get stuck in a poor dip</li><li>No guarantee you found the best</li><li>The answer depends on where you started</li><li>Needs restarts, tricks, and some luck</li></ul></div><div class="slide"><h3 class="stitle">2 · The bowls you've already built</h3><ul class="sbullets"><li>The warm surprise of this session</li></ul></div><div class="slide"><h3 class="stitle">One family — and you've met most of it</h3><img class="sdiagram" src="S22/slides/12_0.png" alt="slide 12 diagram" loading="lazy"><p class="scaption">Line-fitting, Ridge/Lasso, logistic regression, the SVM, the Nifty portfolio, delivery routing — all bowls.</p></div><div class="slide"><h3 class="stitle">The same problems, made explicit</h3></div><div class="slide"><h3 class="stitle">Least squares in one line of CVXPY</h3><ul class="sbullets"><li>Typing 'minimise the squared miss' in CVXPY recovers the exact line the S7 normal equation found.</li></ul><p class="scaption">CODE OUTPUT  ▸ import cvxpy as cp # X has a row [size, 1] per flat; y is the price weights = cp.Variable(2)                 # [slope, intercept] cost = cp.sum_squares(X @ weights - y)   # the total squared miss cp.Problem(cp.Minimize(cost)).solve() # the S7 normal equation gives the very same line numpy_w = np.linalg.solve(X.T @ X, X.T @ y) print('CVXPY [w, b]:', weights.value.round(3)) print('NumPy [w, b]:', numpy_w.round(3)) CVXPY [w, b]: [1.923 7.168] NumPy [w, b]: [1.923 7.168]</p></div><div class="slide"><h3 class="stitle">Ridge and Lasso are both bowls (recall S8)</h3><img class="sdiagram" src="S22/slides/15_0.png" alt="slide 15 diagram" loading="lazy"><p class="scaption">The cost contours meet a fence; Lasso's sharp corners are what push weights to exactly zero.</p></div><div class="slide"><h3 class="stitle">3 · The SVM — the widest street</h3><ul class="sbullets"><li>A worked example you can picture</li></ul></div><div class="slide"><h3 class="stitle">The support vector machine, in words</h3><ul class="sbullets"><li>Goal: draw a line that separates two groups — but not just any line.</li><li>Choose the line with the widest empty street on either side of it.</li><li>A wide street is safer on new data: there's room to be a little bit wrong.</li><li>The few points that touch the street's kerb are the 'support vectors' — they alone fix the line.</li></ul></div><div class="slide"><h3 class="stitle">SVM: the widest street that separates the two groups</h3><img class="sdiagram" src="S22/slides/18_0.png" alt="slide 18 diagram" loading="lazy"><p class="scaption">Make the street as wide as possible; only the circled support vectors decide where it goes.</p></div><div class="slide"><h3 class="stitle">Why the SVM is a bowl with straight fences</h3><ul class="sbullets"><li>Widest street = making the length ½‖w‖² as small as possible — a bowl.</li><li>Each training point adds one straight-line limit: 'stay on your correct side of the street'.</li><li>A bowl cost plus straight-line fences is a 'quadratic program' (QP) — still a bowl.</li><li>So the SVM has one best answer and a fast, reliable solver.</li><li>Messy, overlapping groups add gentle 'slack' terms — still a bowl.</li></ul></div><div class="slide"><h3 class="stitle">Fit the widest street with one call to SVC</h3><ul class="sbullets"><li>One fit separates every applicant correctly, and just two edge applicants — the support vectors — pin the whole street.</li></ul><p class="scaption">CODE from sklearn.svm import SVC # applicants: 40 rows of [income, existing_emis]; labels +1 / -1 loan_svm = SVC(kernel='linear', C=1000.0) loan_svm.fit(applicants, labels) print('accuracy:', loan_svm.score(applicants, labels)) print('support vectors:', loan_svm.support_vectors_.shape[0]) for p in loan_svm.support_vectors_: print(f'   income {p[0]:.1f}   emis {p[1]:.1f}') OUTPUT  ▸ accuracy: 1.0 support vectors: 2 income 51.1   emis 24.9 income 63.8   emis 12.7</p></div><div class="slide"><h3 class="stitle">4 · CVXPY — write the maths, get the answer</h3><ul class="sbullets"><li>One tool for the whole family — this is the centrepiece</li></ul></div><div class="slide"><h3 class="stitle">CVXPY: write the problem the way you'd write it on paper</h3><ul class="sbullets"><li>Name your unknowns, then type the goal and the limits as algebra — almost exactly as the maths reads.</li><li>No need to hand-build a solver or reshape the problem into some solver's input format.</li><li>CVXPY first checks the problem is a bowl, then picks and calls a suitable solver for you.</li><li>It returns the genuine best answer, with a certificate that it IS the best.</li><li>Next slide: the five-line skeleton every bowl problem shares.</li></ul></div><div class="slide"><h3 class="stitle">The CVXPY recipe — worth memorising</h3><ul class="sbullets"><li>Every problem in today's family is these five steps with different algebra filled in. If you remember one slide, remember this one.</li></ul><p class="scaption">CODE OUTPUT  ▸ import cvxpy as cp x = cp.Variable()                  # 1. name the unknowns objective = cp.Minimize((x - 3)**2)   # 2. the goal (a bowl) constraints = [x &gt;= 0]             # 3. the rules (straight fences) prob = cp.Problem(objective, constraints) prob.solve()                       # 4. solve print(prob.status, x.value)        # 5. 'optimal' = provably the best optimal 3.0</p></div><div class="slide"><h3 class="stitle">State a goal and rules; get the best plan</h3><ul class="sbullets"><li>You name the unknowns, type the goal and the limits as algebra, and CVXPY returns the provably best weekly bake.</li></ul><p class="scaption">CODE OUTPUT  ▸ cakes    = cp.Variable() biscuits = cp.Variable() profit = 400*cakes + 500*biscuits          # maximise weekly profit rules = [3*cakes + 2*biscuits &lt;= 80,       # flour: 80 kg 1*cakes + 3*biscuits &lt;= 50,       # oven: 50 hours cakes &gt;= 0, biscuits &gt;= 0] prob = cp.Problem(cp.Maximize(profit), rules) prob.solve() print('status:', prob.status) print('cakes:', round(float(cakes.value)), ' biscuits:', round(float(biscuits.value))) print('profit: Rs', round(float(profit.value))) status: optimal cakes: 20  biscuits: 10 profit: Rs 13000</p></div><div class="slide"><h3 class="stitle">Write the maths, get the answer</h3><img class="sdiagram" src="S22/slides/25_0.png" alt="slide 25 diagram" loading="lazy"><p class="scaption">CVXPY checks your problem really is a bowl before it solves — so it never quietly hands back a wrong-ish answer.</p></div><div class="slide"><h3 class="stitle">Which tool for which problem?</h3></div><div class="slide"><h3 class="stitle">Rebuild the SVM as a CVXPY program</h3><ul class="sbullets"><li>Writing the SVM as 'shrink ½‖w‖² subject to one fence per point' reproduces scikit-learn's line exactly.</li></ul><p class="scaption">CODE # unknowns: the line's direction w and its offset b w = cp.Variable(2) b = cp.Variable() objective = cp.Minimize(0.5 * cp.sum_squares(w))  # widen the street # one straight fence per applicant: stay on your side by &gt;= 1 fences = [labels[i] * (w @ applicants[i] + b) &gt;= 1 for i in range(applicants.shape[0])] cp.Problem(objective, fences).solve() print('our w:', w.value.round(4), ' sklearn w:', loan_svm.coef_[0].round(4)) print('our b:', round(float(b.value), 4), ' sklearn b:', round(float(loan_svm.intercept_[0]), 4)) OUTPUT  ▸ our w: [ 0.0818 -0.0784]   sklearn w: [ 0.0818 -0.0784] our b: -3.2232   sklearn b: -3.2232</p></div><div class="slide"><h3 class="stitle">5 · Pitfalls &amp; wrap-up</h3></div><div class="slide"><h3 class="stitle">Common traps</h3><ul class="sbullets"><li>Avoid</li><li>Running a solver on a wobbly problem and calling the result 'the best'</li><li>Writing expressions CVXPY can't confirm are bowls</li><li>Forgetting to put features on a similar scale first</li><li>Ignoring a rewrite that would make the problem a bowl</li><li>Do instead</li><li>First ask: is this problem actually a bowl?</li><li>Use the ready-made blocks (sum_squares, quad_form, norm)</li><li>Scale the features, then solve</li><li>Look for the bowl-shaped way to write it</li></ul></div><div class="slide"><h3 class="stitle">One recipe, growing one line at a time</h3></div><div class="slide"><h3 class="stitle">Lab: rebuild three familiar models as CVXPY programs</h3><ul class="sbullets"><li>In the lab: convert problems you've already solved with other tools — an LP, line-fitting, Ridge, a portfolio — into the five-line CVXPY recipe, and confirm the answers match.</li><li>1.  Notebook 01: draw the two pictures — a dent-free shape and a bowl — and count the traps a wobbly landscape hides.</li><li>2.  Notebook 02: convert an S20-style production plan (an LP) into CVXPY and read the 'optimal' certificate.</li><li>3.  Stretch: convert line-fitting (S7), then Lasso and Ridge (S8), then the S16 Nifty portfolio into the same recipe — cross-check every answer.</li><li>4.  Notebook 03: let scikit-learn draw the SVM's widest street, then (stretch) rebuild the same SVM by hand as a bowl with fences.</li><li>Deliverable:  a notebook on GitHub: familiar models rewritten as CVXPY programs, with answers cross-checked against earlier sessions.</li></ul></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>The real dividing line is bowl vs wobbly (convex vs non-convex), not simple vs complicated.</li><li>In a bowl the best point nearby is the best point anywhere — a solver's answer comes with a certificate.</li><li>Line-fitting, Ridge, Lasso, logistic regression, the SVM and portfolios are all bowls.</li><li>The five-line CVXPY recipe: unknowns, objective, constraints, solve, check 'optimal'.</li><li>Pick the tool by the problem's shape: PuLP for LPs and integer decisions, CVXPY for bowls, PyTorch for the wobbly world.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S22_convex_optimization/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_why_a_bowl_is_easy.ipynb 02_familiar_problems_in_cvxpy.ipynb 03_svm_the_widest_street.ipynb Small synthetic datasets generated inside the notebooks (seeded NumPy) Two-class blobs from scikit-learn's make_blobs (no download needed) New to the idea? primers/convex_sets_and_functions.md New to code? primers/python_in_15_minutes.md Line-fitting background? primers/least_squares_and_lines.md Boyd &amp; Vandenberghe — Convex Optimization (free at web.stanford.edu/~boyd/cvxbook), ch. 2-3 &amp; 5 CVXPY documentation and example gallery (cvxpy.org/examples) Stanford EE364a lecture notes</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S23 — Monte Carlo &amp; discrete-event simulation. When a problem is messy, random, or wobbly, we stop solving in closed form and start simulating.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

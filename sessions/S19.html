@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Does This Trading Rule Actually Make Money? (Backtesting Honestly) · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 3 — Financial Mathematics &amp; Quant Analytics</p>
+  <h1>S19 · Does This Trading Rule Actually Make Money? (Backtesting Honestly)</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/hypothesis_testing_and_pvalues.html">Hypothesis testing and pvalues</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A friend gives you a tip: "Buy HDFC Bank when its 20-day average climbs above its
+50-day average. Sell when it drops below. Easy money." It sounds sensible. Before you
+put real rupees behind it, you want to know one thing: does this rule actually make
+money?</p>
+<p>The only way to check is to replay history. You take seven years of daily prices,
+2019 to 2025, pretend you followed the rule every day, and add up what you would have
+earned. This is called a <strong>backtest</strong>. It is the single most useful, and the single
+most dangerous, tool in quant finance. Useful, because it is the only honest way to
+check an idea before risking money. Dangerous, because it is astonishingly easy to run
+a backtest that says "you would be rich" when the truth is you would not.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>A backtest replays history and asks: if I had followed this rule, day by day, without
+ever peeking at the future, and after paying the fees I really would have paid, would I
+have beaten simply buying and holding the stock?</p>
+<p>Done honestly on HDFC Bank, the answer is no. ₹1 following the rule from January 2019
+became about ₹1.05; ₹1 simply held became about ₹1.97. Most backtests you see online
+look far better than this, and today is about why. They peek at the future, they try
+many rules and keep the lucky one, they test only on stocks that survived, and they
+forget that every trade costs money.</p>
+<p>We finish with a more advanced rule, a <strong>pairs trade</strong> on HDFC Bank and ICICI Bank,
+fitted on 2024 and traded on 2025, a year it never saw. The session's one sentence:
+<strong>a trading strategy is easy; an honest backtest is hard.</strong></p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>The 20/50 moving-average rule on HDFC Bank: a moving average by hand, the rule as one
+   number a day, five days of the backtest by hand, then all seven years in code, drawn
+   against buy and hold with its return, Sharpe ratio and worst fall.</li>
+<li>The same backtest broken on purpose, three ways, with each lie measured: drop one
+   <code>shift(1)</code> and ₹1.05 becomes ₹1.23; tune the window lengths on 2019–22 and the winner
+   loses money on 2023–25; ignore costs and a fast rule that really loses looks like a
+   winner.</li>
+<li>A pairs trade on HDFC Bank and ICICI Bank: build the gap, test that it keeps coming
+   back (cointegration), trade it with a z-score, and judge it on a fresh year, after
+   costs.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what a moving average and a backtest are, and how to run one by hand,</li>
+<li>the four ways a backtest fools you, and the fix for each,</li>
+<li>how two stocks can be traded as a pair, and how to test that the pairing is real
+  before you trust it.</li>
+</ul>
+<p>The little you may want in advance: how to run a notebook cell, and a feel for the
+question "is this real or just luck?" Both are covered here first.</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.
+  You can run every cell with the play button and follow along.</li>
+<li>Want the "is this real or just luck?" idea in one page? Read
+  <a href="../primers/hypothesis_testing_and_pvalues.html">Hypothesis testing and p-values</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already trade, code, or know your statistics, skip ahead and look for the
+cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Turn a price series into a daily position and backtest it honestly with
+  <code>position.shift(1)</code>, then read its equity curve against buy and hold.</li>
+<li>Report more than the final number: yearly return, Sharpe ratio and worst fall.</li>
+<li>Spot and demonstrate the ways a backtest lies: look-ahead bias, survivorship bias,
+  trying too many rules, and ignored trading costs.</li>
+<li>Build the gap between two related stocks, test it for cointegration, trade it with a
+  z-score, and report an honest out-of-sample result after costs.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those
+who want it, and none of it is needed to finish.</p>
+<p>Today's mathematical object has two halves. The first is <strong>hypothesis testing</strong>.
+Treat a strategy as a claim and its backtest as a test, with the null hypothesis
+"this rule has no real edge." A gorgeous backtest is a small p-value, a result
+that would be surprising if the null were true. The catch is <strong>multiple testing</strong>:
+run a hundred tests and, by chance, about five clear the 5% bar with no edge at
+all. Serious quants therefore <em>deflate</em> their Sharpe ratio to penalise the number
+of trials they ran; Bailey and López de Prado's papers in the reading list make
+this precise.</p>
+<p>The second half is <strong>cointegration</strong>. A single stock price is usually a
+non-stationary random walk: it drifts with no fixed mean, so you cannot say where
+it will be next year. Two such walks can share a common trend so tightly that a
+particular combination of them, the <strong>spread</strong> <code>A − β·B</code>, <em>is</em> stationary: it has a
+stable mean and keeps returning to it. That <code>β</code> is the hedge ratio, and you find it
+with the same least squares from Session 7. The Engle–Granger test makes this
+testable: regress A on B, then run an ADF stationarity test on the residual spread,
+with the null "the spread is not stationary." For HDFC Bank and ICICI Bank the test
+passes in 2024 (p ≈ 0.02) and fails in 2021 and 2025, which is the practical lesson:
+cointegration is a property of a period, not of a pair, so it must be re-tested.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>backtest</strong> — replay a trading rule over past prices to see what it would have
+  earned.</li>
+<li><strong>moving average</strong> — the average of the last n closing prices, recomputed each day.</li>
+<li><strong>equity curve</strong> — the running value of ₹1 put into a strategy over time.</li>
+<li><strong>drawdown</strong> — how far the equity curve sits below its previous high; the worst one
+  is the maximum drawdown.</li>
+<li><strong>look-ahead bias</strong> — accidentally using information you could not have had yet,
+  which flatters a backtest.</li>
+<li><strong>survivorship bias</strong> — testing only on stocks that survived to today, leaving out
+  the ones that failed.</li>
+<li><strong>data-snooping</strong> — trying many strategies or settings and keeping the best, so the
+  "winner" is mostly luck.</li>
+<li><strong>in-sample / out-of-sample</strong> — the data a rule was tuned on, and fresh data it
+  never saw.</li>
+<li><strong>transaction cost</strong> — what each trade really costs: brokerage, STT, stamp duty,
+  exchange fees and slippage.</li>
+<li><strong>pairs trade</strong> — betting on the gap between two related stocks rather than on
+  either one.</li>
+<li><strong>spread</strong> and <strong>hedge ratio</strong> — the gap <code>A − β·B</code>, and the <code>β</code> that balances one
+  share of A.</li>
+<li><strong>cointegration</strong> — two wandering prices whose spread keeps returning to its
+  average, like a dog on a leash.</li>
+<li><strong>z-score</strong> — how many typical swings a value sits from its average.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Backtest a trading rule, honestly: the 20/50 rule on HDFC Bank</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S19/notebooks/01_backtest_a_trading_rule.ipynb">Open in Colab</a>
+      <a class="btn" href="S19/notebooks/01_backtest_a_trading_rule.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S19/notebooks/01_backtest_a_trading_rule.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">How a backtest lies, and how to stop it</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S19/notebooks/02_how_a_backtest_lies.ipynb">Open in Colab</a>
+      <a class="btn" href="S19/notebooks/02_how_a_backtest_lies.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S19/notebooks/02_how_a_backtest_lies.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Pairs trading, honestly: HDFC Bank vs ICICI Bank</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S19/notebooks/03_pairs_trading.ipynb">Open in Colab</a>
+      <a class="btn" href="S19/notebooks/03_pairs_trading.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S19/notebooks/03_pairs_trading.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li><a href="S19/data/hdfc_icici_2019_2025.csv" download><code>data/hdfc_icici_2019_2025.csv</code></a> — HDFC Bank and ICICI Bank daily closing prices on the NSE, January 2019 to December 2025. All three notebooks load this saved copy, so nothing needs to download and the numbers match the slides.</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Ernest Chan — <em>Algorithmic Trading: Winning Strategies and Their Rationale</em></li>
+<li>Bailey &amp; López de Prado — on backtest overfitting and the deflated Sharpe ratio</li>
+<li><a href="https://www.statsmodels.org/stable/tsa.html">statsmodels: cointegration (Engle–Granger), <code>coint</code> and <code>adfuller</code></a></li>
+<li><a href="https://vectorbt.dev/">vectorbt documentation</a> — a fast backtesting library</li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Does This Trading Rule Actually Make Money?</h3><ul class="sbullets"><li>Backtesting honestly, on one real HDFC Bank rule</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 3 — Financial Mathematics &amp; Quant Analytics   ·   Session S19   ·   2 hours Module 3 finale · the quant-finance block closes here</p></div><div class="slide"><h3 class="stitle">The problem: a rule that sounds like easy money</h3><ul class="sbullets"><li>A friend says: "Buy HDFC Bank when its 20-day average climbs above its 50-day average. Sell when it drops below. Easy money."</li><li>It sounds sensible. Before you risk a single rupee, ask one question: does this rule actually make money?</li><li>The only way to check is to replay the past: pretend you followed the rule every day from 2019 to 2025 and add up what happened.</li><li>That replay is a backtest. Writing the rule takes one line. Testing it without fooling yourself is today's real lesson.</li></ul></div><div class="slide"><h3 class="stitle">The one idea, in one picture</h3><ul class="sbullets"><li>Put ₹1 in on 1 January 2019.</li><li>Grey: just buy HDFC Bank and hold it. ₹1 became ₹1.97.</li><li>Green: follow the rule. ₹1 became ₹1.05.</li><li>The question is never "did it go up?" It is "did it beat doing nothing clever, after fees, without peeking?"</li></ul><img class="sdiagram" src="S19/slides/3_0.png" alt="slide 3 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Systematic trading: rules in, orders out</h3><img class="sdiagram" src="S19/slides/4_0.png" alt="slide 4 diagram" loading="lazy"><p class="scaption">Speeds range from microseconds (high-frequency trading, not us) to holding for weeks. We live at the slow, statistical end.</p></div><div class="slide"><h3 class="stitle">Three families of rules, three different bets</h3></div><div class="slide"><h3 class="stitle">A moving average, by hand</h3><ul class="sbullets"><li>The average of the last n closing prices. Each day it slides forward by one.</li><li>HDFC Bank's first closes of 2025:  ₹865.2,  ₹870.5,  ₹848.9,  ₹830.1</li><li>A 3-day average on 3 Jan:  (865.2 + 870.5 + 848.9) / 3 = ₹861.5</li><li>Next day, drop the oldest and add the newest:  (870.5 + 848.9 + 830.1) / 3 = ₹849.8</li><li>20 days gives a fast, jumpy line; 50 days gives a slow, calm one.</li></ul><img class="sdiagram" src="S19/slides/6_0.png" alt="slide 6 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">The rule, in one picture</h3><img class="sdiagram" src="S19/slides/7_0.png" alt="slide 7 diagram" loading="lazy"><p class="scaption">Two boxes, one comparison, once a day. That is the whole strategy.</p></div><div class="slide"><h3 class="stitle">The rule on real prices</h3><img class="sdiagram" src="S19/slides/8_0.png" alt="slide 8 diagram" loading="lazy"><p class="scaption">HDFC Bank, 2023–24. Green triangles: fast crosses above slow (buy). Red: fast crosses below (sell).</p></div><div class="slide"><h3 class="stitle">The rule in code: one number a day</h3><ul class="sbullets"><li>The picture's two boxes are the line  position = (fast &gt; slow).astype(int).</li></ul><p class="scaption">CODE prices = pd.read_csv("hdfc_icici_2019_2025.csv", index_col=0, parse_dates=True) price = prices["HDFCBANK"]              # HDFC Bank, daily close fast = price.rolling(20).mean()          # 20-day average slow = price.rolling(50).mean()          # 50-day average position = (fast &gt; slow).astype(int)     # 1 = own the stock, 0 = cash print("days owning the stock:", position.sum()) print("days in cash         :", (position == 0).sum()) print("buy or sell days     :", int(position.diff().abs().sum())) OUTPUT  ▸ days owning the stock: 1078 days in cash         : 652 buy or sell days     : 44</p></div><div class="slide"><h3 class="stitle">A backtest: replay history, one day at a time</h3><ul class="sbullets"><li>Walk forward through the past, one day at a time.</li><li>Each day, use only what you knew by yesterday's close.</li><li>Earn the stock's return if you held it; pay a fee if you traded.</li><li>The output is an equity curve: the running value of ₹1.</li></ul><img class="sdiagram" src="S19/slides/10_0.png" alt="slide 10 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Replay five days by hand</h3></div><div class="slide"><h3 class="stitle">The whole backtest in code</h3><ul class="sbullets"><li>shift(1) moves every signal one day later: the table's 'held today' column.</li></ul><p class="scaption">CODE stock_return = price.pct_change() strategy_return = position.shift(1) * stock_return   # hold YESTERDAY's signal rule = (1 + strategy_return).prod()     # multiply up every day's growth hold = (1 + stock_return).prod() print("Rs 1 following the rule became:", round(rule, 2)) print("Rs 1 just holding HDFC became :", round(hold, 2)) OUTPUT  ▸ Rs 1 following the rule became: 1.05 Rs 1 just holding HDFC became : 1.97</p></div><div class="slide"><h3 class="stitle">Judge more than the final number</h3><ul class="sbullets"><li>Rule: 0.7% a year, Sharpe 0.13, worst fall -46%.</li><li>Hold: 10.1% a year, Sharpe 0.52, worst fall -41%.</li><li>Worst fall (drawdown): how far below the last high you sank.</li><li>A rule you cannot bear to hold through its worst fall is no use.</li></ul><img class="sdiagram" src="S19/slides/13_0.png" alt="slide 13 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Trap 1: look-ahead bias, peeking at the future</h3><img class="sdiagram" src="S19/slides/14_0.png" alt="slide 14 diagram" loading="lazy"><p class="scaption">Left: decide using only the past. Right: secretly using data from after the decision.</p></div><div class="slide"><h3 class="stitle">Forget one shift(1) and the rule looks better</h3><ul class="sbullets"><li>The cheat uses today's close to decide today's trade, and pockets the move that caused the signal.</li></ul><p class="scaption">CODE honest = position.shift(1) * stock_return   # decide yesterday, earn today cheat  = position * stock_return            # decide AND earn today: peeking print("honest:", round((1 + honest).prod(), 2)) print("cheat :", round((1 + cheat).prod(), 2)) OUTPUT  ▸ honest: 1.05 cheat : 1.23</p></div><div class="slide"><h3 class="stitle">Trap 2: survivorship bias, testing only the winners</h3><ul class="sbullets"><li>Yes Bank was in the Nifty 50 until March 2020.</li><li>By then it had fallen 84% from its 2018 high.</li><li>Backtest on today's Nifty 50 list and Yes Bank is not in your data.</li><li>Your rule never has to live through its collapse.</li></ul><img class="sdiagram" src="S19/slides/16_0.png" alt="slide 16 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Trap 3: try 200 rules and one will look brilliant</h3><ul class="sbullets"><li>None of these 200 rules has any edge. The best one is pure luck, and it is the one people show you.</li></ul><p class="scaption">CODE np.random.seed(1) results = [] for i in range(200): r = np.random.normal(0, 0.01, 500)    # a rule with NO edge: pure noise results.append((1 + r).prod()) print("average rule:", round(np.mean(results), 2)) print("best rule   :", round(max(results), 2)) print("rules that made 20% or more:", sum(x &gt; 1.2 for x in results)) OUTPUT  ▸ average rule: 1.03 best rule   : 1.75 rules that made 20% or more: 44</p></div><div class="slide"><h3 class="stitle">The same trap with real knobs</h3><ul class="sbullets"><li>Try 19 pairs of averages on 2019–22 and keep the best: 30/100 days.</li><li>On those years it turned ₹1 into ₹1.40.</li><li>On 2023–25, years it never saw: ₹0.93. Just holding: ₹1.27.</li><li>Tune on one stretch of history. Judge on another, once.</li></ul><img class="sdiagram" src="S19/slides/18_0.png" alt="slide 18 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Trap 4: every trade costs money</h3><ul class="sbullets"><li>Brokerage, STT, stamp duty, exchange fees and slippage. If an edge survives only at zero cost, it does not exist.</li></ul><p class="scaption">CODE trades = position.diff().abs()                # 1 on every buy or sell day net_return = strategy_return - 0.001 * trades.shift(1)   # pay 0.1% per trade print("trades      :", int(trades.sum())) print("before costs:", round((1 + strategy_return).prod(), 3)) print("after costs :", round((1 + net_return).prod(), 3)) OUTPUT  ▸ trades      : 44 before costs: 1.052 after costs : 1.007</p></div><div class="slide"><h3 class="stitle">Why quants lose money</h3><ul class="sbullets"><li>Good-looking strategy + dishonest backtest</li><li>It peeked at the future</li><li>It was tuned until it shone</li><li>It ignored costs</li><li>It was tested only on survivors</li><li>Result: real money bet on a mirage. Disaster.</li><li>Mediocre strategy + honest backtest</li><li>Signals shifted, costs charged</li><li>Settings fixed before the test</li><li>Judged once, on unseen years</li><li>You know exactly how little it does</li><li>Result: small, known, survivable. Much safer.</li></ul></div><div class="slide"><h3 class="stitle">Honest backtesting: the one slide</h3><ul class="sbullets"><li>Tempting shortcuts</li><li>Decide on today's close and trade at it</li><li>Use today's index members for all of history</li><li>Keep tweaking until the curve is gorgeous</li><li>Assume free, instant trades</li><li>Believe an edge from a handful of trades</li><li>Honest practice</li><li>shift(1): act the day after the signal</li><li>Point-in-time data that keeps the dead names</li><li>Fix settings on one period, test once on the next</li><li>Charge realistic fees and slippage on every trade</li><li>Demand many trades, and compare with buy and hold</li></ul></div><div class="slide"><h3 class="stitle">Pairs trading: two stocks that usually move together</h3><ul class="sbullets"><li>HDFC Bank and ICICI Bank: same economy, same interest rates, same regulator.</li><li>Each price alone is hard to predict.</li><li>But when they drift apart, bet that they come back together.</li><li>Market crashes hit both, so the bet barely cares.</li></ul><img class="sdiagram" src="S19/slides/22_0.png" alt="slide 22 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Build the gap</h3><ul class="sbullets"><li>Gap = HDFC − 0.52 × ICICI. The 0.52 comes from fitting a straight line through 2024's prices.</li></ul><p class="scaption">CODE hdfc, icici = prices["HDFCBANK"], prices["ICICIBANK"] fit = prices.loc["2024"]                      # learn from 2024 only beta = np.polyfit(fit["ICICIBANK"], fit["HDFCBANK"], 1)[0] spread = hdfc - beta * icici                  # the gap we trade print("hedge ratio:", round(beta, 2), "ICICI shares per HDFC share") print("2024 gap: average", round(spread.loc["2024"].mean()), "  typical swing", round(spread.loc["2024"].std())) OUTPUT  ▸ hedge ratio: 0.52 ICICI shares per HDFC share 2024 gap: average 182   typical swing 36</p></div><div class="slide"><h3 class="stitle">Cointegration: a dog on a leash</h3><ul class="sbullets"><li>A dog and its owner each wander anywhere.</li><li>The leash keeps the gap between them steady.</li><li>Two prices that wander, with a gap that keeps coming back: that pair is cointegrated.</li><li>In 2024 the HDFC–ICICI gap kept returning to about ₹182.</li></ul><img class="sdiagram" src="S19/slides/24_0.png" alt="slide 24 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Only now, test the leash</h3><ul class="sbullets"><li>Small p-value (below 0.05): the gap does come back. 2024 passes; 2021 does not. Leashes come and go.</li></ul><p class="scaption">CODE from statsmodels.tsa.stattools import coint for year in ["2021", "2024"]: part = prices.loc[year] p = coint(part["HDFCBANK"], part["ICICIBANK"])[1] print(year, "p-value:", round(p, 3))      # small p: the leash holds OUTPUT  ▸ 2021 p-value: 0.389 2024 p-value: 0.024</p></div><div class="slide"><h3 class="stitle">The trading rule: a z-score and three lines</h3><ul class="sbullets"><li>z = (gap − 2024 average) ÷ 2024 swing.</li><li>z above +2: gap too wide. SELL the gap: sell HDFC, buy ICICI.</li><li>z below −2: gap too narrow. BUY the gap.</li><li>z back near 0: EXIT.</li></ul><img class="sdiagram" src="S19/slides/26_0.png" alt="slide 26 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">What the gap trade actually did</h3></div><div class="slide"><h3 class="stitle">Lab: backtest honestly, then try a pair</h3><ul class="sbullets"><li>In the lab: rebuild today's HDFC Bank backtest yourself, break it on purpose, then fit a pair on one year and trade it on the next.</li><li>1.  Notebook 01: the 20/50 rule on HDFC Bank, the by-hand table, the backtest, and the chart against buy and hold.</li><li>2.  Notebook 02: break it three ways (drop shift(1), tune the knobs, ignore costs) and measure each lie.</li><li>3.  Notebook 03: HDFC Bank vs ICICI Bank. Build the gap, test the leash, trade the z-score on 2025.</li><li>4.  Your turn: pick another pair (e.g. two IT or two cement stocks), fit on 2024, trade 2025, and report it honestly.</li><li>Deliverable:  a notebook with the out-of-sample result after costs, compared with buy and hold, and two sentences on whether you would trust it.</li></ul></div><div class="slide"><h3 class="stitle">A trading strategy is easy.An honest backtest is hard.</h3></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S19_algo_trading/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_backtest_a_trading_rule.ipynb 02_how_a_backtest_lies.ipynb 03_pairs_trading.ipynb HDFC Bank and ICICI Bank daily closing prices 2019–2025 from the NSE (data/hdfc_icici_2019_2025.csv). New to code? primers/python_in_15_minutes.md Real or just luck? primers/hypothesis_testing_and_pvalues.md Any unfamiliar word: primers/glossary.md Ernest Chan, Algorithmic Trading: Winning Strategies and Their Rationale Bailey and López de Prado, on backtest overfitting and the deflated Sharpe ratio</p></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

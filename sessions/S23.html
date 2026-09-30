@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>When the Maths Runs Out, Roll the Dice (Simulation) · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 4 — Optimization &amp; Operations Research</p>
+  <h1>S23 · When the Maths Runs Out, Roll the Dice (Simulation)</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/the_law_of_large_numbers.html">The law of large numbers</a></li><li><a href="../primers/what_is_a_distribution.html">What is a distribution</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>Stand in an SBI branch at lunchtime. Customers wander in at random moments, some
+minutes apart, some in a bunch. One teller serves them one at a time, and each
+person takes a different amount of time. The branch manager wants a straight
+answer to a simple question: how long will a customer wait, and will the queue
+get out of hand if the teller slows down even a little?</p>
+<p>There is no neat formula waiting to be plugged in here. The randomness is
+everywhere: in when people arrive, in how long each one takes. The same problem
+shows up in a hospital OPD, at a Flipkart packing station on sale day, in a
+Zomato kitchen at 9pm. When the maths runs out like this, industry does something
+almost cheeky: it stops trying to solve the problem and instead rolls the dice
+thousands of times to see what usually happens.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>When you cannot compute an answer, you can often <em>sample</em> it. Write your quantity
+as "the average of some random outcome", then generate that outcome many, many
+times on the computer and take the average. The more times you roll the dice, the
+closer that average sits to the truth. That is it. That is simulation.</p>
+<p>It splits into two flavours, and we do both today.</p>
+<p><strong>Monte Carlo</strong> ignores the clock. It just wants an average. Throw random darts at
+a square with a circle drawn inside it, and four times the fraction landing inside
+the circle comes out as pi. No calculus, just darts and patience. The same trick
+finds the area under any awkward curve.</p>
+<p><strong>Discrete-event simulation</strong> cares about timing. Instead of averaging static
+outcomes, you press play on a little model of the bank: the clock ticks, a
+customer arrives, joins the queue, reaches the teller, is served, leaves. You
+watch the whole day unfold and read off how long people waited. It is a flight
+simulator for a queue.</p>
+<p>Both rest on the same quiet fact, the <strong>law of large numbers</strong>: the average of
+many random samples settles down near the true value. One run is one story;
+enough runs tell you what really happens.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Estimate pi by throwing random darts at a square, and watch the estimate settle
+   down as you add more darts.</li>
+<li>See the price of accuracy for yourself: the error only shrinks like
+   <code>1/sqrt(N)</code>, so ten times better costs a hundred times more darts. Then estimate
+   an area under a curve the same way.</li>
+<li>Meet the five distributions that power almost every simulation, draw a sample
+   from each with NumPy, and see the shape each one makes.</li>
+<li>Build a single-teller bank queue in SimPy: random arrivals, random service, run
+   the clock, and read off the average wait and queue length.</li>
+<li>Run that queue many times over and report a confidence interval, because one
+   run is only one anecdote.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what a simulation is and why rolling the dice can replace hard maths,</li>
+<li>how to draw random numbers of the right kind with NumPy,</li>
+<li>how to model a queue as events on a clock and measure how long people wait,</li>
+<li>why you never trust a single run, and how to report an honest range instead.</li>
+</ul>
+<p>The little you may want in advance is the picture behind "averaging many random
+samples", and a feel for what a distribution is. Both are one short read away:</p>
+<ul>
+<li>New to the idea of "roll the dice and average"? Read
+  <a href="../primers/the_law_of_large_numbers.html">The law of large numbers</a>.</li>
+<li>Want the picture of a distribution first? Read
+  <a href="../primers/what_is_a_distribution.html">What is a distribution?</a>.</li>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code or already know your probability, run the simple version, then
+look for the cells marked <strong>Stretch (optional)</strong> in the notebooks: a peek at
+importance sampling, a check that the samples obey the theory, and a second teller
+that makes the queue collapse.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain Monte Carlo in one line: write your quantity as an average, sample it a
+  lot, and average.</li>
+<li>Connect the settling you watch on screen to the law of large numbers, and state
+  the <code>1/sqrt(N)</code> cost of accuracy.</li>
+<li>Pick the right NumPy distribution for a modelling task and draw a sample from it.</li>
+<li>Build a small discrete-event simulation of a queue in SimPy and read off the
+  average wait and queue length.</li>
+<li>Report a simulation result honestly, with repeated runs and a confidence
+  interval, instead of trusting one lucky run.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for anyone
+who wants it, and none of it is needed to finish.</p>
+<p>Today's mathematical object is the <strong>random variable</strong>: a quantity <code>X</code> whose value
+is governed by a distribution, so we speak of its expectation <code>E[X]</code> (its true
+average) rather than a fixed number. Monte Carlo estimates <code>E[X]</code> by drawing
+independent samples <code>X_1, ..., X_N</code> and forming the sample mean. The <strong>law of large
+numbers</strong> guarantees this sample mean converges to <code>E[X]</code>, and the central limit
+theorem sharpens that: the estimate's own spread shrinks like <code>sigma / sqrt(N)</code>,
+which is exactly the <code>1/sqrt(N)</code> cost you will measure. That is also why a
+confidence interval on a simulation result is <code>mean ± about 2 standard errors</code>.</p>
+<p>The variance-reduction trick we mention, <strong>importance sampling</strong>, is the honest
+statement that you may sample from a different, more convenient distribution <code>q</code>
+instead of the true <code>p</code>, as long as you reweight each sample by the ratio <code>p/q</code>.
+Chosen well, <code>q</code> concentrates samples where they matter and cuts the variance
+sharply for the same <code>N</code>. On the queue side, <strong>Little's Law</strong> (<code>L = lambda · W</code>,
+average number in system equals arrival rate times average time in system) links
+the two things you measure, and the <code>M/M/1</code> result that the wait grows like
+<code>rho / (1 - rho)</code> explains why the queue explodes as utilisation <code>rho</code> nears one.
+All a bonus, never a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>Monte Carlo</strong> — estimate a quantity by generating many random scenarios and
+  averaging the outcomes.</li>
+<li><strong>law of large numbers</strong> — the average of many random samples settles close to
+  the true value as you take more of them.</li>
+<li><strong>random variable</strong> — a number whose value is decided by chance, like a dice
+  roll or a customer's waiting time.</li>
+<li><strong>distribution</strong> — the pattern of how often each value of a random quantity shows
+  up (uniform, normal, exponential, and so on).</li>
+<li><strong>discrete-event simulation</strong> — a model that jumps along a clock from one event
+  to the next (an arrival, a service finishing).</li>
+<li><strong>utilisation</strong> — the fraction of time a server is busy; waits blow up as it
+  nears 100%.</li>
+<li><strong>Little's Law</strong> — average number in a system equals arrival rate times the
+  average time each item spends in it.</li>
+<li><strong>confidence interval</strong> — an honest range for a result that came from randomness,
+  reported instead of a single number.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Roll the dice to estimate pi and an area</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S23/notebooks/01_estimate_pi_with_darts.ipynb">Open in Colab</a>
+      <a class="btn" href="S23/notebooks/01_estimate_pi_with_darts.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S23/notebooks/01_estimate_pi_with_darts.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">The five distributions you will reuse forever</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S23/notebooks/02_five_useful_distributions.ipynb">Open in Colab</a>
+      <a class="btn" href="S23/notebooks/02_five_useful_distributions.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S23/notebooks/02_five_useful_distributions.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Press play on a bank queue with SimPy</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S23/notebooks/03_bank_queue_with_simpy.ipynb">Open in Colab</a>
+      <a class="btn" href="S23/notebooks/03_bank_queue_with_simpy.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S23/notebooks/03_bank_queue_with_simpy.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Small synthetic datasets generated inside the notebooks (random samples)</li>
+<li>Arrival-rate and service-rate assumptions for the queue model</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Sheldon Ross — <em>Simulation</em> (the gentle introduction)</li>
+<li>Averill Law — <em>Simulation Modeling and Analysis</em> (the industrial reference)</li>
+<li><a href="https://simpy.readthedocs.io">SimPy documentation</a></li>
+<li>MIT OpenCourseWare 6.041 / 15.071 (probability and analytics)</li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">When the Maths Runs Out, Roll the Dice</h3><ul class="sbullets"><li>Simulation: sample many random outcomes to see what usually happens</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 4 — Optimization &amp; Operations Research   ·   Session S23   ·   2 hours Module 4 — simulation as a general-purpose tool</p></div><div class="slide"><h3 class="stitle">The problem: how long will the queue be?</h3><ul class="sbullets"><li>Stand in an SBI branch at lunchtime. Customers wander in at random moments — some a minute apart, some in a bunch.</li><li>One teller serves them one at a time, and each person takes a different amount of time.</li><li>The manager wants a straight answer: how long will a customer wait, and will the queue get out of hand if the teller slows down a little?</li><li>There is no neat formula to plug into. The randomness is everywhere — in when people arrive, and in how long each one takes.</li><li>The same question runs a hospital OPD, a Flipkart packing station on sale day, a Zomato kitchen at 9pm.</li></ul></div><div class="slide"><h3 class="stitle">The one idea: roll the dice many times</h3><ul class="sbullets"><li>You cannot compute the answer, so you sample it instead.</li><li>Make the random outcome happen many, many times on the computer.</li><li>The more times you roll, the closer the average sits to the truth.</li><li>Simulation = run many random futures and average them. That is the whole session.</li></ul><img class="sdiagram" src="S23/slides/3_0.png" alt="slide 3 diagram" loading="lazy"><p class="scaption">Each roll is random and tells you little. Average thousands of them and the answer appears.</p></div><div class="slide"><h3 class="stitle">What we'll cover</h3><ul class="sbullets"><li>1   The problem, and the one idea (done — that was the big picture)</li><li>2   Random numbers: the four shapes you will actually use</li><li>3   Monte Carlo: estimate π and an area by rolling the dice</li><li>4   Press play on a queue: events on a clock</li><li>5   SimPy: the bank branch in twenty lines</li><li>6   Reading the answer honestly + lab</li></ul></div><div class="slide"><h3 class="stitle">Everything starts with one random number</h3><ul class="sbullets"><li>Every simulation is built from one move: draw a random number of a chosen kind.</li><li>In Python, NumPy does this — 'rng = np.random.default_rng(seed)' gives you a dice-roller you can call.</li><li>Pick the kind of randomness that matches what you are modelling. That choice is where the real judgement lives.</li><li>Set a seed and a run becomes repeatable: same seed, same 'random' numbers, every time.</li></ul></div><div class="slide"><h3 class="stitle">Four kinds of randomness you will actually use</h3><ul class="sbullets"><li>Uniform — equal chance in a range: a raffle draw, a random location. rng.uniform(low, high)</li><li>Normal — many small effects added up: measurement error, daily returns. rng.normal(mean, spread)</li><li>Exponential — the gap between random events: time between two arrivals. rng.exponential(1/rate)</li><li>Poisson — count of events in a window: customers per hour. rng.poisson(rate)</li></ul><img class="sdiagram" src="S23/slides/6_0.png" alt="slide 6 diagram" loading="lazy"><p class="scaption">Each shape models a different kind of chance. Choosing the right one is the modelling step.</p></div><div class="slide"><h3 class="stitle">The real risk: picking the wrong shape</h3><ul class="sbullets"><li>The computer will happily simulate nonsense if you feed it the wrong kind of randomness.</li><li>Arrivals are almost never evenly spaced — people cluster; that is exactly what Poisson and exponential capture.</li><li>Where you can, fit the shape to real data rather than guessing it.</li><li>Garbage in, confident garbage out — the output looks just as precise either way.</li></ul></div><div class="slide"><h3 class="stitle">The recipe has just three steps</h3><ul class="sbullets"><li>1. Write the thing you want as an average of some random outcome.</li><li>2. Roll the dice many times to get many outcomes.</li><li>3. Average them. That average is your estimate.</li><li>That is the whole method — Monte Carlo. Why it works is exactly the settling average from the opening picture.</li></ul></div><div class="slide"><h3 class="stitle">The classic: estimate π by throwing darts</h3><ul class="sbullets"><li>Throw random darts at a square with a circle inside.</li><li>The circle's area is π; the square's area is 4.</li><li>So the share landing inside should be π/4.</li><li>π ≈ 4 × (darts inside ÷ total darts).</li></ul><img class="sdiagram" src="S23/slides/9_0.png" alt="slide 9 diagram" loading="lazy"><p class="scaption">The fraction of darts landing inside the circle, times four, estimates π.</p></div><div class="slide"><h3 class="stitle">Estimate π by counting darts inside</h3><ul class="sbullets"><li>No formula for π anywhere — we measured it by counting which random darts fell inside.</li></ul><p class="scaption">CODE OUTPUT  ▸ np.random.seed(0) n = 3000 x = np.random.uniform(-1, 1, n)     # dart x-coordinates y = np.random.uniform(-1, 1, n)     # dart y-coordinates # a dart is inside the circle when x*x + y*y &lt;= 1 inside = (x**2 + y**2) &lt;= 1 pi_estimate = 4 * np.sum(inside) / n print('darts inside:', int(np.sum(inside)), 'of', n) print('estimate of pi:', round(pi_estimate, 4)) darts inside: 2359 of 3000 estimate of pi: 3.1453</p></div><div class="slide"><h3 class="stitle">Finding an area is the same trick</h3><img class="sdiagram" src="S23/slides/11_0.png" alt="slide 11 diagram" loading="lazy"><p class="scaption">An awkward area is just the fraction of darts that land under the curve.</p></div><div class="slide"><h3 class="stitle">Watch the average settle</h3><img class="sdiagram" src="S23/slides/12_0.png" alt="slide 12 diagram" loading="lazy"><p class="scaption">Early on the estimate jumps around; as darts pile up it homes in on true π.</p></div><div class="slide"><h3 class="stitle">Accuracy is expensive: the 1/√N rule</h3><ul class="sbullets"><li>The error shrinks like 1 over the square root of N.</li><li>Want the error half as big?</li><li>You must throw four times as many darts.</li><li>This is the price of the whole method.</li></ul><img class="sdiagram" src="S23/slides/13_0.png" alt="slide 13 diagram" loading="lazy"><p class="scaption">Ten times more accuracy costs a hundred times more darts.</p></div><div class="slide"><h3 class="stitle">When timing and order matter</h3><ul class="sbullets"><li>Monte Carlo just averages outcomes; it does not care about time.</li><li>But the bank queue is all about timing: who arrives when, who waits, who is served first.</li><li>So we press play on a little model and watch the day unfold. This is discrete-event simulation.</li><li>Three plain words: things flowing (customers, patients, orders), the resource they queue for (a teller, a doctor), and events (an arrival, a service finishing).</li></ul></div><div class="slide"><h3 class="stitle">The clock jumps from event to event</h3><img class="sdiagram" src="S23/slides/15_0.png" alt="slide 15 diagram" loading="lazy"><p class="scaption">Nothing changes between events, so the clock skips straight to the next one.</p></div><div class="slide"><h3 class="stitle">The single-teller queue</h3><img class="sdiagram" src="S23/slides/16_0.png" alt="slide 16 diagram" loading="lazy"><p class="scaption">Arrivals join the line, wait for the one teller, get served, then leave.</p></div><div class="slide"><h3 class="stitle">The textbook queue, in plain words</h3><ul class="sbullets"><li>The simplest queue has a name — M/M/1 — meaning random arrivals, random service times, one server.</li><li>Two knobs: how fast people arrive, and how fast the teller serves.</li><li>'How busy the teller is' is just arrivals divided by service speed — the fraction of time the teller is working.</li><li>If people arrive faster than the teller can serve, the queue grows forever. Below that, it settles, and we can ask real questions.</li></ul></div><div class="slide"><h3 class="stitle">Little's Law: one handy formula</h3><img class="sdiagram" src="S23/slides/18_0.png" alt="slide 18 diagram" loading="lazy"><p class="scaption">A remarkably general link between how many are waiting, how fast they arrive, and how long each stays.</p></div><div class="slide"><h3 class="stitle">Push the teller too hard and the wait explodes</h3><ul class="sbullets"><li>At low load the wait barely grows.</li><li>Near 100% busy it shoots toward infinity.</li><li>Randomness is the reason.</li><li>Plan for slack, not for full.</li></ul><img class="sdiagram" src="S23/slides/19_0.png" alt="slide 19 diagram" loading="lazy"><p class="scaption">Run the teller past about 85% busy and the average wait shoots upward.</p></div><div class="slide"><h3 class="stitle">Being 95% busy is not the same as being efficient</h3><ul class="sbullets"><li>The tempting mistake</li><li>'The teller is 95% busy, so we are efficient'</li><li>Assumes busier is always better</li><li>Ignores that waits explode near 100%</li><li>Customers walk out; OPD patients wait dangerously</li><li>The reality</li><li>95% busy can mean huge, volatile queues</li><li>Some slack is what keeps waits short</li><li>The right busy-ness depends on the wait you can tolerate</li><li>Add a teller before you hit the cliff</li></ul></div><div class="slide"><h3 class="stitle">SimPy in three plain ideas</h3><ul class="sbullets"><li>SimPy is a small Python library for press-play simulation — the whole bank model is about twenty lines.</li><li>Environment: holds the clock and runs the events.</li><li>Process: one thing's story, written step by step — arrive, ask for the teller, hold for a service time, release it, leave.</li><li>Resource: the limited thing they queue for — a teller, a doctor, a forklift — with a fixed count.</li></ul></div><div class="slide"><h3 class="stitle">What a SimPy model says, in English</h3><ul class="sbullets"><li>A customer: ask for a teller → wait until one is free → hold for a random service time → release the teller → leave.</li><li>Arrivals: every random gap, a new customer walks in.</li><li>Record each customer's wait, and run the clock for, say, an 8-hour day.</li><li>At the end, read off the average wait and the average queue length.</li></ul></div><div class="slide"><h3 class="stitle">Run the bank queue and read the average wait</h3><ul class="sbullets"><li>Press play once: 491 customers flow through and we read the wait straight off the clock.</li></ul><p class="scaption">CODE OUTPUT  ▸ # customer() and generate_arrivals() define the model (notebook 03) waiting_times = [] np.random.seed(0) env = simpy.Environment()               # holds the clock teller = simpy.Resource(env, capacity=1)  # one teller env.process(generate_arrivals(env, teller)) env.run(until=2400)                       # run for 2400 minutes waits = np.array(waiting_times) print('customers served:', len(waits)) print('average wait :', round(waits.mean(), 2), 'min') print('longest wait :', round(waits.max(), 2), 'min') customers served: 491 average wait : 27.37 min longest wait : 106.08 min</p></div><div class="slide"><h3 class="stitle">The simulation recipe — works every time</h3><ul class="sbullets"><li>1. Define the randomness: which shapes, with what rates?</li><li>2. Generate random events from those shapes.</li><li>3. Run the system: just average, or press play on a clock.</li><li>4. Measure the outcome you care about (a wait, a loss, a count).</li><li>5. Repeat many times with fresh seeds.</li><li>6. Average the results — and report the spread.</li></ul></div><div class="slide"><h3 class="stitle">A simulation's answer is itself random. One run is an anecdote, not an answer.</h3></div><div class="slide"><h3 class="stitle">The answer is a spread, not a single number</h3><img class="sdiagram" src="S23/slides/26_0.png" alt="slide 26 diagram" loading="lazy"><p class="scaption">Report the average with a confidence range, never a lone number.</p></div><div class="slide"><h3 class="stitle">Average 30 runs for an honest wait and range</h3><ul class="sbullets"><li>The single run said 27; averaging 30 says 13.4 with an honest window — that lone run was unlucky.</li></ul><p class="scaption">CODE OUTPUT  ▸ runs = [] for seed in range(30):                 # replay the whole day 30 times np.random.seed(seed) waiting_times = [] env = simpy.Environment() teller = simpy.Resource(env, capacity=1) env.process(generate_arrivals(env, teller)) env.run(until=2400) runs.append(np.mean(waiting_times)) mean, se = np.mean(runs), 2 * np.std(runs) / np.sqrt(len(runs)) print('average over 30 runs:', round(mean, 2), 'min') print('95% range:', round(mean - se, 2), 'to', round(mean + se, 2), 'min') average over 30 runs: 13.39 min 95% range: 11.47 to 15.31 min</p></div><div class="slide"><h3 class="stitle">Add a second teller: watch the wait collapse</h3><ul class="sbullets"><li>One extra teller does not halve the wait — it nearly erases it, from 13 minutes to under one.</li></ul><p class="scaption">CODE OUTPUT  ▸ two = [] for seed in range(30): np.random.seed(seed) waiting_times = [] env = simpy.Environment() counter = simpy.Resource(env, capacity=2)  # two tellers now env.process(generate_arrivals(env, counter)) env.run(until=2400) two.append(np.mean(waiting_times)) print('average wait, ONE teller :', round(np.mean(runs), 2), 'min') print('average wait, TWO tellers:', round(np.mean(two), 2), 'min') average wait, ONE teller : 13.39 min average wait, TWO tellers: 0.73 min</p></div><div class="slide"><h3 class="stitle">A checklist for an honest answer</h3><ul class="sbullets"><li>Never report a single run — always use many replications.</li><li>Report an average with a confidence range, not a bare number.</li><li>Throw away the warm-up: a branch that starts empty is not yet typical, so cut the opening stretch before you measure.</li><li>Sanity-check against theory where you can (Little's Law, the M/M/1 formulas).</li><li>Say your assumptions out loud — especially the shapes of the randomness you fed in.</li></ul></div><div class="slide"><h3 class="stitle">Monte Carlo: answer 'what are the odds?'</h3><ul class="sbullets"><li>Simulate the uncertain inputs many times, then just count outcomes — no formula needed.</li></ul><p class="scaption">CODE rng = np.random.default_rng(0) sims = rng.normal(mu, sigma, size=100_000)    # 100k what-if scenarios prob_loss = (sims &lt; 0).mean()                  # P(loss) low, high = np.percentile(sims, [5, 95])       # 90% range print(prob_loss, low, high) # accuracy improves like 1/sqrt(N): 4x the runs -&gt; half the error</p></div><div class="slide"><h3 class="stitle">Lab: press play on a bank queue</h3><ul class="sbullets"><li>In the lab: build a small SimPy model of a single-teller bank branch, measure the average wait and queue length, and run it many times to put an honest range on the answer.</li><li>1.  Set how fast customers arrive and how fast the teller serves; work out how busy the teller is.</li><li>2.  Write the customer and arrivals steps in plain SimPy; run the clock for one working day.</li><li>3.  Throw away a warm-up stretch, then record the waits and the queue length.</li><li>4.  Repeat for 30+ seeds; report the average wait with a 95% confidence range.</li><li>5.  Add a second teller (or speed the teller up) and watch the wait collapse — find the cliff.</li><li>Deliverable:  a notebook on GitHub: a working queue simulation with repeated runs, a confidence range on the average wait, and the busy-vs-wait curve.</li></ul></div><div class="slide"><h3 class="stitle">Simulation traps (and how to dodge them)</h3><ul class="sbullets"><li>Avoid</li><li>Reporting one run as the answer</li><li>Pretending a random output is exact</li><li>Measuring from an empty start (no warm-up)</li><li>Guessing input shapes (e.g. evenly-spaced arrivals)</li><li>Confusing 'busy' with 'has enough capacity'</li><li>Do instead</li><li>Run many times and average</li><li>Report an average with a confidence range</li><li>Throw away the warm-up; measure the steady state</li><li>Fit shapes to real data; try a few and check</li><li>Remember waits explode near 100% — plan slack</li></ul></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>The framework, in four words: Randomness → Model → Repeat → Average. Every simulation you will ever build is these four.</li><li>When a system is too tangled for a formula, simulate it — roll the dice many times; the law of large numbers does the rest.</li><li>Accuracy is expensive: the error shrinks only like 1/√N — halve the error, quadruple the runs.</li><li>Press-play (discrete-event) simulation steps through events on a clock; SimPy = environment, process, resource.</li><li>Waits explode as the server nears 100% busy — busy is not the same as having enough capacity.</li><li>A simulation's answer is random: many runs, a confidence range, and a warm-up thrown away.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S23_simulation/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_estimate_pi_with_darts.ipynb 02_five_useful_distributions.ipynb 03_bank_queue_with_simpy.ipynb Small synthetic datasets generated inside the notebooks (random samples) Arrival-rate and service-rate assumptions for the queue model New to the idea? primers/the_law_of_large_numbers.md Want the picture of a distribution first? primers/what_is_a_distribution.md New to code? primers/python_in_15_minutes.md Sheldon Ross — Simulation (the gentle introduction) Averill Law — Simulation Modeling and Analysis (the industrial reference) Curious how experts beat the 1/√N cost? Look up importance sampling and variance reduction (Ross has a chapter) SimPy documentation (simpy.readthedocs.io)</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S24 — Markov chains &amp; the inventory project. We move from independent random samples to chains of linked random states: transition matrices, steady-state distributions, and an (s, S) inventory policy built on today's simulation skills.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

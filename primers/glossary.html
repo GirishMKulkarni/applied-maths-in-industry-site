@@ -105,16 +105,22 @@ example finding the average of a thousand numbers in one step.</p>
 <p>one save point: a snapshot of the whole project, with a message.</p>
 <h3 id="confidence-interval">confidence interval</h3>
 <p>an honest range for a result that came from randomness, reported instead of a single number.</p>
+<h3 id="confounder">confounder</h3>
+<p>a hidden third thing that drives two quantities at once, making them look linked (summer heat drives both ice-cream sales and drownings).</p>
 <h3 id="confusion-matrix">confusion matrix</h3>
 <p>the table of the four counts: right and wrong, for each class.</p>
 <h3 id="constraint">constraint</h3>
 <p>a rule the answer must obey, like a queue length never going below zero.</p>
+<h3 id="control-chart">control chart</h3>
+<p>a daily plot of a process with limits marking what ordinary wobble can produce; a point outside the limits says something changed — investigate.</p>
 <h3 id="convex-function">convex function</h3>
 <p>a bowl-shaped cost: every chord lies on or above the curve.</p>
 <h3 id="convex-optimization">convex optimization</h3>
 <p>finding the lowest point of a bowl-shaped problem, which a computer can always do reliably.</p>
 <h3 id="convex-set">convex set</h3>
 <p>a shape with no dents: the line between any two inside points stays inside.</p>
+<h3 id="correlation">correlation</h3>
+<p>two quantities moving together. Being linked says nothing about which one (if either) causes the other.</p>
 <h3 id="covariance">covariance</h3>
 <p>a number saying whether two stocks tend to move up and down together.</p>
 <h3 id="covariance-matrix">covariance matrix (Σ)</h3>
@@ -159,6 +165,8 @@ example finding the average of a thousand numbers in one step.</p>
 <p>the shape of a single column of numbers: where they cluster and how spread out they are.</p>
 <h3 id="diversification">diversification</h3>
 <p>spreading money across stocks that don't move together, to lower risk.</p>
+<h3 id="drawdown">drawdown</h3>
+<p>how far a portfolio's value sits below its previous high; the deepest one is the maximum drawdown, the worst fall you would have had to sit through.</p>
 <h3 id="duckdb">DuckDB</h3>
 <p>a tool that runs SQL straight on a table in Python, no setup.</p>
 <h3 id="efficient-frontier">efficient frontier</h3>
@@ -220,6 +228,8 @@ find the slope and starting value that match the data best.</p>
 <p>the genuinely best answer, not just the best nearby.</p>
 <h3 id="groupby-split-apply-combine">groupby (split-apply-combine)</h3>
 <p>split rows into groups, apply a summary to each, combine the answers into a small table.</p>
+<h3 id="hedge-ratio">hedge ratio</h3>
+<p>in a pairs trade, how many shares of one stock balance one share of the other; the slope of a straight-line fit of one price on the other.</p>
 <h3 id="heuristic">heuristic</h3>
 <p>a fast, simple rule that finds a good answer, not always the perfect one.</p>
 <h3 id="holding-cost-stockout">holding cost / stockout</h3>
@@ -232,8 +242,12 @@ find the slope and starting value that match the data best.</p>
 <p>a number for how mixed a group of labels is; 0 means all one class.</p>
 <h3 id="in-at-out-of-the-money">in / at / out of the money</h3>
 <p>whether using an option right now would pay something: a call is in the money when the share is above the strike, out of the money when below, at the money when equal.</p>
+<h3 id="in-sample-out-of-sample">in-sample / out-of-sample</h3>
+<p>the stretch of data a rule was tuned on, and fresh data it never saw; only the out-of-sample result is an honest test.</p>
 <h3 id="index">index</h3>
 <p>the row labels down the left of a table; the address of each row.</p>
+<h3 id="infeasible">infeasible</h3>
+<p>a verdict from an optimisation solver: no plan obeys every constraint, because the rules contradict each other (or a number or a sign is wrong).</p>
 <h3 id="information-gain">information gain</h3>
 <p>how much a question lowered the impurity; the tree picks the biggest.</p>
 <h3 id="integer-programming">integer programming</h3>
@@ -322,6 +336,8 @@ model in the course.</p>
 <p>estimate a quantity by generating many random scenarios and averaging the outcomes.</p>
 <h3 id="monte-carlo-simulation">Monte Carlo simulation</h3>
 <p>rolling many random possible futures and reading the answer off them.</p>
+<h3 id="moving-average">moving average</h3>
+<p>the average of the last n closing prices, recomputed each day as the window slides forward by one.</p>
 <h3 id="mse-mean-squared-error">MSE (mean squared error)</h3>
 <p>The average of the squared misses. Squaring punishes big misses more than small
 ones. Smaller is better. Used because it has nice mathematical behaviour.</p>
@@ -355,6 +371,8 @@ it looks great on data it has seen and does badly on new data. The reason we
 always test on held-out data.</p>
 <h3 id="p-value">p-value</h3>
 <p>if the change did nothing, how often luck alone would give a result this extreme. Small means surprising, so evidence of a real effect.</p>
+<h3 id="pairs-trade">pairs trade</h3>
+<p>a bet on the gap between two related stocks (sell the one that looks dear, buy the one that looks cheap) rather than on either stock alone.</p>
 <h3 id="parameter">parameter</h3>
 <p>a number the world hands you and you hold fixed for one run, like an arrival rate or a cost.</p>
 <h3 id="payoff">payoff</h3>
@@ -423,6 +441,8 @@ squares makes the squared residuals small. See <a href="least_squares_and_lines.
 <h3 id="r2-r-squared">R² (R-squared)</h3>
 <p>A score from 0 to 1 (roughly) saying how much of the variation in the data the
 model explains. 1 is perfect, 0 is no better than guessing the average.</p>
+<h3 id="sampling-bias">sampling bias</h3>
+<p>when the people you measured do not mirror the people you care about (only city users, only app users, only those who replied); no p-value can rescue a biased sample.</p>
 <h3 id="scope">scope</h3>
 <p>the exact boundary of what your project will and will not do; to "lock scope" is to fix that boundary so you stop wandering.</p>
 <h3 id="seasonality">seasonality</h3>
@@ -482,6 +502,8 @@ increase in the input.</p>
 <p>the fixed price written into the option, written <code>K</code>.</p>
 <h3 id="support-vector">support vector</h3>
 <p>a data point sitting right on the edge of an SVM's margin; a handful of these fix the whole boundary.</p>
+<h3 id="survivorship-bias">survivorship bias</h3>
+<p>testing only on stocks that survived to today, leaving out the ones that failed or were dropped, which flatters a backtest.</p>
 <h3 id="svm-support-vector-machine">SVM (support vector machine)</h3>
 <p>a classifier that places the boundary to leave the widest gap (margin) between
 the two classes; only the borderline points (support vectors) on the margin's
@@ -518,6 +540,8 @@ check honestly how well the model does on cases it never saw (test).</p>
 <p>a chart whose value axis does not start at zero, which fakes a big change out of a small one.</p>
 <h3 id="type">type</h3>
 <p>what kind of value something is: a whole number, a decimal, text, or true/false.</p>
+<h3 id="unbounded">unbounded</h3>
+<p>a verdict from an optimisation solver: the objective can keep improving forever, which almost always means a real-world limit is missing from the model.</p>
 <h3 id="utilisation">utilisation</h3>
 <p>the fraction of time a server is busy; waits blow up as it nears 100%.</p>
 <h3 id="value-at-risk-var">Value at Risk (VaR)</h3>

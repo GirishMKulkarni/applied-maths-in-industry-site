@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Yes-or-No Decisions — Integer Programming &amp; Routing · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 4 — Optimization &amp; Operations Research</p>
+  <h1>S21 · Yes-or-No Decisions — Integer Programming &amp; Routing</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/optimization_objectives_and_constraints.html">Optimization objectives and constraints</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/distance_between_points.html">Distance between points</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A quick-commerce company like Blinkit or Zepto wants to promise ten-minute
+delivery across a metro. To do that it runs small neighbourhood stores called
+dark stores. Each one it opens costs rent and staff every month, but a store
+close to you means a faster, cheaper delivery. Open too few and deliveries come
+from far away; open too many and the rent eats the profit. So someone has to
+decide, store by store, open this one or not, and then work out which
+neighbourhoods each open store serves.</p>
+<p>That single word "or" is the whole session. Open this store, or not. Load this
+parcel on the van, or not. Send the van down this road, or not. Decisions that
+can only be yes or no, never halfway.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Last session you met linear programming, where the answer could be any number:
+ship 2.4 tonnes, use 1.7 machines. That world is easy and a free solver cracks
+it in milliseconds.</p>
+<p>Today we add one rule that sounds tiny and changes everything: some decisions
+must be whole. You cannot open half a dark store or send a third of a van. Very
+often the decision is just 0 or 1, a plain yes/no switch. Open it (1) or don't
+(0). Take the parcel (1) or leave it (0).</p>
+<p>Here is the picture. In the easy world you could slide a dial smoothly to any
+setting and the best setting was easy to find. Now the dial can only click into
+whole notches, and the best notch can be surprisingly hard to find, because you
+often cannot just take the smooth answer and round it off. That is the catch,
+and coping with it is what today is about.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Solve a small <strong>knapsack</strong> in PuLP: pick items to load under a weight limit so
+   the total value is as large as possible, using yes/no variables.</li>
+<li>See with a tiny example why dropping the yes/no rule and rounding the answer
+   can go wrong.</li>
+<li>Solve an <strong>assignment</strong> problem: match delivery agents to routes at the lowest
+   total cost.</li>
+<li>Build a <strong>facility-location</strong> model: decide which dark stores to open and who
+   each one serves, for the cheapest overall plan.</li>
+<li>Route a delivery van through about ten city stops with a simple
+   nearest-neighbour rule, plot the route, and watch why finding the perfect
+   route becomes impossible as stops pile up.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what a yes/no decision looks like as a variable a computer can choose,</li>
+<li>how to write a small model (a goal plus a few rules) and let a free solver pick
+  the best answer,</li>
+<li>why "just round the easy answer" is not safe,</li>
+<li>what a routing heuristic is and why real fleets rely on one.</li>
+</ul>
+<p>The little we assume, and where to catch up first:</p>
+<ul>
+<li>New to the idea of a solver picking the best option under some rules? Read
+  <a href="../primers/optimization_objectives_and_constraints.html">Optimization: objectives and constraints</a>.
+  It is ten minutes and it is the foundation for the whole session.</li>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>The routing notebook measures straight-line distance between two points; the
+  picture is in <a href="../primers/distance_between_points.html">Distance between two points</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>This session builds on Session 20 (linear programming), but you do not need to
+have done it. The modelling style is the same: a goal, a few rules, a solver. The
+only new ingredient is the demand that some decisions be whole numbers, and we
+introduce that from scratch here.</p>
+<p>If you already code or already know integer programming, run the simple version,
+then look for the cells marked <strong>Stretch (optional)</strong>.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain why some decisions must be whole numbers, and what a 0/1 variable
+  stands for.</li>
+<li>Write a knapsack, an assignment, and a facility-location model in PuLP and read
+  the solver's answer.</li>
+<li>Say why solving the easy relaxed version and rounding it is not safe.</li>
+<li>Build a nearest-neighbour routing rule and explain why finding the perfect
+  route is out of reach once there are many stops.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is extra depth, and none of it
+is needed to finish.</p>
+<p>Today's mathematical object is <strong>combinatorial optimization</strong>: choosing the best
+option from a finite but enormous set of discrete possibilities. Formally we write
+an integer (or mixed-integer) program: a linear objective and linear constraints,
+exactly as in linear programming, plus the extra demand that some variables take
+integer values, very often <code>x ∈ {0, 1}</code>.</p>
+<p>That extra demand breaks the geometry that made LP easy. If you drop it you get
+the <strong>LP relaxation</strong>, whose optimum sits at a corner of the feasible polygon,
+found fast. But that corner is usually fractional, so it is not a legal answer,
+and rounding it can be worse than optimal or even infeasible. Solvers instead run
+<strong>branch-and-bound</strong>: split on a fractional variable (one branch with <code>x ≤ 2</code>,
+one with <code>x ≥ 3</code>), use each sub-problem's relaxation as a bound, and prune any
+branch that cannot beat the best whole-number answer found so far. Cutting planes
+sharpen the relaxation further. These problems are <strong>NP-hard</strong> in general: no
+known algorithm solves every instance quickly. For routing the possibilities grow
+like a <strong>factorial</strong> (<code>(n−1)!/2</code> distinct tours through <code>n</code> stops), so past a few
+dozen stops exact solving is hopeless and industry uses heuristics under a time
+budget. That link between clean models and brutal difficulty is the heart of
+operations research, but it is a bonus here, not a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>binary variable</strong> — a decision that can only be 0 or 1, a yes/no switch.</li>
+<li><strong>integer programming</strong> — optimization where some variables must be whole numbers.</li>
+<li><strong>knapsack problem</strong> — pick items under a capacity limit to maximise total value.</li>
+<li><strong>assignment problem</strong> — match each worker to exactly one task at least total cost.</li>
+<li><strong>facility location</strong> — choose which sites to open and who each serves, cheapest overall.</li>
+<li><strong>LP relaxation</strong> — the easy version with the whole-number rule dropped; its answer can be fractional.</li>
+<li><strong>heuristic</strong> — a fast, simple rule that finds a good answer, not always the perfect one.</li>
+<li><strong>combinatorial explosion</strong> — the number of possible choices blowing up as the problem grows.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Yes/no decisions — packing a bag and matching workers (PuLP)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S21/notebooks/01_knapsack_assignment.ipynb">Open in Colab</a>
+      <a class="btn" href="S21/notebooks/01_knapsack_assignment.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S21/notebooks/01_knapsack_assignment.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Which dark stores to open — a facility-location model</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S21/notebooks/02_facility_location.ipynb">Open in Colab</a>
+      <a class="btn" href="S21/notebooks/02_facility_location.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S21/notebooks/02_facility_location.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Last-mile routing with a nearest-neighbour rule</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S21/notebooks/03_last_mile_routing.ipynb">Open in Colab</a>
+      <a class="btn" href="S21/notebooks/03_last_mile_routing.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S21/notebooks/03_last_mile_routing.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Small problems generated in-code with NumPy (seeded) — no downloads needed</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Hillier &amp; Lieberman — <em>Introduction to Operations Research</em>, chapter on integer programming</li>
+<li>Wolsey — <em>Integer Programming</em></li>
+<li><a href="https://coin-or.github.io/pulp/">PuLP documentation</a></li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Yes-or-No Decisions</h3><ul class="sbullets"><li>Which warehouses to open, which route to take</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 4 — Optimization &amp; Operations Research   ·   Session S21   ·   2 hours Module 4 continues — the optimisation &amp; OR block</p></div><div class="slide"><h3 class="stitle">The problem: open this store, or not?</h3><ul class="sbullets"><li>A quick-commerce company like Blinkit or Zepto wants to promise ten-minute delivery across a whole metro.</li><li>To do that it runs small neighbourhood stores — 'dark stores'. Each one it opens costs rent and staff every month.</li><li>A store close to you means a faster, cheaper delivery; too few and orders come from far away; too many and the rent eats the profit.</li><li>So someone must decide, store by store: open this one, or not — and then which neighbourhoods each open store serves.</li></ul></div><div class="slide"><h3 class="stitle">The one idea, in a single picture</h3><ul class="sbullets"><li>Last session's answer could be any number.</li><li>Today many decisions must be whole: 0, 1, 2, 3.</li><li>Very often it is just 0 or 1 — a plain yes/no.</li><li>The catch: you usually cannot take the smooth answer and round it off.</li></ul><img class="sdiagram" src="S21/slides/3_0.png" alt="slide 3 diagram" loading="lazy"><p class="scaption">Last session the dial slid to any value. Today it only clicks into whole notches — and the best notch can be hard to find.</p></div><div class="slide"><h3 class="stitle">What we'll cover</h3><ul class="sbullets"><li>1   The problem, and the one idea: some decisions must be whole — often just 0 or 1</li><li>2   Four classic models: packing, matching, dark stores, coverage — one pattern</li><li>3   Why finding the best answer is genuinely hard — and why rounding fails</li><li>4   How free solvers cope: split, bound, prune</li><li>5   Routing a delivery fleet</li><li>6   A five-step recipe, and a last-mile lab</li></ul></div><div class="slide"><h3 class="stitle">Integer programming: the one new demand</h3><ul class="sbullets"><li>Last week's smooth answer could be 2.4 trucks — you cannot ship 2.4 trucks.</li><li>Integer: force whole numbers — 0, 1, 2, 3, …</li><li>The star case is binary: 0 or 1. Open the store, or not. Load the parcel, or not. Hire the worker, or not.</li><li>The goal and the rules stay linear, exactly like last week. Only this one demand is new — and it changes everything.</li></ul><img class="sdiagram" src="S21/slides/5_0.png" alt="slide 5 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">1 · Four classic yes/no models</h3></div><div class="slide"><h3 class="stitle">Four models you'll meet again and again</h3><ul class="sbullets"><li>Packing (knapsack) — pick items under a capacity to maximise value.</li><li>Matching (assignment) — give each worker one task, at least cost.</li><li>Dark stores (facility location) — choose which sites to open.</li><li>Coverage (set covering) — reach every area with the fewest depots.</li><li>Each is just: some yes/no decisions, a goal, and a few rules.</li></ul></div><div class="slide"><h3 class="stitle">Packing a bag: value under a weight limit</h3><ul class="sbullets"><li>One yes/no per parcel: take it, or leave it.</li><li>Goal: make the total value as large as possible.</li><li>Rule: the total weight must fit the van.</li><li>That's the whole model — a goal and one rule.</li></ul><img class="sdiagram" src="S21/slides/8_0.png" alt="slide 8 diagram" loading="lazy"><p class="scaption">Choose a subset of parcels to maximise total value without exceeding the van.</p></div><div class="slide"><h3 class="stitle">Matching: one agent, one route</h3><ul class="sbullets"><li>One yes/no per pair: does this agent take this route?</li><li>Goal: smallest total cost (or time, or distance).</li><li>Rule: each agent takes exactly one route.</li><li>Rule: each route gets exactly one agent.</li></ul><img class="sdiagram" src="S21/slides/9_0.png" alt="slide 9 diagram" loading="lazy"><p class="scaption">Every agent gets exactly one route; every route exactly one agent.</p></div><div class="slide"><h3 class="stitle">Which dark stores to open</h3><ul class="sbullets"><li>One yes/no per site: open this store, or not (it has a rent).</li><li>One yes/no per link: does this store serve this area?</li><li>Goal: rent of opened stores + delivery distance, as low as possible.</li><li>Key rule: you may serve an area only from a store you opened.</li></ul><img class="sdiagram" src="S21/slides/10_0.png" alt="slide 10 diagram" loading="lazy"><p class="scaption">Open a subset of candidate sites; serve every neighbourhood from an open one.</p></div><div class="slide"><h3 class="stitle">Coverage: fewest depots to reach everyone</h3><ul class="sbullets"><li>One yes/no per depot: use this depot, or not.</li><li>Goal: the fewest depots (or the lowest total cost).</li><li>Rule: every area is within reach of at least one chosen depot.</li><li>'At least one' — an area may be covered more than once.</li></ul><img class="sdiagram" src="S21/slides/11_0.png" alt="slide 11 diagram" loading="lazy"><p class="scaption">Each depot covers nearby areas; pick the fewest depots covering all areas.</p></div><div class="slide"><h3 class="stitle">One line of code behind all four models</h3><ul class="sbullets"><li>Same mathematics, different business. cat="Binary" is the only thing that separates today from last week's PuLP code.</li></ul><p class="scaption">CODE import pulp # The same one-line move, four different businesses: take   = pulp.LpVariable("take_parcel",  cat="Binary")  # load it, or not match  = pulp.LpVariable("asha_routeA",  cat="Binary")  # this agent here, or not opn    = pulp.LpVariable("open_andheri", cat="Binary")  # open the site, or not use    = pulp.LpVariable("use_depot_3",  cat="Binary")  # pick the depot, or not # Then every model is the same three moves: #   m += &lt;goal: a linear sum of the switches&gt; #   m += &lt;each business rule, as a linear (in)equality&gt; #   m.solve(pulp.PULP_CBC_CMD(msg=0))</p></div><div class="slide"><h3 class="stitle">All four models are the same question</h3></div><div class="slide"><h3 class="stitle">2 · Why finding the best answer is hard</h3></div><div class="slide"><h3 class="stitle">The tempting shortcut that fails</h3><ul class="sbullets"><li>Tempting idea: ignore 'must be whole', solve the easy smooth problem, then round.</li><li>Solving without the whole-number rule is called the 'LP relaxation' — the easy version with the rule dropped.</li><li>It is fast, but its best answer usually sits on a fraction.</li><li>And rounding that fraction can be worse than the true answer, or even not allowed at all.</li></ul></div><div class="slide"><h3 class="stitle">The easy answer can land on a fraction</h3><img class="sdiagram" src="S21/slides/16_0.png" alt="slide 16 diagram" loading="lazy"><p class="scaption">The best corner of the smooth region is at (2.3, 3.6) — not a whole-number dot.</p></div><div class="slide"><h3 class="stitle">Watch the relaxation return 0.667</h3><ul class="sbullets"><li>The answer is 0.667 — but how do we pack two-thirds of a parcel? The honest 0/1 answer is 0: the item simply does not fit.</li></ul><p class="scaption">CODE import pulp # A 3 kg parcel, but only 2 kg of room. Allow a fraction, just to see. m = pulp.LpProblem("relaxed", pulp.LpMaximize) x = pulp.LpVariable("x", lowBound=0, upBound=1) m += 10 * x        # goal: as much value as we can m += 3 * x &lt;= 2    # the weight must fit m.solve(pulp.PULP_CBC_CMD(msg=0)) print("Best fraction:", round(x.value(), 3)) OUTPUT  ▸ Best fraction: 0.667</p></div><div class="slide"><h3 class="stitle">Why rounding is dangerous</h3><img class="sdiagram" src="S21/slides/18_0.png" alt="slide 18 diagram" loading="lazy"><p class="scaption">Round down and you lose value; round up and you can leave the allowed region.</p></div><div class="slide"><h3 class="stitle">The number of options explodes</h3><ul class="sbullets"><li>n yes/no switches: 2ⁿ combinations.</li><li>n stops on a route: about n!/2 tours.</li><li>At n = 20 that is already astronomical.</li><li>So we cannot just try them all — but we needn't.</li></ul><img class="sdiagram" src="S21/slides/19_0.png" alt="slide 19 diagram" loading="lazy"><p class="scaption">With n stops or n switches, the number of possible choices grows explosively.</p></div><div class="slide"><h3 class="stitle">Count the routes as stops grow</h3><ul class="sbullets"><li>Each extra stop multiplies the count of possible round-trips — by 20 stops there are 60 quadrillion of them.</li></ul><p class="scaption">CODE import math print("stops | possible routes  (about (n-1)!/2)") for n in [5, 8, 10, 12, 15, 20]: routes_n = math.factorial(n - 1) // 2 print("{:&gt;4}  | {:,}".format(n, routes_n)) OUTPUT  ▸ stops | possible routes  (about (n-1)!/2) 5  | 12 8  | 2,520 10  | 181,440 12  | 19,958,400 15  | 43,589,145,600 20  | 60,822,550,204,416,000</p></div><div class="slide"><h3 class="stitle">3 · How free solvers cope</h3></div><div class="slide"><h3 class="stitle">Split, bound, prune — in plain words</h3><ul class="sbullets"><li>Solve the easy smooth version. If it came out all-whole, you're done.</li><li>If a decision came out fractional (say x = 2.3), split into two cases: one with x ≤ 2, one with x ≥ 3.</li><li>Each case's easy version gives a 'best it could ever do' — a bound.</li><li>If a branch's best-case can't beat the best whole answer you already have, throw it away unexplored (prune it).</li></ul></div><div class="slide"><h3 class="stitle">The search tree: split, bound, prune</h3><img class="sdiagram" src="S21/slides/23_0.png" alt="slide 23 diagram" loading="lazy"><p class="scaption">Split on a fraction; bound each branch; prune the ones that cannot win.</p></div><div class="slide"><h3 class="stitle">The free toolchain you already have</h3><img class="sdiagram" src="S21/slides/24_0.png" alt="slide 24 diagram" loading="lazy"><p class="scaption">Write the model in PuLP or OR-Tools; the free CBC solver does the split-bound-prune.</p></div><div class="slide"><h3 class="stitle">4 · Routing: which route to take</h3></div><div class="slide"><h3 class="stitle">A real model usually mixes both kinds of decision</h3><img class="sdiagram" src="S21/slides/26_0.png" alt="slide 26 diagram" loading="lazy"><p class="scaption">Smooth 'how much' decisions and whole-number 'yes/no' decisions, together in one model.</p></div><div class="slide"><h3 class="stitle">Routing: the problems that built the field</h3><ul class="sbullets"><li>One van, many stops: visit every stop once, return home, shortest total distance — the Travelling Salesman Problem.</li><li>A fleet of vans from one hub: split the stops across vans — the Vehicle Routing Problem.</li><li>Add real constraints: van capacity, delivery time slots, driver shifts.</li><li>These are everywhere in Indian logistics — and the number of options is enormous.</li></ul></div><div class="slide"><h3 class="stitle">Route a van with the nearest-stop rule</h3><ul class="sbullets"><li>Start at the hub.</li><li>Drive to the nearest stop you haven't visited yet.</li><li>Repeat until no stops are left.</li><li>Return to the hub to close the loop.</li></ul><img class="sdiagram" src="S21/slides/28_0.png" alt="slide 28 diagram" loading="lazy"><p class="scaption">Spot where the route crosses itself — a crossing means a shorter route exists. This whole loop comes from the four-step rule — quick and decent, not guaranteed shortest.</p></div><div class="slide"><h3 class="stitle">Two ways to attack a routing problem</h3><ul class="sbullets"><li>Prove the best answer</li><li>Uses the split-bound-prune machinery</li><li>Gives the guaranteed shortest routes</li><li>Fine for small problems</li><li>Time explodes past a few dozen stops</li><li>Find a good answer fast</li><li>Simple rules: nearest-stop, swap-to-improve</li><li>Google OR-Tools' routing engine</li><li>No guarantee it is the very best</li><li>Scales to thousands of stops</li></ul></div><div class="slide"><h3 class="stitle">What makes last-mile genuinely hard in India</h3><ul class="sbullets"><li>Density and chaos: narrow lanes, unclear addresses, heavy traffic.</li><li>Time slots: customers want delivery in a window; some pay cash on delivery.</li><li>Capacity: each van holds a limited number of parcels.</li><li>Scale: thousands of stops per city, re-planned every single day.</li><li>So everyone uses fast good-enough rules with a time budget, not perfect optimisation.</li></ul></div><div class="slide"><h3 class="stitle">5 · Build one yourself: lab &amp; wrap-up</h3></div><div class="slide"><h3 class="stitle">How to formulate any yes/no model — five steps</h3><ul class="sbullets"><li>1 · Spot the yes/no decisions.  Open it? Take it? Assign it?</li><li>2 · Give each one a 0/1 variable.  In PuLP: cat="Binary".</li><li>3 · Write the goal.  One linear sum to maximise or minimise.</li><li>4 · Write the rules.  Each business rule becomes a linear (in)equality between the switches.</li><li>5 · Solve and read it back.  PuLP + the free CBC solver; translate the 0s and 1s into a business decision.</li></ul><p class="scaption">PRACTICAL TIPS</p></div><div class="slide"><h3 class="stitle">Lab: Indian last-mile fleet routing</h3><ul class="sbullets"><li>In the lab: pack a van and pick dark stores with small yes/no models in PuLP, then route a delivery van through a set of metro stops and see why the perfect route slips out of reach.</li><li>1.  Warm-up in PuLP: solve a knapsack (load the van) with yes/no variables.</li><li>2.  See with a tiny example why dropping the rule and rounding can go wrong.</li><li>3.  Solve a matching (agents to routes) and a dark-store (facility-location) model.</li><li>4.  Route a van through about ten stops with a nearest-neighbour rule; plot the route.</li><li>5.  Watch the number of possible routes explode as you add stops, and compare against a naive plan.</li><li>Deliverable:  a notebook on GitHub: a routed delivery run on a city map, plus a yes/no model that picks which dark stores to open.</li></ul></div><div class="slide"><h3 class="stitle">Common first-timer traps</h3><ul class="sbullets"><li>Avoid</li><li>Solving the easy version and just rounding</li><li>Ignoring problem size and time limits</li><li>Expecting a proven-best answer on a huge route</li><li>Trusting one number without a map</li><li>Do instead</li><li>Let the solver enforce whole numbers</li><li>Set a time limit; accept the best found</li><li>Use a fast good-enough rule at scale</li><li>Always plot the routes and sanity-check</li></ul></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>Same recipe as last week — variables + a goal + rules — plus ONE new demand: the answer must be whole.</li><li>The star case is the 0/1 switch: x is 0 or 1, never halfway. Open the store, load the parcel, or not.</li><li>Packing, matching, dark stores, coverage: the same yes/no mathematics wearing four business suits.</li><li>Don't solve the easy version and round — fractions lie and the options explode; let split-bound-prune search.</li><li>Routing a fleet is huge; at scale use a fast good-enough rule with a time budget, not perfect solving.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S21_integer_programming/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_knapsack_assignment.ipynb 02_facility_location.ipynb 03_last_mile_routing.ipynb Small problems generated in-code with NumPy (seeded) — no downloads needed New to the idea of a solver? primers/optimization_objectives_and_constraints.md New to code? primers/python_in_15_minutes.md Straight-line distance, in one page: primers/distance_between_points.md Hillier &amp; Lieberman — Introduction to Operations Research, integer-programming chapter Wolsey — Integer Programming PuLP documentation and the Google OR-Tools routing guide</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S22 — Convex optimization with CVXPY. We leave the discrete, whole-number world and return to smooth problems where any local best is the global best.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

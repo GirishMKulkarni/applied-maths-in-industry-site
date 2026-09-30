@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Finding the Best Plan When You Have Limits (Linear Programming) · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 4 — Optimization &amp; Operations Research</p>
+  <h1>S20 · Finding the Best Plan When You Have Limits (Linear Programming)</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/what_is_optimization.html">What is optimization</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A hostel mess serves 400 lunches a day. The manager wants each plate as cheap as
+possible, but every plate must give a student at least 30 g of protein and 900
+calories. Rice is cheap but low in protein; dal has protein but costs more. How many
+katoris of each? Then the warden asks for iron as well, and two more foods, curd and
+palak, come on the menu.</p>
+<p>Prediction tells you what may happen. Optimisation tells you what to do. Choosing the
+best plan under limits is one of the most valuable things a numbers person does in
+industry, and today you learn to hand that choice to the computer.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Every linear program has the same pieces. <strong>Decision variables</strong>: what you choose
+(katoris of each food). An <strong>objective</strong>: the one number you push as low or as high as
+it goes (the cost of the plate). <strong>Constraints</strong>: the rules you must obey (protein at
+least 30 g, calories at least 900). And <strong>non-negativity</strong>: no negative katoris.</p>
+<p>There is a picture underneath it. With two foods, each rule is a straight line, and the
+plates that pass every rule form a shaded shape. The cheapest plate is never in the
+middle of that shape; it sits at a corner, here 3 katoris of rice and 2 of dal for ₹31.
+A solver finds that corner for you, even when there are thousands of foods and you can
+no longer draw the picture.</p>
+<p>We use the same thali all session: two foods for the picture, four foods with an iron
+rule for the full model (3 rice, 1.75 dal, 0.75 palak, ₹35), and the same plate again
+when we break the model on purpose. The second example is a warehouse-to-city delivery
+plan: different industry, same mathematics.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Check some plates by hand, draw the two-food thali, shade the allowed plates, price
+   the corners, and watch PuLP land on the same corner.</li>
+<li>Write the four-food thali with an iron rule in PuLP, solve it with the free CBC
+   solver, and check the plate by hand. Then add a curd rule and a budget the plate
+   cannot meet, and read each verdict.</li>
+<li>Model the warehouse-to-city delivery plan, check every supply and demand rule, draw
+   the network, and push one city's demand until the model goes Infeasible.</li>
+<li>For every model: read the status first, then the plan, then the cost.</li>
+</ol>
+<p><strong>Install note.</strong> The notebooks need PuLP below version 4 (<code>pip install "pulp&lt;4"</code>; the
+Colab cell does this for you). PuLP 4.0 changed how variables are created and no
+longer ships the CBC solver.</p>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what "the best plan under limits" means and why the answer sits at a corner,</li>
+<li>how to write a plan as decision variables, an objective and constraints,</li>
+<li>how to hand them to a solver and read back the answer.</li>
+</ul>
+<p>The little you may want in advance: how to run a notebook cell, and the idea of
+turning knobs to make a number as good as possible without breaking a rule. Both
+are covered here first:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Want the idea behind today in one page? Read
+  <a href="../primers/what_is_optimization.html">What optimization is</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code or already know linear programming, skip ahead and look for
+the cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Write any plan as decision variables, one objective, constraints and non-negativity,
+  and say which constraints are "at least" and which are "at most".</li>
+<li>Show by drawing why the best plan of a two-variable problem sits at a corner of the
+  feasible region.</li>
+<li>Build and solve a model in PuLP: create the problem, make a variable per decision,
+  add the objective, add each constraint, solve.</li>
+<li>Read the solver's verdict (Optimal, Infeasible, Unbounded) before any number, and
+  check a solution by hand.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those
+who want it, and none of it is needed to finish.</p>
+<p>Today's mathematical object is the <strong>convex polyhedron</strong>. Each constraint
+<code>aᵀx ≤ b</code> is a half-space; the feasible set is the intersection of finitely many
+half-spaces, which is a convex polyhedron (in two dimensions, the convex polygon
+you shaded by hand). "Convex" means the segment between any two feasible points
+stays feasible, so the region has no dents. Because a linear objective <code>cᵀx</code> has
+no interior stationary point, its optimum over a bounded polyhedron is attained at
+a <strong>vertex</strong> (a corner where enough constraints are tight). That is the
+corner-point theorem, and it is the reason the simplex method can walk from corner
+to corner and terminate.</p>
+<p>The second half is <strong>duality</strong>. Every linear program (the <em>primal</em>) has a
+mirror-image <strong>dual</strong>: if the primal chooses a plan to minimise cost subject to
+meeting requirements, the dual prices each requirement, and strong duality says
+the two problems meet at exactly the same optimal value. Those dual prices are the
+<strong>shadow prices</strong> you meet in the Stretch cells: the shadow price of a constraint is
+how much the best objective would move if you loosened that constraint by one
+unit. A tight constraint has a nonzero shadow price and is the bottleneck; a slack
+one has shadow price zero. This duality is a genuine highlight of the subject, but
+here it is a bonus, not a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>optimization</strong> — choosing the best plan a set of limits allows.</li>
+<li><strong>linear program (LP)</strong> — a plan where the objective and every rule are plain
+  weighted sums, no squares or curves.</li>
+<li><strong>decision variable</strong> — one of the quantities you get to choose.</li>
+<li><strong>objective</strong> — the single number you push as low or as high as it will go.</li>
+<li><strong>constraint</strong> — a rule the plan must obey.</li>
+<li><strong>feasible region</strong> — the set of all plans that obey every constraint at once.</li>
+<li><strong>solver</strong> — the tool (here CBC, inside PuLP) that searches for the best plan.</li>
+<li><strong>infeasible</strong> — no plan obeys every constraint; the rules contradict each other.</li>
+<li><strong>unbounded</strong> — the objective can improve forever; usually a missing constraint.</li>
+<li><strong>shadow price</strong> — how much the best answer moves if you loosen one constraint
+  by one unit.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">See why the cheapest plate sits at a corner</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S20/notebooks/01_see_the_best_corner.ipynb">Open in Colab</a>
+      <a class="btn" href="S20/notebooks/01_see_the_best_corner.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S20/notebooks/01_see_the_best_corner.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">The cheapest thali that still meets nutrition</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S20/notebooks/02_cheapest_thali.ipynb">Open in Colab</a>
+      <a class="btn" href="S20/notebooks/02_cheapest_thali.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S20/notebooks/02_cheapest_thali.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Moving stock between warehouses at least cost</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S20/notebooks/03_moving_stock.ipynb">Open in Colab</a>
+      <a class="btn" href="S20/notebooks/03_moving_stock.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S20/notebooks/03_moving_stock.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Small in-code data only — a four-food thali table (per katori) and a warehouse-to-city freight table; no downloads</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Hillier &amp; Lieberman — <em>Introduction to Operations Research</em></li>
+<li>Wayne Winston — <em>Operations Research: Applications and Algorithms</em></li>
+<li><a href="https://coin-or.github.io/pulp/">PuLP documentation</a></li>
+<li>MIT OpenCourseWare 15.053 / 15.093 (Optimization)</li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Finding the Best Plan Under Limits</h3><ul class="sbullets"><li>Linear programming, on one hostel lunch thali</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 4 — Optimization &amp; Operations Research   ·   Session S20   ·   2 hours Module 4 begins: the optimisation block</p></div><div class="slide"><h3 class="stitle">The problem: the cheapest lunch that still feeds a student</h3><ul class="sbullets"><li>A hostel mess serves 400 lunches a day. The manager wants each plate as cheap as possible.</li><li>But every plate must give at least 30 g of protein and 900 calories.</li><li>Rice is cheap but low in protein. Dal has protein but costs more. How many katoris of each?</li><li>Prediction tells you what may happen. Optimisation tells you what to DO.</li></ul></div><div class="slide"><h3 class="stitle">Every linear program has three pieces</h3></div><div class="slide"><h3 class="stitle">The thali, written as a linear program</h3><ul class="sbullets"><li>Choose r and d to make the cost smallest while every rule holds.</li><li>Protein rule: each katori of rice gives 4 g, each katori of dal 9 g.</li><li>Calorie rule: rice 200 per katori, dal 150.</li><li>The same four lines work for 2 foods or 2,000: only the lists get longer.</li></ul><img class="sdiagram" src="S20/slides/4_0.png" alt="slide 4 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">What 'linear' means</h3><ul class="sbullets"><li>Linear: multiply by a number, then add</li><li>5r + 8d   (cost)</li><li>4r + 9d ≥ 30   (protein)</li><li>r ≥ 0</li><li>Straight lines on a graph. Solvers handle millions of these.</li><li>Not linear: anything that bends</li><li>r × d   (two choices multiplied)</li><li>r²   (a choice squared)</li><li>cost ÷ protein   (a ratio of choices)</li><li>a bulk discount after 10 kg   (a kink)</li><li>Curves are S22; whole numbers are S21.</li></ul></div><div class="slide"><h3 class="stitle">Check some plates by hand</h3></div><div class="slide"><h3 class="stitle">Each rule is a straight boundary</h3><ul class="sbullets"><li>Plot every plate as a point: rice across, dal up.</li><li>4r + 9d = 30 is a straight line: plates with exactly 30 g.</li><li>Above it: enough protein. Below it: too little.</li><li>(2, 2) fails. (3, 2) and (5, 3) pass, as in the table.</li></ul><img class="sdiagram" src="S20/slides/7_0.png" alt="slide 7 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Together the rules make the allowed region</h3><ul class="sbullets"><li>Keep only the plates that pass BOTH rules: the shaded region.</li><li>Its corners are where two boundaries cross.</li><li>(3, 2) is where protein and calories are both exactly met.</li><li>Region = every allowed plan. The name: feasible region.</li></ul><img class="sdiagram" src="S20/slides/8_0.png" alt="slide 8 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">The cheapest plan is always at a corner</h3><ul class="sbullets"><li>Every dashed line is one price: all plates costing exactly ₹49, ₹43…</li><li>Slide the line towards cheaper until it last touches the region.</li><li>It last touches at a corner: 3 rice + 2 dal, ₹31.</li><li>A straight goal never has a best point in the middle, so we only check corners.</li></ul><img class="sdiagram" src="S20/slides/9_0.png" alt="slide 9 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">Score the three corners</h3><ul class="sbullets"><li>Three corners, three prices. The cheapest corner is the cheapest plate of all: ₹31, the same as our best row in the table.</li></ul><p class="scaption">CODE corners = [(7.5, 0), (3, 2), (0, 6)]      # (rice, dal) for r, d in corners: print(r, 'rice +', d, 'dal costs Rs', 5*r + 8*d) OUTPUT  ▸ 7.5 rice + 0 dal costs Rs 37.5 3 rice + 2 dal costs Rs 31 0 rice + 6 dal costs Rs 48</p></div><div class="slide"><h3 class="stitle">Hand the same lunch to a solver: PuLP</h3><ul class="sbullets"><li>The solver finds the same corner we found by hand: 3 rice, 2 dal, ₹31.</li></ul><p class="scaption">CODE import pulp model = pulp.LpProblem("lunch_thali", pulp.LpMinimize) r = pulp.LpVariable("rice", lowBound=0) d = pulp.LpVariable("dal", lowBound=0) model += 5*r + 8*d              # cost model += 4*r + 9*d &gt;= 30        # protein model += 200*r + 150*d &gt;= 900   # calories model.solve(pulp.PULP_CBC_CMD(msg=0)) print("status:", pulp.LpStatus[model.status]) print("rice:", r.varValue, " dal:", d.varValue) print("cost: Rs", pulp.value(model.objective)) OUTPUT  ▸ status: Optimal rice: 3.0  dal: 2.0 cost: Rs 31.0</p></div><div class="slide"><h3 class="stitle">The PuLP model, line by line</h3></div><div class="slide"><h3 class="stitle">Your turn first: the warden adds iron</h3><ul class="sbullets"><li>Our ₹31 plate gives only 3 × 0.5 + 2 × 2 = 5.5 mg of iron. The warden wants at least 8 mg.</li><li>Two more foods are on offer: curd and palak sabzi.</li><li>Before any code, answer on paper:</li><li>1.  Decision variables: what do we choose now?</li><li>2.  Objective: which number, and up or down?</li><li>3.  Constraints: how many rules, and which way do they point?</li><li>4.  Non-negativity: which choices must be ≥ 0?</li></ul></div><div class="slide"><h3 class="stitle">The four foods, per katori</h3></div><div class="slide"><h3 class="stitle">The checklist, answered</h3></div><div class="slide"><h3 class="stitle">The full thali in PuLP</h3><ul class="sbullets"><li>lpSum adds up price × katoris over every food: the objective row of the checklist.</li></ul><p class="scaption">CODE # foods, price, protein, calories, iron: the table as dictionaries thali = pulp.LpProblem("full_thali", pulp.LpMinimize) k = {f: pulp.LpVariable(f, lowBound=0) for f in foods}   # katoris of each thali += pulp.lpSum(price[f] * k[f] for f in foods) thali += pulp.lpSum(protein[f] * k[f] for f in foods) &gt;= 30 thali += pulp.lpSum(calories[f] * k[f] for f in foods) &gt;= 900 thali += pulp.lpSum(iron[f] * k[f] for f in foods) &gt;= 8 print(len(k), "variables,", len(thali.constraints), "constraints") OUTPUT  ▸ 4 variables, 3 constraints</p></div><div class="slide"><h3 class="stitle">Solve it and read the plate</h3><ul class="sbullets"><li>Iron costs ₹4 a plate: the solver keeps 3 rice, swaps a quarter katori of dal for palak, and skips curd.</li></ul><p class="scaption">CODE thali.solve(pulp.PULP_CBC_CMD(msg=0)) print("status:", pulp.LpStatus[thali.status]) for f in foods: print(f"  {f:6s} {k[f].varValue:5.2f} katoris") print("cost: Rs", pulp.value(thali.objective)) OUTPUT  ▸ status: Optimal rice    3.00 katoris dal     1.75 katoris curd    0.00 katoris palak   0.75 katoris cost: Rs 35.0</p></div><div class="slide"><h3 class="stitle">Worked example 2: move stock from warehouses to cities</h3><ul class="sbullets"><li>A sale is on. Three warehouses hold stock; three cities need it.</li><li>Choices: truckloads on each of the 9 routes.</li><li>Objective: total freight bill, smallest.</li><li>Rules: ship no more than a warehouse holds; every city gets what it needs.</li></ul><img class="sdiagram" src="S20/slides/18_0.png" alt="slide 18 diagram" loading="lazy"></div><div class="slide"><h3 class="stitle">The freight costs (₹ thousand per truckload)</h3></div><div class="slide"><h3 class="stitle">The delivery plan in PuLP</h3><ul class="sbullets"><li>Two loops, two families of rules: one '≤ supply' per warehouse, one '≥ demand' per city.</li></ul><p class="scaption">CODE plan = pulp.LpProblem("move_stock", pulp.LpMinimize) ship = {(w, c): pulp.LpVariable(f"{w}_to_{c}", lowBound=0) for w in warehouses for c in cities}          # 9 routes plan += pulp.lpSum(cost[w][c] * ship[w, c] for (w, c) in ship) for w in warehouses:     # supply: ship out no more than you hold plan += pulp.lpSum(ship[w, c] for c in cities) &lt;= supply[w] for c in cities:         # demand: every city gets what it needs plan += pulp.lpSum(ship[w, c] for w in warehouses) &gt;= demand[c] print(len(ship), "variables,", len(plan.constraints), "constraints") OUTPUT  ▸ 9 variables, 6 constraints</p></div><div class="slide"><h3 class="stitle">Solve it and read the plan</h3><ul class="sbullets"><li>Five of the nine routes carry stock, for a bill of ₹4.05 lakh. No warehouse is over-used and no city is short.</li></ul><p class="scaption">CODE plan.solve(pulp.PULP_CBC_CMD(msg=0)) print("status:", pulp.LpStatus[plan.status]) for (w, c), trucks in ship.items(): if trucks.varValue &gt; 0: print(f"  {w:8s} -&gt; {c:6s} {trucks.varValue:3.0f} truckloads") print("bill: Rs", pulp.value(plan.objective), "thousand") OUTPUT  ▸ status: Optimal Bhiwandi -&gt; Mumbai  20 truckloads Bhiwandi -&gt; Pune    10 truckloads Hosur    -&gt; Pune    15 truckloads Hosur    -&gt; Nagpur  10 truckloads Kolkata  -&gt; Nagpur  20 truckloads bill: Rs 405.0 thousand</p></div><div class="slide"><h3 class="stitle">Who solves problems like these</h3></div><div class="slide"><h3 class="stitle">Two problems, one recipe</h3><ul class="sbullets"><li>What changes</li><li>Thali: choices are katoris of food</li><li>Stock: choices are truckloads on routes</li><li>Thali rules: nutrients, all 'at least'</li><li>Stock rules: supply 'at most', demand 'at least'</li><li>What stays the same</li><li>Name the choices, each ≥ 0</li><li>Write ONE number and say min or max</li><li>One line per rule</li><li>Solve, read the verdict, then the plan</li><li>Different industries. Same mathematics.</li></ul></div><div class="slide"><h3 class="stitle">Three things a solver can tell you</h3><img class="sdiagram" src="S20/slides/24_0.png" alt="slide 24 diagram" loading="lazy"><p class="scaption">Same lunch thali each time. Only the rules or the direction changed.</p></div><div class="slide"><h3 class="stitle">Break the model on purpose</h3><ul class="sbullets"><li>Both verdicts are true statements about the model, not crashes. Read them before any number.</li></ul><p class="scaption">CODE # 1. add a budget the plate can't meet model += 5*r + 8*d &lt;= 25, "budget" model.solve(pulp.PULP_CBC_CMD(msg=0)) print("Rs 25 budget:        ", pulp.LpStatus[model.status]) # 2. maximise protein with no budget at all greedy = pulp.LpProblem("more_protein", pulp.LpMaximize) greedy += 4*r + 9*d greedy += 200*r + 150*d &gt;= 900 greedy.solve(pulp.PULP_CBC_CMD(msg=0)) print("max protein, no cap: ", pulp.LpStatus[greedy.status]) OUTPUT  ▸ Rs 25 budget:         Infeasible max protein, no cap:  Unbounded</p></div><div class="slide"><h3 class="stitle">Reading the verdict</h3><ul class="sbullets"><li>Infeasible</li><li>Unbounded</li><li>The rules contradict each other</li><li>e.g. a ₹25 budget, but the cheapest nutritious plate is ₹31</li><li>e.g. cities need 80 truckloads, warehouses hold 75</li><li>often a typo: ≥ where you meant ≤, or a wrong unit</li><li>fix: relax a rule, or correct the data</li><li>The number can improve forever</li><li>e.g. maximise protein with no budget</li><li>almost always a MISSING rule</li><li>or a forgotten lowBound=0</li><li>fix: add the real-world limit you left out</li></ul></div><div class="slide"><h3 class="stitle">Common traps</h3><ul class="sbullets"><li>Trap</li><li>Wrong units (grams vs kg, ₹ vs ₹ thousand)</li><li>A missing constraint</li><li>≥ where you meant ≤ (or = where you meant ≤)</li><li>Forgetting non-negativity</li><li>Sneaking in a curve: r × d, r², a ratio</li><li>Trusting the solver without checking</li><li>Habit</li><li>Write the unit next to every number</li><li>List every real limit before you code</li><li>Read each rule aloud: 'at least' or 'at most'?</li><li>lowBound=0 on every variable that can't go negative</li><li>Keep it multiply-and-add; curves wait for S22</li><li>Print the status; check one rule by hand</li></ul></div><div class="slide"><h3 class="stitle">What to remember</h3><ul class="sbullets"><li>LP = decision variables + one objective + constraints (+ non-negativity).</li><li>The feasible region is every plan that obeys all the rules.</li><li>The best plan sits at a corner, so a solver only has to search corners.</li><li>PuLP + the free CBC solver turn the three pieces into an answer in a few lines.</li><li>Read the verdict first: Optimal, Infeasible or Unbounded.</li><li>Diets, deliveries, feed, refineries, rosters: different industries, same mathematics.</li></ul></div><div class="slide"><h3 class="stitle">Lab: model and solve your own thali and delivery plan</h3><ul class="sbullets"><li>In the lab: rebuild today's thali and warehouse models in PuLP, then change them the way a real manager would and read what the solver says.</li><li>1.  Notebook 01: draw the two-food thali, shade the allowed plates, price the corners, and watch PuLP agree.</li><li>2.  Notebook 02: the four-food thali with iron. Then add a curd rule and a budget, and read each verdict.</li><li>3.  Notebook 03: the warehouse-to-city plan. Then raise one city's demand until it goes Infeasible.</li><li>4.  Your turn: model a plate from your own mess menu with prices you look up.</li><li>Deliverable:  a notebook with a solved model, its verdict, the plan, and two sentences on what a manager should do with it.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S20_linear_programming/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_see_the_best_corner.ipynb 02_cheapest_thali.ipynb 03_moving_stock.ipynb The thali table (four foods, per katori) and the warehouse cost table, built into the notebooks. No downloads. New to code? primers/python_in_15_minutes.md Today's idea in one page: primers/what_is_optimization.md Any unfamiliar word: primers/glossary.md Hillier &amp; Lieberman, Introduction to Operations Research PuLP documentation (coin-or.github.io/pulp)</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S21: Yes-or-no decisions. Open a warehouse or not, send a truck or not. When answers must be whole numbers, the corners stop being enough.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

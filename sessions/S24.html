@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Systems That Settle — Markov Chains and the Inventory Project · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 4 — Optimization &amp; Operations Research</p>
+  <h1>S24 · Systems That Settle — Markov Chains and the Inventory Project</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/markov_chains.html">Markov chains</a></li><li><a href="../primers/vectors_and_matrices.html">Vectors and matrices</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A Flipkart seller keeps one product on the shelf, say phone chargers. Every day a
+random number of customers buy one. Keep too little stock and the shelf goes empty,
+so sales are lost and customers go to a rival. Keep too much and cash and warehouse
+space sit idle. So two questions have to be answered: how low should stock fall
+before reordering, and how much should each order bring in? Today's deliverable is
+a small study that answers exactly that for one shop.</p>
+<p>That restocking puzzle turns out to be one example of a much bigger pattern, and the
+pattern is where we start.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Lots of real systems are always in one of a few situations and hop between them, one
+step at a time, where the next hop depends only on where you are right now. The
+weather is sunny or rainy. A phone customer is loyal or has ported out to a rival. A
+machine is working or broken. A warehouse holds this much stock today and a
+different amount tomorrow. Give each hop a chance and you have what is called a
+<strong>Markov chain</strong>: a few states, and a fixed set of odds for moving between them.</p>
+<p>Here is the useful part. Watch such a system for long enough and it settles. Start
+the weather off as "definitely sunny" and roll it forward day after day, and the
+chance of sun drifts and then stops drifting, landing near 57%. Start it off
+"definitely rainy" and it settles at the same 57%. After a while the system forgets
+where it began. That settled mix, the long-run share of sunny days, is nearly always
+the thing we actually want to know: the long-run churn rate, the long-run fraction
+of time a machine is up, the long-run spread of stock on a shelf.</p>
+<p>And you can get that settled mix two ways: roll the system forward until it stops
+moving, or just play it out at random for a long time and count. The inventory
+policy is one such system, and we tune it by playing it out.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Build a small weather chain, write its table of jump chances, and step a starting
+   guess forward day by day until it stops moving.</li>
+<li>Read off the long-run mix, then confirm it a second way by simulating the chain,
+   and watch the two answers agree.</li>
+<li>Simulate an <code>(s, S)</code> restock policy for a shop, draw the stock "sawtooth", and
+   read off its daily cost and its service level.</li>
+<li>Run a full mini operations-research study: estimate demand from past sales, try
+   several policies, pick the cheapest one that keeps 95% of customers served, and
+   write the recommendation with its assumptions. That is the Module 4 deliverable.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what a "state" and a "hop" are, and how to write the jump chances as a small table,</li>
+<li>what "the system settles in the long run" means, and how to find that settled mix,</li>
+<li>how to simulate a restocking rule and measure whether it is any good.</li>
+</ul>
+<p>The little you may want in advance is how a table of numbers works, and how to run a
+notebook cell:</p>
+<ul>
+<li>Want the whole idea of today on one page? Read
+  <a href="../primers/markov_chains.html">A system that hops between states</a>.</li>
+<li>New to tables of numbers? Read
+  <a href="../primers/vectors_and_matrices.html">Vectors and matrices</a>.</li>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already know Markov chains or you already code, skip ahead and look for the
+cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Describe a random system as "a few states with jump chances", and write those
+  chances as a transition matrix whose rows each sum to 1.</li>
+<li>Step a starting mix forward and watch it settle into a steady long-run mix.</li>
+<li>Find that long-run mix and cross-check it against a simulation.</li>
+<li>Simulate an <code>(s, S)</code> inventory policy and read off its daily cost and service level.</li>
+<li>Choose a sensible restock policy by comparing simulated options, and state the
+  assumptions behind your recommendation.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for anyone who
+wants it, and none of it is needed to finish.</p>
+<p>Today's mathematical object is the <strong>transition matrix</strong> <code>P</code>: a square matrix whose
+rows are probabilities and each sum to 1 (a <em>stochastic matrix</em>). Pushing a
+probability row-vector one step into the future is the matrix product <code>p · P</code>, and
+<code>n</code> steps is the matrix power <code>p · Pⁿ</code>. The settled mix, the <strong>stationary
+distribution</strong> <code>π</code>, is the distribution that one more step leaves unchanged:
+<code>π · P = π</code>. Rearranged, that says <code>π</code> is a <strong>left eigenvector of <code>P</code> with eigenvalue
+1</strong>. Every stochastic matrix has 1 as an eigenvalue, and for a chain that is
+<em>irreducible</em> (you can get from any state to any other) and <em>aperiodic</em> (not locked
+into a rigid cycle), that <code>π</code> is unique and is reached from any starting mix. The
+first notebook finds <code>π</code> both ways and checks they agree. And the <code>(s, S)</code> inventory
+system is itself a Markov chain, on stock levels, so its long-run stock spread is a
+stationary distribution too. All of this is a bonus, never a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>state</strong> — one of the few situations a system can be in (sunny/rainy, working/broken).</li>
+<li><strong>Markov chain</strong> — a system that hops between states, where the next state depends only on the current one.</li>
+<li><strong>transition matrix</strong> — the table of jump chances; each row sums to 1.</li>
+<li><strong>stationary distribution</strong> — the steady long-run mix the system settles into.</li>
+<li><strong>(s, S) policy</strong> — a restock rule: when stock falls to <code>s</code>, order back up to <code>S</code>.</li>
+<li><strong>service level</strong> — the fraction of customer demand you actually meet from stock.</li>
+<li><strong>holding cost / stockout</strong> — the cost of stock sitting idle, and of running out.</li>
+<li><strong>lead time</strong> — the delay between placing an order and it arriving.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">A system that settles — Markov chains and the long run</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S24/notebooks/01_markov_chains_and_the_long_run.ipynb">Open in Colab</a>
+      <a class="btn" href="S24/notebooks/01_markov_chains_and_the_long_run.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S24/notebooks/01_markov_chains_and_the_long_run.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Simulating an (s, S) inventory policy</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S24/notebooks/02_inventory_by_simulation.ipynb">Open in Colab</a>
+      <a class="btn" href="S24/notebooks/02_inventory_by_simulation.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S24/notebooks/02_inventory_by_simulation.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">The inventory case study (the deliverable)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S24/notebooks/03_or_case_study.ipynb">Open in Colab</a>
+      <a class="btn" href="S24/notebooks/03_or_case_study.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S24/notebooks/03_or_case_study.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Small synthetic datasets generated inside the notebooks (seeded NumPy)</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Ross — <em>Introduction to Probability Models</em> (Markov chains)</li>
+<li>Hillier &amp; Lieberman — <em>Introduction to Operations Research</em> (Markov chains &amp; inventory)</li>
+<li>Norris — <em>Markov Chains</em></li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Systems That Settle</h3><ul class="sbullets"><li>Markov chains, the long run, and the inventory project that closes Module 4</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 4 — Optimization &amp; Operations Research   ·   Session S24   ·   2 hours Module 4 finale — operations research wrap-up</p></div><div class="slide"><h3 class="stitle">The problem: how much stock should a shop hold?</h3><ul class="sbullets"><li>A Flipkart seller keeps one product on the shelf — say phone chargers.</li><li>Each day a random number of customers buy one. Some days five, some days none.</li><li>Keep too little and the shelf goes empty: lost sales, and customers go to a rival (a 'stockout').</li><li>Keep too much and cash and warehouse space sit idle (the 'holding cost').</li><li>Two questions: how low should stock fall before we reorder, and how much should each order bring in?</li></ul></div><div class="slide"><h3 class="stitle">The one idea, in a single picture</h3><ul class="sbullets"><li>Many systems sit in one of a few states and hop between them.</li><li>Weather is sunny or rainy; a shelf holds this much stock or that.</li><li>Watch it long enough and it settles down.</li><li>That settled mix is almost always what we want to know.</li></ul><img class="sdiagram" src="S24/slides/3_0.png" alt="slide 3 diagram" loading="lazy"><p class="scaption">Start a hopping system anywhere and, after a while, it settles into the same steady mix and forgets where it began.</p></div><div class="slide"><h3 class="stitle">What we'll cover</h3><ul class="sbullets"><li>1   The problem and the one idea (done — that was the big picture)</li><li>2   A system that hops between states</li><li>3   The table of jump chances, and rolling the mix forward</li><li>4   Where it settles: the steady long-run mix</li><li>5   When there is a single settled answer</li><li>6   Where this shows up: PageRank, churn, reliability</li><li>7   The inventory project: the (s, S) restock rule</li></ul></div><div class="slide"><h3 class="stitle">A system that lives in one of a few situations</h3><ul class="sbullets"><li>Picture something that is always in exactly one of a few STATES.</li><li>A 'state' is just a label for the situation right now.</li><li>Weather is Sunny or Rainy. A customer is Active or Churned. A machine is Working or Broken.</li><li>Each step (a day, a week, a click) it may hop to another state, by fixed odds.</li></ul></div><div class="slide"><h3 class="stitle">The one rule that makes it a Markov chain</h3><ul class="sbullets"><li>Knowing the full history adds nothing beyond today's state.</li><li>This 'memoryless' rule is why one small table of odds can describe the whole system.</li><li>It is a simplification — sometimes great, sometimes poor.</li></ul><img class="sdiagram" src="S24/slides/6_0.png" alt="slide 6 diagram" loading="lazy"><p class="scaption">Where it goes next depends only on where it is now — not on how it got there.</p></div><div class="slide"><h3 class="stitle">Everyday systems that hop between states</h3></div><div class="slide"><h3 class="stitle">Putting all the jump chances in one table</h3><ul class="sbullets"><li>List the states. Make a square table, one row and one column per state.</li><li>The entry in row i, column j is the chance of hopping from i to j in one step.</li><li>Rows are where you are NOW; columns are where you go NEXT.</li><li>Every row adds up to 1 — from any state, something must happen next.</li><li>Its formal name is the transition matrix; think of it as the jump-chance table.</li></ul></div><div class="slide"><h3 class="stitle">A two-state weather chain: the picture</h3><ul class="sbullets"><li>Sunny stays Sunny 70% of days.</li><li>Sunny → Rainy with chance 0.3.</li><li>Rainy stays Rainy 60%.</li><li>Rainy → Sunny with chance 0.4.</li></ul><img class="sdiagram" src="S24/slides/9_0.png" alt="slide 9 diagram" loading="lazy"><p class="scaption">Circles are states; arrows are hops, labelled with their chances.</p></div><div class="slide"><h3 class="stitle">The same weather chain as a table</h3><img class="sdiagram" src="S24/slides/10_0.png" alt="slide 10 diagram" loading="lazy"><p class="scaption">Row i, column j = the chance of going to j when you are in i. Each row adds to 1.</p></div><div class="slide"><h3 class="stitle">Reading the table: rows are FROM, columns are TO</h3><ul class="sbullets"><li>Two rules — every entry ≥ 0, every row sums to 1 — and P.sum(axis=1) is the one-second check. Columns need NOT add to 1.</li></ul><p class="scaption">CODE import numpy as np # rows = 'from' (today), columns = 'to' (tomorrow) P = np.array([[0.7, 0.3],     # from Sunny [0.4, 0.6]])    # from Rainy print("Transition matrix P:") print(P) print("Sum of each row:", P.sum(axis=1)) OUTPUT  ▸ Transition matrix P: [[0.7 0.3] [0.4 0.6]] Sum of each row: [1. 1.]</p></div><div class="slide"><h3 class="stitle">From 'which state' to 'how likely each state'</h3><ul class="sbullets"><li>Often we do not know the exact state, only a chance for each.</li><li>Write that as a little row of numbers: e.g. 60% Sunny, 40% Rainy.</li><li>One day later, the new mix is that row 'run through' the jump-chance table.</li><li>Concretely: chance of Rainy tomorrow = (chance Sunny today × its chance of turning Rainy) + (chance Rainy today × its chance of staying Rainy).</li></ul></div><div class="slide"><h3 class="stitle">Step the mix forward one day</h3><ul class="sbullets"><li>One matrix multiply turns today's mix into tomorrow's — the whole engine of the chain.</li></ul><p class="scaption">CODE OUTPUT  ▸ today = np.array([1.0, 0.0])    # certainly Sunny today # one step = run the mix through the table tomorrow = today @ P print("Today's chances   :", today) print("Tomorrow's chances:", tomorrow.round(3)) Today's chances   : [1. 0.] Tomorrow's chances: [0.7 0.3]</p></div><div class="slide"><h3 class="stitle">Multiply again and again — it settles, and forgets its start</h3><ul class="sbullets"><li>n days ahead: run the mix through the table n times.</li><li>Start Sunny: the amber line falls.</li><li>Start Rainy: the blue line rises.</li><li>Both meet — the starting point is forgotten.</li></ul><img class="sdiagram" src="S24/slides/14_0.png" alt="slide 14 diagram" loading="lazy"><p class="scaption">today, today × P, today × P², today × P³, ... — two very different starting points race to the same long-run mix.</p></div><div class="slide"><h3 class="stitle">The mix that stops changing</h3><ul class="sbullets"><li>Suppose a mix is left unchanged by one more step.</li><li>Then it is unchanged by every step after that — it is a fixed point.</li><li>It is the long-run fraction of time the system spends in each state.</li><li>For the weather chain it is about 57% Sunny, 43% Rainy.</li></ul></div><div class="slide"><h3 class="stitle">Finding the settled mix: roll it forward, simulate, or solve</h3><ul class="sbullets"><li>Method 1: roll any start forward until it stops moving. Method 2: simulate and count time in each state. Method 3 (shown): one eigenvector solve, exact.</li></ul><p class="scaption">CODE # the settled mix is the left eigenvector of P for eigenvalue 1 values, vectors = np.linalg.eig(P.T) i = np.argmin(np.abs(values - 1.0)) mix = np.real(vectors[:, i]) # make it a set of chances: positive and adding to 1 mix = np.abs(mix); mix = mix / mix.sum() print("Settled mix:", mix.round(4)) print("Exact 4/7 and 3/7:", round(4/7, 4), round(3/7, 4)) OUTPUT  ▸ Settled mix: [0.5714 0.4286] Exact 4/7 and 3/7: 0.5714 0.4286</p></div><div class="slide"><h3 class="stitle">Two conditions for a clean answer</h3><ul class="sbullets"><li>All-connected: from any state you can eventually reach any other state.</li><li>No rigid cycle: the system is not locked into a fixed on-off-on-off rhythm.</li><li>With both, there is one settled mix, reached from any starting point.</li><li>Those two conditions are exactly why our weather chain behaved so nicely.</li><li>Stretch: mathematicians call these 'irreducible' and 'aperiodic'.</li></ul></div><div class="slide"><h3 class="stitle">One connected system vs a one-way trap</h3><img class="sdiagram" src="S24/slides/18_0.png" alt="slide 18 diagram" loading="lazy"><p class="scaption">Left: every state reachable → one settled mix. Right: a trap breaks it.</p></div><div class="slide"><h3 class="stitle">PageRank: the whole web as one giant chain</h3><ul class="sbullets"><li>States = web pages.</li><li>Links = hops.</li><li>Settled mix = importance.</li><li>Billions of states, one answer.</li></ul><img class="sdiagram" src="S24/slides/19_0.png" alt="slide 19 diagram" loading="lazy"><p class="scaption">A random surfer clicking links; the settled mix ranks pages by how often they are visited.</p></div><div class="slide"><h3 class="stitle">Customer state models in industry</h3><ul class="sbullets"><li>Model each customer as Active → At-risk → Churned, hopping month to month.</li><li>The jump chances come from your own past data — just count the moves.</li><li>Useful answers: the steady mix of customers, expected lifetime, churn rate.</li><li>BFSI, telecom and e-commerce firms in India run exactly these models.</li></ul></div><div class="slide"><h3 class="stitle">Reliability: an up-and-down machine</h3><img class="sdiagram" src="S24/slides/21_0.png" alt="slide 21 diagram" loading="lazy"><p class="scaption">The same skeleton, relabelled: Working / At-risk / Failed.</p></div><div class="slide"><h3 class="stitle">Why this is worth an applied mathematician's time</h3><ul class="sbullets"><li>One small table captures a whole random system's long-run behaviour.</li><li>The hard question 'what happens eventually?' becomes a short calculation.</li><li>It scales from 2 states to billions with the very same idea.</li><li>This is exactly the transferable, cross-industry skill the course keeps building.</li></ul></div><div class="slide"><h3 class="stitle">The Markov-chain recipe — works every time</h3><ul class="sbullets"><li>1. Define the states: a short list of situations the system can be in.</li><li>2. Estimate the jump chances from data: count the moves, row by row.</li><li>3. Build the table P and check every row sums to 1.</li><li>4. Compute the settled mix: roll forward, simulate, or solve.</li><li>5. Interpret it in business terms: cost, churn, uptime, stock.</li></ul></div><div class="slide"><h3 class="stitle">Back to the shop: how much stock to hold</h3><ul class="sbullets"><li>Hold too little and you run out — lost sales and unhappy customers.</li><li>Hold too much and you tie up cash and warehouse space.</li><li>Demand each day is random, so you cannot simply plan it away.</li><li>We need a rule that balances the two costs under that uncertainty.</li></ul></div><div class="slide"><h3 class="stitle">The (s, S) rule, in one line</h3><ul class="sbullets"><li>Watch the stock each day.</li><li>When it falls to the reorder point s, order back up to the level S.</li><li>Otherwise, do nothing.</li><li>Two numbers, s and S, define the whole policy — our job is to choose them well.</li></ul></div><div class="slide"><h3 class="stitle">The (s, S) sawtooth</h3><img class="sdiagram" src="S24/slides/26_0.png" alt="slide 26 diagram" loading="lazy"><p class="scaption">Stock drifts down with demand, then jumps back up to S each time it hits s.</p></div><div class="slide"><h3 class="stitle">Random demand drives the whole thing</h3><img class="sdiagram" src="S24/slides/27_0.png" alt="slide 27 diagram" loading="lazy"><p class="scaption">How many customers buy each day is a random draw, estimated from past sales.</p></div><div class="slide"><h3 class="stitle">One day of the simulation — and why it is a settling system too</h3><ul class="sbullets"><li>The stock level is the state; each day's demand is the hop.</li><li>So the (s, S) shop is one of today's hopping systems.</li><li>Its settled mix is the long-run spread of stock on the shelf.</li><li>We read that off by simulating — same long-run idea.</li></ul><img class="sdiagram" src="S24/slides/28_0.png" alt="slide 28 diagram" loading="lazy"><p class="scaption">See the demand, update stock, reorder if low, note the cost — then repeat.</p></div><div class="slide"><h3 class="stitle">Play the (s, S) rule out for 200 days</h3><ul class="sbullets"><li>One seeded run of the policy returns its two headline numbers: cost and service.</li></ul><p class="scaption">CODE OUTPUT  ▸ reorder_point, order_up_to_level = 20, 60   # the (s, S) policy number_of_days = 200 np.random.seed(0)                           # same demand every run # simulate_inventory plays the rule day by day (full code in the notebook) results = simulate_inventory(reorder_point, order_up_to_level) avg = results['total_cost'] / number_of_days print('Average cost per day :', round(avg, 2)) print('Service level        :', round(results['service_level'] * 100, 1), '% of demand met') Average cost per day : 23.95 Service level        : 97.9 % of demand met</p></div><div class="slide"><h3 class="stitle">What a good simulation report contains</h3><ul class="sbullets"><li>Let it settle: ignore the first few days, then measure the long-run behaviour.</li><li>Service level: the fraction of demand met from stock (e.g. aim for 95%).</li><li>Average cost per day: holding + ordering + lost-sale penalties.</li><li>Report a range, not one number — it is a random simulation.</li></ul></div><div class="slide"><h3 class="stitle">Hold too little or too much and it costs more</h3><ul class="sbullets"><li>More stock → more holding cost.</li><li>More stock → fewer lost sales.</li><li>Total cost dips in the middle.</li><li>Simulate to find the dip.</li></ul><img class="sdiagram" src="S24/slides/31_0.png" alt="slide 31 diagram" loading="lazy"><p class="scaption">Total cost dips in the middle — the cheapest restock level.</p></div><div class="slide"><h3 class="stitle">Policy tuning: sweep the candidates, pick the cheapest good one</h3><ul class="sbullets"><li>Push S up: higher service, higher holding cost. Pull it down: cheaper, more stockouts. Goal: the cheapest policy that clears the 95% target — (20, 60).</li></ul><p class="scaption">CODE # demand estimated from a year of sales history (Poisson, seed 0) candidates = [(10,40),(15,50),(20,60),(25,70),(30,80),(35,90)] for s, S in candidates: cost, service = simulate_inventory(s, S)   # 300-day play-out print('s =', s, ' S =', S, ' -&gt; cost/day =', round(cost, 2), ' service =', round(service * 100, 1), '%') OUTPUT  ▸ s = 10  S = 40  -&gt; cost/day = 21.65  service = 81.7 % s = 15  S = 50  -&gt; cost/day = 21.07  service = 89.9 % s = 20  S = 60  -&gt; cost/day = 21.77  service = 97.7 % s = 25  S = 70  -&gt; cost/day = 28.23  service = 99.6 % s = 30  S = 80  -&gt; cost/day = 34.96  service = 99.8 % s = 35  S = 90  -&gt; cost/day = 42.28  service = 100.0 %</p></div><div class="slide"><h3 class="stitle">When these models break</h3><ul class="sbullets"><li>Avoid</li><li>Assuming memoryless when history really matters</li><li>Letting the jump chances quietly drift over time</li><li>Reading rows as columns (or the reverse)</li><li>Quoting the warm-up as the long-run answer</li><li>Tuning s and S by gut feel</li><li>Do instead</li><li>Check whether now really summarises the past</li><li>Re-estimate the table per season; flag the drift</li><li>Label 'from' rows and 'to' columns explicitly</li><li>Discard the warm-up; measure the long run</li><li>Sweep s and S by simulation and compare costs</li></ul></div><div class="slide"><h3 class="stitle">Warm-up vs the long run — don't mix them up</h3><ul class="sbullets"><li>The warm-up is the early, settling-in behaviour just after you start.</li><li>The long run is the steady regime the system relaxes into.</li><li>The settled mix and the service-level numbers describe the long run only.</li><li>Always let the system warm up before you start measuring.</li></ul></div><div class="slide"><h3 class="stitle">Where a Markov system settles</h3><ul class="sbullets"><li>Multiply the state by the transition matrix repeatedly and it converges to the stationary distribution.</li></ul><p class="scaption">CODE P = np.array([[0.9, 0.1], [0.5, 0.5]])          # each row sums to 1 state = np.array([1.0, 0.0]) for _ in range(50): state = state @ P              # step forward until it stops changing print(state.round(4))              # the long-run (stationary) distribution</p></div><div class="slide"><h3 class="stitle">Project: the operations-research case study</h3><ul class="sbullets"><li>In the lab: take one system to its long-run answer — either tune an (s, S) inventory policy by simulation, or analyse a customer / reliability chain to its settled mix.</li><li>1.  Estimate the model from data: demand history, or counts of state-to-state moves.</li><li>2.  Build it: an (s, S) simulation, or a jump-chance table.</li><li>3.  For a chain, find the settled mix two ways — roll it forward and simulate — and check they agree.</li><li>4.  For inventory, sweep s and S; plot the cost trade-off and the service level.</li><li>5.  Recommend a policy or report the settled mix, with its cost and service level, and state your assumptions.</li><li>Deliverable:  an OR case-study notebook on the course GitHub: model, analysis, a chart, and a clear recommendation with its assumptions.</li></ul></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>The framework, in three words: States → Transitions → Long-run behaviour. Every chain you will ever build is these three.</li><li>A Markov chain is a few states plus a table of jump chances whose rows add to 1 — and you estimate those chances by counting moves in your own data.</li><li>Roll a starting mix forward and a well-behaved chain settles to one steady mix; find it by rolling forward or by simulating — and they should agree.</li><li>Some states are traps: then ask 'where do we end up?' instead of 'what's the mix?'.</li><li>The (s, S) shop is itself a settling system; tune s and S by simulation, not guesswork.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S24_markov_inventory/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_markov_chains_and_the_long_run.ipynb 02_inventory_by_simulation.ipynb 03_or_case_study.ipynb Small synthetic datasets generated inside the notebooks (seeded NumPy) New to the idea? primers/markov_chains.md (a system that hops between states) New to tables of numbers? primers/vectors_and_matrices.md New to code? primers/python_in_15_minutes.md Ross — Introduction to Probability Models (Markov chains) Hillier &amp; Lieberman — Introduction to Operations Research (chains &amp; inventory) Norris — Markov Chains (the deeper treatment)</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S25 — A/B testing &amp; hypothesis tests (Module 5 begins). We move from operations research into statistics for real business decisions.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
