@@ -30,121 +30,131 @@
 <section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/p_values_in_plain_words.html">P values in plain words</a></li><li><a href="../primers/what_is_a_distribution.html">What is a distribution</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
 <section class="body">
 <h2 id="the-problem">The problem</h2>
-<p>A shopping app changes its checkout screen. Half the users keep the old screen; the
-other half get a redesigned one-tap UPI prompt. After a week the new screen looks a
-little better: a few more people finished paying. Someone in the meeting says "great,
-ship it." Someone else says "wait, is that real, or did we just get lucky this week?"</p>
-<p>That second question is the most common applied-statistics job in tech, fintech and
-e-commerce. Ship a change to half your users, keep the old version for the other
-half, and honestly decide whether the new one is genuinely better or the gap is just
-noise. That is an A/B test, and reading one honestly is what today is about.</p>
+<p>A shopping app changes its checkout screen. Half the users keep the old screen. The
+other half get a new one-tap UPI screen. After one week the new screen looks a little
+better: a few more people finished paying. Someone in the meeting says, "Good, let us
+launch it." Someone else asks, "Wait. Is this real, or did it happen by chance this
+week?"</p>
+<p>That second question is the most common statistics job in tech, fintech and
+e-commerce. You give the new version to half your users and keep the old version for
+the other half. Then you decide, honestly, whether the new one is really better or the
+gap is only random variation. This is called an A/B test. Today we learn to read one
+correctly.</p>
 <h2 id="the-one-idea">The one idea</h2>
-<p>Every measurement wobbles. Even if the two screens were secretly identical, the two
-groups would not tie exactly, because luck alone leaves a gap. So the honest question
-is not "did B do better in our sample?" but "could a gap this size have turned up
-even if the change did nothing?"</p>
-<p>Picture a pretend world where the change did nothing at all. Luck still produces
-gaps there: small ones often, big ones rarely. Now drop your real result onto that
-picture. If it lands in the fat middle, it is the kind of gap luck hands you all the
-time, so it is not convincing. If it lands far out in the thin tail, luck would
-almost never produce something that big, so it is real evidence the change did
+<p>Every measurement has some random variation. Suppose the two screens were exactly the
+same. Even then, the two groups would not get exactly the same result. A small gap
+appears by chance. So the real question is not "did B do better in our sample?" The
+real question is "could a gap this big appear by chance, even if the change did
+nothing?"</p>
+<p>Imagine a world where the change did nothing. Gaps still appear there by chance.
+Small gaps appear often. Big gaps appear rarely. Now place your real result on this
+picture. If it falls in the middle, it is the kind of gap that chance gives all the
+time, so it does not prove anything. If it falls far out at the edge, chance would
+almost never give a gap that big. Then it is real evidence that the change did
 something.</p>
-<p>That "how surprising would this be if nothing happened?" number is the <strong>p-value</strong>,
-and it runs the whole session. A small p-value means your result is surprising under
-"nothing happened", so you doubt "nothing happened". One warning we will repeat all
-day: the p-value is <em>not</em> the probability that nothing happened. We work it out by
-<em>assuming</em> nothing happened, so it cannot also be the chance of that.</p>
+<p>This number, "how surprising is our result if the change did nothing?", is called the
+<strong>p-value</strong>. We use it all through this session. A small p-value means our result
+would be surprising if the change did nothing. So we start to doubt that the change
+did nothing.</p>
+<p>One warning we will repeat all day: the p-value is <em>not</em> the chance that the change
+did nothing. We calculate it by <em>assuming</em> the change did nothing. So it cannot also
+be the chance of that.</p>
 <h2 id="what-youll-build-today">What you'll build today</h2>
 <ol>
-<li>Tour the three everyday tests, one line of code each: a t-test to compare two
-   averages, a chi-square test to compare two conversion rates, and ANOVA to compare
-   three or more designs at once.</li>
-<li>Analyse a full checkout A/B test end to end: compute the conversion rates, run the
-   right test, and report the p-value alongside a plausible range for the lift.</li>
-<li>Decide A versus B, separating "unlikely to be luck" from "big enough to be worth
-   shipping".</li>
-<li>See the two ways a test can be wrong as two overlapping bell curves, then work out
-   how many users you need before you launch.</li>
+<li>Learn the three common tests, each in one line of code. A t-test compares two
+   averages. A chi-square test compares two conversion rates. ANOVA compares three or
+   more designs at once.</li>
+<li>Analyse a full checkout A/B test from start to end. You will calculate the
+   conversion rates, run the right test, and report the p-value with a likely range
+   for the increase.</li>
+<li>Decide between A and B. You will keep two questions apart: "is it more than
+   chance?" and "is it big enough to launch?"</li>
+<li>See the two ways a test can be wrong, drawn as two overlapping bell curves. Then
+   calculate how many users you need before you start the test.</li>
 </ol>
 <h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
-<p>We teach all of this from scratch today, in plain steps:</p>
+<p>We teach all of this from the beginning today, step by step:</p>
 <ul>
-<li>what a hypothesis test is and how it turns "real or luck?" into a number,</li>
-<li>what a p-value means, in words, and the one thing it does <em>not</em> mean,</li>
-<li>how to pick the right test for your data, and how to say how many users you need.</li>
+<li>what a hypothesis test is, and how it turns "real or by chance?" into a number,</li>
+<li>what a p-value means in words, and the one thing it does <em>not</em> mean,</li>
+<li>how to pick the right test for your data, and how to calculate how many users you
+  need.</li>
 </ul>
-<p>The little you may want in advance: how to run a notebook cell, and the idea of an
-average and how spread-out numbers can be. Both are covered here first.</p>
+<p>Two small things help if you know them already: how to run a notebook cell, and what
+an average and spread mean. Both are covered here first.</p>
 <ul>
-<li>Want the heart of today in one page? Read
+<li>Want the main idea of today on one page? Read
   <a href="../primers/p_values_in_plain_words.html">P-values in plain words</a>.</li>
 <li>New to averages and spread? Read
   <a href="../primers/what_is_a_distribution.html">What is a distribution?</a>.</li>
 <li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
-<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+<li>Any new word is in the <a href="../primers/glossary.html">glossary</a>.</li>
 </ul>
-<p>If you already know some statistics or already code, skip ahead and look for the
-cells marked <strong>Stretch (optional)</strong> in the notebooks, where we add non-parametric
-tests and show the multiple-testing trap.</p>
+<p>If you already know some statistics or already code, look for the cells marked
+<strong>Stretch (optional)</strong> in the notebooks. There we add tests for skewed data and show
+the problem of testing many metrics at once.</p>
 <h2 id="by-the-end-you-can">By the end you can</h2>
 <ul>
-<li>State the two competing claims and read a p-value in plain words (and say what it
-  is NOT).</li>
+<li>State the two competing claims, and read a p-value in plain words. You can also say
+  what it does NOT mean.</li>
 <li>Pick the right test for your data: t-test for averages, chi-square for conversion
   rates, ANOVA for three or more groups.</li>
-<li>Report an effect with a confidence interval, and weigh "unlikely to be luck"
-  against "big enough to matter" — the three questions every manager asks: is it
-  real, how big is it, should we act?</li>
-<li>Work out the number of users needed to detect an effect you care about, before you
-  launch the test.</li>
-<li>Explain why correlation is not causation, and why the random split is what lets an
-  experiment say "caused" rather than just "linked".</li>
-<li>Spot a biased sample, and read a control chart — the same "ordinary wobble vs
-  something changed" idea that runs factory floors and pharma labs.</li>
+<li>Report an effect with its likely range (confidence interval). Answer the three
+  questions every manager asks: is it real, how big is it, and should we act?</li>
+<li>Calculate the number of users needed to find an effect you care about, before you
+  start the test.</li>
+<li>Explain why "moving together" (correlation) is not "one causes the other"
+  (causation). Explain why the random split lets an experiment say "caused" and not
+  only "linked".</li>
+<li>Spot a sample that does not represent the real users (a biased sample). Read a
+  control chart, which uses the same idea: normal random variation, or did something
+  change? Factories and pharma labs use it every day.</li>
 </ul>
 <h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
-<p>Everything above is enough to do the lab. This box is the extra depth for those who
-want it, and none of it is needed to finish.</p>
-<p>Today's mathematical object is the trio that runs the machine. A <strong>test statistic</strong>
-is the effect measured in standard-error units: roughly the difference you saw
-divided by how much it would wobble by chance, so it is signal over noise. Its beauty
-is that <em>under the null</em> (assuming the change did nothing) this standardised quantity
-follows a distribution we already know (normal, t, chi-square or F), so we can compute
-exactly how far out in the tail our value sits. That tail area is the p-value.</p>
-<p>Because we make a yes/no decision under uncertainty, two mistakes are possible. A
-<strong>Type I error</strong> (false positive) declares B better when it is not; its probability
-is <strong>alpha</strong>, the significance level, usually 0.05. A <strong>Type II error</strong> (false
-negative) misses a real improvement; its probability is <strong>beta</strong>. <strong>Statistical
-power</strong> is <code>1 − beta</code>, the chance of catching a real effect, and the convention is to
-design for 80% power. Alpha and beta trade off against each other through the decision
-threshold, and the way to shrink both at once is a larger sample, which pulls the two
-distributions apart. All of this is a bonus, not a gate.</p>
+<p>The sections above are enough for the lab. This part is extra depth for those who
+want it. You do not need it to finish.</p>
+<p>Today's mathematical object has three parts. The first is the <strong>test statistic</strong>. It
+is the gap you saw divided by how much the gap usually changes by chance. In other
+words, it is signal divided by noise, measured in standard-error units. The useful
+fact is this: if the change did nothing (the null hypothesis), the test statistic
+follows a distribution we already know (normal, t, chi-square or F). So we can
+calculate exactly how far out at the edge our value sits. That edge area is the
+p-value.</p>
+<p>We make a yes/no decision with uncertain data, so two mistakes are possible. A false
+alarm (Type I error) says B is better when it is not. Its probability is <strong>alpha</strong>,
+the significance level, usually 0.05. A missed effect (Type II error) misses a real
+improvement. Its probability is <strong>beta</strong>. <strong>Statistical power</strong> is <code>1 − beta</code>. It is
+the chance of catching a real effect. The usual target is 80% power. When you move the
+decision line, alpha and beta move in opposite directions. To make both smaller at
+once, you need a larger sample. A larger sample pulls the two distributions apart.</p>
 <h2 id="new-words-in-this-session">New words in this session</h2>
 <ul>
-<li><strong>A/B test</strong> — ship the old version to half your users and the new one to the
-  other half, then compare, to see if the change really helped.</li>
-<li><strong>hypothesis test</strong> — the honest procedure for deciding whether a difference is
-  real or just luck.</li>
-<li><strong>p-value</strong> — if the change did nothing, how often luck alone would give a result
-  this extreme. Small means surprising, so evidence of a real effect.</li>
-<li><strong>null hypothesis</strong> — the sceptical default: there is no real difference, any gap
-  is chance.</li>
-<li><strong>test statistic</strong> — the effect measured in standard-error units, signal over
-  noise.</li>
-<li><strong>confidence interval</strong> — a plausible range for the true effect, reported with its
-  size rather than just a yes/no.</li>
-<li><strong>statistical power</strong> — the chance of catching a real effect if one exists; the
-  usual target is 80%.</li>
-<li><strong>practical significance</strong> — whether an effect is big enough to be worth acting on,
-  as opposed to merely unlikely to be luck.</li>
-<li><strong>correlation</strong> — two quantities moving together. Being linked says nothing about
-  which one (if either) causes the other.</li>
-<li><strong>confounder</strong> — a hidden third thing that drives two quantities at once, making
-  them look linked (summer heat drives both ice-cream sales and drownings).</li>
-<li><strong>sampling bias</strong> — when the people you measured do not mirror the people you care
-  about; no p-value can rescue a biased sample.</li>
-<li><strong>control chart</strong> — a daily plot of a process with limits marking what ordinary
-  wobble can produce; a point outside the limits says something changed.</li>
+<li><strong>A/B test</strong>: give the old version to half your users and the new version to the
+  other half. Then compare, to see if the change really helped.</li>
+<li><strong>hypothesis test</strong>: a fixed method for deciding if a difference is real or only by
+  chance.</li>
+<li><strong>p-value</strong>: if the change did nothing, how often chance alone would give a result
+  this extreme. A small p-value means the result is surprising, so it is evidence of a
+  real effect.</li>
+<li><strong>null hypothesis</strong>: the careful starting claim that the change did nothing. Any gap
+  is by chance.</li>
+<li><strong>test statistic</strong>: the effect measured in standard-error units, that is, signal
+  divided by noise.</li>
+<li><strong>confidence interval</strong>: the likely range for the true effect. It shows the size of
+  the effect, not only a yes/no.</li>
+<li><strong>statistical power</strong>: the chance of catching a real effect if one exists. The usual
+  target is 80%.</li>
+<li><strong>practical significance</strong>: whether an effect is big enough to act on. This is
+  different from "more than chance".</li>
+<li><strong>correlation</strong>: two quantities moving together. It does not tell you which one
+  causes the other, or if either does.</li>
+<li><strong>confounder</strong>: a hidden third thing that pushes two quantities at the same time,
+  so they look linked. Example: hot summer weather increases both ice-cream sales and
+  drownings.</li>
+<li><strong>sampling bias</strong>: the people you measured are not like the people you care about.
+  No p-value can fix a biased sample.</li>
+<li><strong>control chart</strong>: a daily plot of a process, with limits that show how much normal
+  random variation can give. A point outside the limits says something changed.</li>
 </ul>
 <p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
 </section>
@@ -166,7 +176,7 @@ distributions apart. All of this is a bonus, not a gate.</p>
     </span>
   </div>
   <div class="nb">
-    <span class="nbtitle">Power and sample size — how many users do we need?</span>
+    <span class="nbtitle">Power and sample size (how many users do we need?)</span>
     <span class="nblinks">
       <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S25/notebooks/03_how_many_users_do_we_need.ipynb">Open in Colab</a>
       <a class="btn" href="S25/notebooks/03_how_many_users_do_we_need.ipynb" download>Download</a>

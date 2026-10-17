@@ -30,87 +30,95 @@
 <section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
 <section class="body">
 <h2 id="the-problem">The problem</h2>
-<p>Over the last weeks you have trained real models: a flat-price estimator, a
-loan-risk classifier, a demand forecast. Each one works beautifully, but only in
-one place: a notebook, on your laptop, where only you can run it. Your family
-cannot try it. A recruiter cannot click it. A client cannot use it. A model that
-nobody else can reach might as well not exist.</p>
-<p>Today you fix that. You take one trained model and put it online as a tiny web
-app, so anyone with the link can open it on their phone and use it. Free, no
-credit card, no servers to rent. By the end you have a working link you can text
-to whoever you like.</p>
+<p>In the last few weeks you trained real models. You made a flat-price estimator, a
+loan-risk classifier and a demand forecast. Each one works well, but only in one
+place: a notebook on your laptop. Only you can run it. Your family cannot try it.
+A recruiter cannot click on it. A client cannot use it. If nobody else can use
+your model, it is of little use to anyone.</p>
+<p>Today we change that. You take one trained model and put it on the internet as a
+small web app. Anyone with the link can open it on their phone and use it. It is
+free. You need no credit card and no server. At the end of the session you have a
+working link that you can send to anyone on WhatsApp.</p>
 <h2 id="the-one-idea">The one idea</h2>
-<p>A trained model is just a function: numbers go in, an answer comes out. Give it a
-flat's size and locality, it hands back a price. Give it a flower's four
-measurements, it hands back a species. That is all a model is once it is trained.</p>
-<p>Deploying it means giving that function a public address on the internet. Picture
-your model as a vending machine. Right now it sits in your bedroom, so only you
-can buy from it. Deployment wheels the same machine into a busy market: same
-buttons, same output, but now anyone walking past can use it. Nothing about the
-model changes. Only its reach does.</p>
-<p>Everything today is plumbing around that one function: collect the inputs a user
-types, call the function, show the answer back.</p>
+<p>A trained model is a function. Numbers go in, and an answer comes out. Give it the
+size and locality of a flat, and it gives back a price. Give it four measurements
+of a flower, and it gives back the species. After training, that is all a model is.</p>
+<p>To <strong>deploy</strong> the model means to put it on the internet at a public link. Think of
+a shop. Now your model is like a shop inside your own house, so only you can use
+it. After you deploy, the same shop opens on a main road, and anyone can use it.
+The model does not change. Only the number of people who can reach it changes.</p>
+<p>So the web app has only three jobs. It collects the inputs that the user types. It
+calls the model. It shows the answer.</p>
 <h2 id="what-youll-build-today">What you'll build today</h2>
+<p>Today is a workshop. You do six steps on your own laptop. After each step there is
+a <strong>checkpoint</strong>, where you check your screen with your neighbour.</p>
 <ol>
-<li>Train a tiny classifier and check it honestly on data it has never seen.</li>
-<li>Save the trained model to a file with <code>joblib</code>, then load it back and predict,
-   with no retraining.</li>
-<li>Write the web app (<code>app.py</code>) straight from the notebook and read it block by
-   block.</li>
-<li>Follow the exact free steps to put it online at a public URL, and learn the few
-   pitfalls that break a deployment.</li>
+<li>Run the notebook. It trains a small model, saves it, and writes three files:
+   the saved model file <code>iris_model.joblib</code>, the app <code>app.py</code>, and
+   <code>requirements.txt</code>.</li>
+<li>Run the app on your laptop with <code>streamlit run app.py</code>.</li>
+<li>Read <code>app.py</code> in four blocks, and then change it (for example, put your name
+   in the title).</li>
+<li>Upload the three files to a public GitHub repo.</li>
+<li>Deploy the app on Streamlit Community Cloud, for free, and open the link on
+   your phone.</li>
+<li>Update the live app by editing a file on GitHub, and write a short README.</li>
 </ol>
 <h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
-<p>We teach all of this from scratch today, in plain steps:</p>
+<p>We teach all of this today, step by step:</p>
 <ul>
 <li>how to save a trained model to a file and load it back,</li>
-<li>what a "web app" is, and how a handful of Python lines becomes a web page,</li>
-<li>how deploying to a free public URL actually works, click by click.</li>
+<li>what a "web app" is, and how a few lines of Python become a web page,</li>
+<li>how to deploy the app to a free public link, one click at a time.</li>
 </ul>
-<p>The little we assume: that you can run a notebook cell, and that you have met a
-trained model once before (any of the earlier machine-learning sessions is
-plenty). If either feels shaky:</p>
+<p>We expect only two things. You can run a notebook cell. You have seen a trained
+model once before (any one of the earlier machine-learning sessions is enough). If
+either one is new to you:</p>
 <ul>
 <li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
-<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+<li>Any new word is in the <a href="../primers/glossary.html">glossary</a>.</li>
 </ul>
-<p>You do not need any web, HTML, or server knowledge. Streamlit lets you build the
-whole page in plain Python, and the free hosting does the server part for you.</p>
-<p>If you already code, skip ahead and look for the cells marked
-<strong>Stretch (optional)</strong> in the notebook.</p>
+<p>You do not need to know HTML, websites or servers. Streamlit lets you make the
+whole page in Python. The free cloud service runs the server part for you.</p>
+<p>Bring your laptop, its charger and your phone. Make a free account on github.com
+before the class, if you do not have one. You do not need a separate Streamlit
+account, because you log in with GitHub.</p>
+<p>If you already code, look for the cells marked <strong>Stretch (optional)</strong> in the
+notebook.</p>
 <h2 id="by-the-end-you-can">By the end you can</h2>
 <ul>
-<li>Explain a trained model as a function <code>f(x)</code>, and deployment as putting that
-  function on the internet.</li>
-<li>Save a fitted model with <code>joblib.dump</code> and load it back with <code>joblib.load</code>, no
-  retraining.</li>
-<li>Read a small Streamlit app and find its four blocks: load the model, collect
-  inputs, predict, display.</li>
-<li>Write that app to a file, know the one command that runs it, and deploy it free
-  to a public URL.</li>
-<li>Show a prediction with units and context, not a bare number.</li>
+<li>Explain a trained model as a function <code>f(x)</code>, and explain deploying as putting
+  that function on the internet at a public link.</li>
+<li>Save a trained model with <code>joblib.dump</code>, and load it back with <code>joblib.load</code>,
+  without training it again.</li>
+<li>Read a small Streamlit app and find its four blocks: load the model, show a
+  heading, collect the inputs, predict and show the answer.</li>
+<li>Run the app on your laptop, deploy it for free, and update it later from GitHub.</li>
+<li>Show a prediction with units and context, not only a bare number.</li>
 </ul>
 <h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
-<p>Everything above is enough to do the lab. This box is a bonus, and none of it is
-needed to finish.</p>
-<p>Today's mathematical object is deliberately light: a trained model is a function,
-<code>ŷ = f(x)</code>. It takes an input (here, four flower measurements; in your projects, a
-flat's size or a borrower's details) and returns a prediction. That is the same
-function idea from first-year calculus and the linear maps of the earlier
-machine-learning sessions. Deployment adds nothing to the mathematics. It takes
-that finished function and gives it a public address, so a call to <code>f(x)</code> can come
-from anyone's browser instead of only from your notebook. The trade name for this
-move is <strong>exposing a function as a service</strong>. The whole session is engineering
-around an <code>f</code> you already built.</p>
+<p>You do not need this box for the lab. It is extra reading.</p>
+<p>There is no new mathematics today. A trained model is a function, <code>ŷ = f(x)</code>. It
+takes an input and gives back a prediction. Here the input is four flower
+measurements. In your projects it can be the size of a flat or the details of a
+loan applicant. This is the same idea of a function that you know from first-year
+calculus, and from the linear maps in the earlier machine-learning sessions.</p>
+<p>Deploying adds nothing to the mathematics. It takes the finished function and gives
+it a public address. Then a call to <code>f(x)</code> can come from anyone's browser, not only
+from your notebook. In industry this is called <strong>exposing a function as a
+service</strong>. The whole session is engineering work around an <code>f</code> that you already
+built.</p>
 <h2 id="new-words-in-this-session">New words in this session</h2>
 <ul>
-<li><strong>deploy</strong> — put your app on the internet at a public link so other people can use it.</li>
-<li><strong>Streamlit</strong> — a library that turns a plain Python script into a web page, with no HTML.</li>
-<li><strong>widget</strong> — an on-screen control (a slider, a box, a dropdown) that collects one input.</li>
-<li><strong>serialize (joblib.dump)</strong> — write a trained model to a file so it loads later without retraining.</li>
-<li><strong>requirements.txt</strong> — the list of exact package versions the hosting machine must install.</li>
-<li><strong>classifier</strong> — a model that sorts each case into one of a few named groups (here, the species).</li>
-<li><strong>caching (st.cache_resource)</strong> — load the model once and reuse it, instead of on every click.</li>
+<li><strong>deploy</strong> — put your app on the internet at a public link, so other people can use it.</li>
+<li><strong>repo</strong> (repository) — a project folder on GitHub. The cloud reads your app from a public repo.</li>
+<li><strong>Streamlit</strong> — a library that turns a Python script into a web page, with no HTML.</li>
+<li><strong>widget</strong> — a control on the screen (a slider, a box, a dropdown) that collects one input.</li>
+<li><strong>serialize (joblib.dump)</strong> — write a trained model to a file, the saved model file, so it loads later without training again.</li>
+<li><strong>requirements.txt</strong> — the list of packages, with exact versions. The cloud computer installs the packages in requirements.txt.</li>
+<li><strong>classifier</strong> — a model that puts each case into one of a few named groups (here, the species).</li>
+<li><strong>caching (st.cache_resource)</strong> — load the model once and keep it in memory, instead of loading it again on every click.</li>
+<li><strong>checkpoint</strong> — a short check at the end of each workshop step, to make sure your screen matches before you go on.</li>
 </ul>
 <p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
 </section>

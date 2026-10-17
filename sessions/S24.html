@@ -30,97 +30,107 @@
 <section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/markov_chains.html">Markov chains</a></li><li><a href="../primers/vectors_and_matrices.html">Vectors and matrices</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
 <section class="body">
 <h2 id="the-problem">The problem</h2>
-<p>A Flipkart seller keeps one product on the shelf, say phone chargers. Every day a
-random number of customers buy one. Keep too little stock and the shelf goes empty,
-so sales are lost and customers go to a rival. Keep too much and cash and warehouse
-space sit idle. So two questions have to be answered: how low should stock fall
-before reordering, and how much should each order bring in? Today's deliverable is
-a small study that answers exactly that for one shop.</p>
-<p>That restocking puzzle turns out to be one example of a much bigger pattern, and the
-pattern is where we start.</p>
+<p>A Flipkart seller keeps one product in stock, say phone chargers. Every day a
+random number of customers buy one. If the seller keeps too little stock, the shelf
+becomes empty. Sales are lost and customers go to another seller. If the seller keeps
+too much stock, money and warehouse space are blocked. So the seller must answer two
+questions. How low should stock fall before we reorder? How much should each order
+bring in? Today we make a small study that answers these two questions for one shop.</p>
+<p>This restocking problem is one example of a bigger pattern. We start with that
+pattern.</p>
 <h2 id="the-one-idea">The one idea</h2>
-<p>Lots of real systems are always in one of a few situations and hop between them, one
-step at a time, where the next hop depends only on where you are right now. The
-weather is sunny or rainy. A phone customer is loyal or has ported out to a rival. A
-machine is working or broken. A warehouse holds this much stock today and a
-different amount tomorrow. Give each hop a chance and you have what is called a
-<strong>Markov chain</strong>: a few states, and a fixed set of odds for moving between them.</p>
-<p>Here is the useful part. Watch such a system for long enough and it settles. Start
-the weather off as "definitely sunny" and roll it forward day after day, and the
-chance of sun drifts and then stops drifting, landing near 57%. Start it off
-"definitely rainy" and it settles at the same 57%. After a while the system forgets
-where it began. That settled mix, the long-run share of sunny days, is nearly always
-the thing we actually want to know: the long-run churn rate, the long-run fraction
-of time a machine is up, the long-run spread of stock on a shelf.</p>
-<p>And you can get that settled mix two ways: roll the system forward until it stops
-moving, or just play it out at random for a long time and count. The inventory
-policy is one such system, and we tune it by playing it out.</p>
+<p>Many real systems are always in one of a few situations. We call each situation a
+<strong>state</strong>. The system moves between states one step at a time. The next state
+depends only on the present state, not on the past. This is called the <strong>memoryless
+rule</strong>. Some examples:</p>
+<ul>
+<li>The weather is sunny or rainy.</li>
+<li>A mobile phone customer stays with one company or moves to another company.</li>
+<li>A machine is working or broken.</li>
+<li>A warehouse holds some amount of stock today and a different amount tomorrow.</li>
+</ul>
+<p>Give each move a chance, and you get a <strong>Markov chain</strong>: a few states, and a fixed
+table of chances for moving between states.</p>
+<p>Now the useful part. If you watch such a system for a long time, it settles. Start
+the weather as "surely sunny" and move it forward day by day. The chance of sun
+changes at first, then stops changing near 57%. Start it as "surely rainy" and it
+again settles at 57%. After some time the system forgets where it started. This
+<strong>settled mix</strong> (the long-run share of sunny days) is usually the number we want.
+For example: the long-run share of customers who leave, the long-run share of time a
+machine works, or the long-run spread of stock on a shelf.</p>
+<p>There are two ways to find the settled mix. One way: move the chances forward step
+by step until they stop changing. The other way: play the system at random for many
+days and count. A shop's restock rule is also such a system. We tune it by playing
+it out.</p>
 <h2 id="what-youll-build-today">What you'll build today</h2>
 <ol>
-<li>Build a small weather chain, write its table of jump chances, and step a starting
-   guess forward day by day until it stops moving.</li>
-<li>Read off the long-run mix, then confirm it a second way by simulating the chain,
-   and watch the two answers agree.</li>
-<li>Simulate an <code>(s, S)</code> restock policy for a shop, draw the stock "sawtooth", and
-   read off its daily cost and its service level.</li>
-<li>Run a full mini operations-research study: estimate demand from past sales, try
-   several policies, pick the cheapest one that keeps 95% of customers served, and
-   write the recommendation with its assumptions. That is the Module 4 deliverable.</li>
+<li>Build a small weather chain and write its table of chances. Move a starting guess
+   forward day by day until it stops changing.</li>
+<li>Read off the settled mix. Check it a second way by playing the chain at random,
+   and see that the two answers agree.</li>
+<li>Simulate an <code>(s, S)</code> restock rule for a shop. Draw the "sawtooth" shape of the
+   stock, and read off its daily cost and its service level.</li>
+<li>Do a full small operations-research study. Estimate demand from past sales, try
+   several restock rules, and pick the cheapest one that serves 95% of customers.
+   Write the recommendation with its assumptions. This is the Module 4 deliverable.</li>
 </ol>
 <h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
-<p>We teach all of this from scratch today, in plain steps:</p>
+<p>We teach all of this from the start today, in small steps:</p>
 <ul>
-<li>what a "state" and a "hop" are, and how to write the jump chances as a small table,</li>
-<li>what "the system settles in the long run" means, and how to find that settled mix,</li>
-<li>how to simulate a restocking rule and measure whether it is any good.</li>
+<li>what a "state" is, what "move between states" means, and how to write the chances
+  as a small table,</li>
+<li>what "the system settles in the long run" means, and how to find the settled mix,</li>
+<li>how to simulate a restock rule and measure whether it works well.</li>
 </ul>
-<p>The little you may want in advance is how a table of numbers works, and how to run a
-notebook cell:</p>
+<p>It helps a little if you know how a table of numbers works and how to run a notebook
+cell:</p>
 <ul>
-<li>Want the whole idea of today on one page? Read
+<li>Want today's whole idea on one page? Read
   <a href="../primers/markov_chains.html">A system that hops between states</a>.</li>
 <li>New to tables of numbers? Read
   <a href="../primers/vectors_and_matrices.html">Vectors and matrices</a>.</li>
 <li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
-<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+<li>Any new word is in the <a href="../primers/glossary.html">glossary</a>.</li>
 </ul>
-<p>If you already know Markov chains or you already code, skip ahead and look for the
-cells marked <strong>Stretch (optional)</strong> in the notebooks.</p>
+<p>If you already know Markov chains or you already write code, look for the cells
+marked <strong>Stretch (optional)</strong> in the notebooks.</p>
 <h2 id="by-the-end-you-can">By the end you can</h2>
 <ul>
-<li>Describe a random system as "a few states with jump chances", and write those
-  chances as a transition matrix whose rows each sum to 1.</li>
-<li>Step a starting mix forward and watch it settle into a steady long-run mix.</li>
-<li>Find that long-run mix and cross-check it against a simulation.</li>
-<li>Simulate an <code>(s, S)</code> inventory policy and read off its daily cost and service level.</li>
-<li>Choose a sensible restock policy by comparing simulated options, and state the
-  assumptions behind your recommendation.</li>
+<li>Describe a random system as "a few states with chances to move between them".
+  Write those chances as a transition matrix in which each row adds up to 1.</li>
+<li>Move a starting mix forward step by step and see it settle.</li>
+<li>Find the settled mix and check it against a simulation.</li>
+<li>Simulate an <code>(s, S)</code> restock rule and read off its daily cost and service level.</li>
+<li>Choose a good restock rule by comparing simulated options, and state the
+  assumptions behind your choice.</li>
 </ul>
 <h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
-<p>Everything above is enough to do the lab. This box is the extra depth for anyone who
-wants it, and none of it is needed to finish.</p>
-<p>Today's mathematical object is the <strong>transition matrix</strong> <code>P</code>: a square matrix whose
-rows are probabilities and each sum to 1 (a <em>stochastic matrix</em>). Pushing a
-probability row-vector one step into the future is the matrix product <code>p · P</code>, and
-<code>n</code> steps is the matrix power <code>p · Pⁿ</code>. The settled mix, the <strong>stationary
-distribution</strong> <code>π</code>, is the distribution that one more step leaves unchanged:
-<code>π · P = π</code>. Rearranged, that says <code>π</code> is a <strong>left eigenvector of <code>P</code> with eigenvalue
-1</strong>. Every stochastic matrix has 1 as an eigenvalue, and for a chain that is
-<em>irreducible</em> (you can get from any state to any other) and <em>aperiodic</em> (not locked
-into a rigid cycle), that <code>π</code> is unique and is reached from any starting mix. The
-first notebook finds <code>π</code> both ways and checks they agree. And the <code>(s, S)</code> inventory
-system is itself a Markov chain, on stock levels, so its long-run stock spread is a
-stationary distribution too. All of this is a bonus, never a gate.</p>
+<p>The sections above are enough to do the lab. This part is extra depth for those who
+want it. You do not need it to finish.</p>
+<p>Today's mathematical object is the <strong>transition matrix</strong> <code>P</code>. It is a square matrix.
+Each row holds probabilities, and each row adds up to 1. Such a matrix is called a
+<em>stochastic matrix</em>. If <code>p</code> is a row vector of probabilities, then one step forward is
+the matrix product <code>p · P</code>. After <code>n</code> steps it is <code>p · Pⁿ</code>.</p>
+<p>The settled mix has the formal name <strong>stationary distribution</strong>, written <code>π</code>. It is
+the distribution that one more step does not change: <code>π · P = π</code>. In other words,
+<code>π</code> is a <strong>left eigenvector of <code>P</code> with eigenvalue 1</strong>. Every stochastic matrix has 1
+as an eigenvalue. Suppose the chain is <em>irreducible</em> (you can reach any state from
+any other state) and <em>aperiodic</em> (it is not stuck in a fixed cycle). Then <code>π</code> is
+unique, and the chain reaches it from any starting mix. The first notebook finds <code>π</code>
+in both ways and checks that they agree.</p>
+<p>The <code>(s, S)</code> stock system is also a Markov chain, with stock levels as its states. So
+its long-run spread of stock is also a stationary distribution. All of this is extra.
+You can do the session without it.</p>
 <h2 id="new-words-in-this-session">New words in this session</h2>
 <ul>
-<li><strong>state</strong> — one of the few situations a system can be in (sunny/rainy, working/broken).</li>
-<li><strong>Markov chain</strong> — a system that hops between states, where the next state depends only on the current one.</li>
-<li><strong>transition matrix</strong> — the table of jump chances; each row sums to 1.</li>
-<li><strong>stationary distribution</strong> — the steady long-run mix the system settles into.</li>
-<li><strong>(s, S) policy</strong> — a restock rule: when stock falls to <code>s</code>, order back up to <code>S</code>.</li>
-<li><strong>service level</strong> — the fraction of customer demand you actually meet from stock.</li>
-<li><strong>holding cost / stockout</strong> — the cost of stock sitting idle, and of running out.</li>
-<li><strong>lead time</strong> — the delay between placing an order and it arriving.</li>
+<li><strong>state</strong>: one of the few situations a system can be in (sunny or rainy, working or broken).</li>
+<li><strong>Markov chain</strong>: a system that moves between states, where the next state depends only on the present state (the memoryless rule).</li>
+<li><strong>transition matrix</strong>: the table of chances for moving between states. Each row adds up to 1.</li>
+<li><strong>stationary distribution</strong>: the settled mix, that is, the long-run mix the system settles into.</li>
+<li><strong>(s, S) rule</strong>: a restock rule. When stock falls to the reorder point <code>s</code>, order enough to bring stock back up to the order-up-to level <code>S</code>.</li>
+<li><strong>service level</strong>: the share of customer demand that you meet from stock.</li>
+<li><strong>holding cost / stockout</strong>: the cost of keeping stock on the shelf, and the event of running out of stock.</li>
+<li><strong>lead time</strong>: the delay between placing an order and receiving it.</li>
 </ul>
 <p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
 </section>
