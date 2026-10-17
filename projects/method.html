@@ -24,65 +24,72 @@
 </header>
 <main>
 <section class="body"><h1 id="the-method">The method</h1>
-<p>Eight stages. Every submission has all eight, whichever brief you took. This is
-the specification your work is marked against, so read it before you write a
-line of code, and read it again before you submit.</p>
+<p>Eight stages. Every submission has all eight, whichever brief you took. Your
+work is marked against this list. So read it before you write any code, and
+read it again before you submit.</p>
 <h2 id="1-write-down-the-decision-and-what-a-mistake-costs">1. Write down the decision, and what a mistake costs</h2>
-<p>Before you open the data. In the first hour.</p>
-<p>One page. What decision does this model feed? Who acts on it? What happens when
-the model is wrong in each of the two directions, and what does each direction
-cost in rupees? For a delivery estimate: what does an hour of underestimate cost
-against an hour of overestimate. For a wafer test: what does a missed failure
-cost against a false alarm.</p>
+<p>Do this before you open the data, in the first hour.</p>
+<p>Write one page. Which decision will this model help with? Who takes that
+decision? The model can be wrong in two directions. What happens in each case,
+and what does each one cost in rupees? For a delivery estimate: what does one
+hour of underestimate cost, compared with one hour of overestimate? For a wafer
+test: what does a missed failure cost, compared with a false alarm?</p>
 <p>Commit this page to git before you commit anything else. The timestamp is part
-of the evidence. Everything in stage 7 refers back to these numbers, and a cost
-table written after you saw your results is worth nothing.</p>
+of the evidence. Everything in stage 7 depends on these numbers. If you write
+the cost table after you have seen your results, it gets no marks.</p>
 <h2 id="2-get-the-data-and-look-at-it-properly">2. Get the data, and look at it properly</h2>
-<p>Your brief gives you a download that needs no account. Write the download as
-code in a notebook, not as a manual step, and make it work on a machine that has
-never seen the file. The data arrives as CSV files you can read straight into
+<p>Your brief gives you a download link that needs no account. Write the download
+as code in a notebook. Do not do it by hand. It must work on a machine that has
+never had the file. The data comes as CSV files that you can read directly into
 pandas. There is no database to set up and nothing to install.</p>
-<p>Then look at it before you model it. Answer at least eight questions about the
-table, and not the questions we would ask: the ones you personally need answered
-before you would trust this data enough to build on it. How many rows are
-actually usable. What the missing values look like and whether they are missing
-at random. What the target's distribution is. Which columns are near-duplicates
-of each other. What the oldest and newest rows are.</p>
-<p>Show the answers as numbers and charts, and write one paragraph on what you
-found that surprised you. Every one of these six datasets has something in it
-that does not match what the brief led you to expect.</p>
+<p>Then study the data before you build any model. Answer at least eight questions
+about the table. Do not just answer the questions we would ask. Answer the ones
+you yourself need answered before you can trust this data and build on it. How
+many rows can really be used? What do the missing values look like, and are
+they missing at random? What is the distribution of the target? Which columns
+are almost copies of each other? What are the oldest and newest rows?</p>
+<p>Show the answers as numbers and charts. Then write one paragraph on what
+surprised you. Each of these six datasets has something in it that is different
+from what the brief made you expect.</p>
 <h2 id="3-split-the-test-set-off-and-lock-it">3. Split the test set off, and lock it</h2>
 <p>Your brief tells you how. It is never a random shuffle. It is by date, or by
-match, or by customer, and there is a reason in every case.</p>
-<p>Do this before feature engineering, before scaling, before you plot anything
-that includes the test rows. Then leave it alone until stage 7. You get one look
-at it, at the end, and you report what you saw whether it flatters you or not.</p>
-<p>Say in writing how many rows and what date range are in each part, and what
-would leak if you had split the easy way instead.</p>
+match, or by customer. In every case there is a reason.</p>
+<p>Do this before feature engineering, before scaling, and before you plot
+anything that includes the test rows. Then do not touch it until stage 7. You
+get to look at it only once, at the end. Report what you saw, even if the
+result is bad for you.</p>
+<p>Write down how many rows and which date range are in each part. Also write what
+would have leaked if you had split the easy way instead.</p>
 <h2 id="4-build-the-features-inside-a-pipeline">4. Build the features, inside a pipeline</h2>
 <p>Every transformation that learns anything from the data goes inside a scikit-learn
-<code>Pipeline</code> or <code>ColumnTransformer</code>. Imputation, scaling, encoding, selection, the
-lot. If you fit a scaler on the whole dataset and then split, you have leaked,
-and the mark for this stage is zero regardless of how good the rest is.</p>
-<p>Hunt for leakage on purpose and write up what you found. Every one of these six
-datasets contains at least one column that will not be available at the moment
-the prediction is actually needed, and at least one that quietly contains the
-answer. Finding them is a graded part of the work, not a preliminary.</p>
+<code>Pipeline</code> or <code>ColumnTransformer</code>. This means imputation, scaling, encoding,
+selection, all of them. If you fit a scaler on the whole dataset and then
+split, you have leaked. Then the mark for this stage is zero, however good the
+rest of your work is.</p>
+<p>Search for leakage on purpose, and write down what you found. Each of these six
+datasets has at least one column that will not be available at the time the
+prediction is needed. Each also has at least one column that secretly contains
+the answer. Finding these columns is a marked part of the work. It is not just
+a warm-up step.</p>
 <h2 id="5-do-the-unsupervised-pass">5. Do the unsupervised pass</h2>
-<p>Before the supervised models, not after, and it is not decoration.</p>
-<p>Reduce the dimensions and say how much of the variation you kept. Cluster, and
-choose the number of clusters from evidence, not by eye: report the elbow, the
-silhouette score, Davies-Bouldin and Calinski-Harabasz, and say what you did
-when they disagreed, because they will. Try a method that finds round clusters
-and one that does not, and one that can say "this point belongs to nothing".
-Look for the points that belong to nothing.</p>
-<p>Then do two things with what you found. Give every group a plain-English name
-and a one-line description a non-technical manager would recognise. And feed the
-group label back in as a feature in stage 6, then report whether it helped. Both
-answers are interesting. "It made no difference" is a finding, if you show it.</p>
+<p>Do this before the supervised models, not after. It is a real part of the
+work, not just for show.</p>
+<p>Reduce the dimensions, and say how much of the variation you kept. Then
+cluster. Choose the number of clusters from evidence, not by looking at a
+picture. Report the elbow, the silhouette score, Davies-Bouldin and
+Calinski-Harabasz. These will not all agree, so say what you did when they
+disagreed. Try one method that finds round clusters and one that does not.
+Also try one that can say "this point belongs to no group". Look for those
+points that belong to no group.</p>
+<p>Then do two things with your groups. First, give every group a simple English
+name and a one-line description that a non-technical manager would understand.
+Second, use the group label as a feature in stage 6, and report whether it
+helped. Either answer is useful. "It made no difference" is also a result, if
+you show it.</p>
 <h2 id="6-search-the-models">6. Search the models</h2>
-<p>You are comparing families of model, not tuning one. Every submission covers all
-of these, or explains in writing why one does not apply to its data:</p>
+<p>You are comparing families of models, not tuning just one model. Every
+submission covers all of these. If one does not suit your data, explain why in
+writing:</p>
 <p>For a number: a baseline that ignores the features, ordinary least squares,
 Ridge, Lasso, ElasticNet, polynomial features with a penalty, k-nearest
 neighbours, a support vector regressor, a single decision tree, Random Forest,
@@ -92,27 +99,29 @@ regression with both penalties, k-nearest neighbours, a support vector
 classifier with more than one kernel, naive Bayes, a single decision tree,
 Random Forest, Extra Trees, gradient boosting, XGBoost or LightGBM, and a small
 neural network.</p>
-<p>Now the part people get wrong. You cannot try every hyperparameter of every one
-of those. A full grid over that list is millions of fits and several days of
-Colab, and chasing it is not thoroughness, it is a way of avoiding the thinking.
-What we want instead is a budget you can defend, spent in three stages:</p>
+<p>Now the part where many students make mistakes. You cannot try every
+hyperparameter of every one of those models. A full grid over that list means
+millions of fits and several days of Colab. Trying to do that is not careful
+work. It only lets you avoid thinking. Instead, we want a budget that you can
+justify, spent in three stages:</p>
 <p><strong>Stage A, screen everything.</strong> Every family above, randomised search, a fixed
-number of candidates each, cross-validated. Roughly fifteen hundred fits, a few
-minutes. This tells you which families are even in the running.</p>
+number of candidates for each, cross-validated. About fifteen hundred fits, a
+few minutes. This tells you which families are worth looking at further.</p>
 <p><strong>Stage B, refine the top three.</strong> A tight grid around where stage A landed.
 Say how you chose the bounds of that grid.</p>
 <p><strong>Stage C, one honest number.</strong> Nested cross-validation on the winner. The inner
-loop picks the hyperparameters, the outer loop measures. Report both this number
-and the stage B number, and explain the gap between them, because there will be
-one, and it is the single most useful thing in your report.</p>
-<p>Log every run to a leaderboard: model, parameters, cross-validated score, the
-spread across folds, and how long it took. The leaderboard is a deliverable. A
-model that scores 0.02 better and takes forty times longer to train is not
-obviously the winner, and we want to see you make that call.</p>
-<p>Write down your total fit count and your reasoning for spending it the way you
-did. The smaller your dataset, the larger that budget should be, and one of the
-six briefs is small enough that you really can search hard. Notice if it is
-yours.</p>
+loop picks the hyperparameters, and the outer loop measures. Report both this
+number and the stage B number. There will be a gap between them. Explain it.
+That explanation is the most useful thing in your report.</p>
+<p>Record every run in a leaderboard: model, parameters, cross-validated score,
+the spread across folds, and how long it took. The leaderboard is something you
+must submit. Suppose one model scores 0.02 better but takes forty times longer
+to train. It is not clear that it is the winner. We want to see you decide, and
+give your reason.</p>
+<p>Write down your total number of fits, and why you spent them the way you did.
+The smaller your dataset, the larger this budget should be. One of the six
+briefs has data small enough that you really can search a lot. Check whether it
+is your brief.</p>
 <h2 id="7-compute-every-metric-then-defend-one">7. Compute every metric, then defend one</h2>
 <p>Compute the whole panel. All of it, in a table, for your final model.</p>
 <p>For a number: mean absolute error, root mean squared error, median absolute
@@ -123,29 +132,31 @@ loss at the quantile that matches it.</p>
 micro and weighted forms, Matthews correlation, Cohen's kappa, area under the
 ROC curve, area under the precision-recall curve, log loss, Brier score, and the
 confusion matrix itself.</p>
-<p>Then argue, from the rupee costs you committed in stage 1, which single number
-decides your winner. This paragraph is worth more marks than the models. Say
-what each of the others would have chosen if you had used it instead, and why
-that would have been the wrong call here. On at least one of these datasets,
-accuracy and precision-recall area disagree completely about which model is best,
-and if you cannot say which to believe you have not finished.</p>
-<p>Two things everybody forgets. If you predict a category, 0.5 is not your
-threshold. Choose it from the cost matrix and show the curve of expected cost
-against threshold. And if you report a probability, check it is honest: plot the
-reliability curve and report the Brier score, because a model that says 70% and
-is right 40% of the time is a worse product than a less accurate model that
-means what it says.</p>
+<p>Then use the rupee costs you committed in stage 1 to argue which single number
+decides your winner. This paragraph carries more marks than the models. For
+each of the other metrics, say which model it would have chosen. Then say why
+that choice would have been wrong here. On at least one of these datasets,
+accuracy and precision-recall area give completely different answers about the
+best model. If you cannot say which one to believe, your work is not complete.</p>
+<p>Students often forget two things. First, if you predict a category, 0.5 is not
+your threshold. Choose the threshold from the cost matrix, and show the curve
+of expected cost against threshold. Second, if you report a probability, check
+that it is honest. Plot the reliability curve and report the Brier score.
+Suppose a model says 70% but is right only 40% of the time. It is a worse
+product than a less accurate model whose probabilities are correct.</p>
 <h2 id="8-say-where-it-breaks-then-write-the-memo">8. Say where it breaks, then write the memo</h2>
-<p>Pull out the fifty worst predictions and look at them. What do they have in
-common? Answer this in sentences, not with a plot. This is what separates
-somebody who ran a library from somebody who understands their problem.</p>
-<p>Check the model does not behave very differently for one group than another, the
-way you did in Session 10. Say what you checked and what you found.</p>
-<p>Then the memo. Three pages, no more. Written for the manager in your brief, who
-will not open a notebook. What you would deploy, what it is worth in rupees a
-month, what it gets wrong, what would have to be true for it to keep working,
-and what you would do next with another month. If your memo needs a single line
-of code to make sense, rewrite it.</p></section>
+<p>Take out the fifty worst predictions and study them. What is common to them?
+Answer this in sentences, not with a plot. This step shows whether you really
+understand your problem, or only know how to call a library.</p>
+<p>Check that the model does not behave very differently for one group compared
+with another, as you did in Session 10. Say what you checked and what you
+found.</p>
+<p>Then write the memo. Three pages, no more. Write it for the manager in your
+brief, who will not open a notebook. Say what you would deploy, how much it is
+worth in rupees per month, and what it gets wrong. Say what conditions must
+stay true for it to keep working. Say what you would do next if you had one
+more month. If the memo needs even one line of code to be understood, rewrite
+it.</p></section>
 <p class="back"><a href="index.html">&larr; All projects</a></p>
 </main>
 <footer class="foot">

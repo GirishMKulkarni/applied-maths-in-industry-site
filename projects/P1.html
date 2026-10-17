@@ -23,59 +23,59 @@
   </nav>
 </header>
 <main>
-<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> An online marketplace</li><li><strong>Field:</strong> E-commerce and logistics</li><li><strong>Data:</strong> Brazilian E-Commerce Public Dataset by Olist — ~100,000 orders, 2016 to 2018, as CSV files</li><li><strong>Size:</strong> about 120 MB</li><li><strong>Licence:</strong> CC BY-NC-SA 4.0. You must credit Olist.</li><li><strong>The catch:</strong> A promise the site has to make at checkout, when most of the useful columns do not exist yet.</li></ul></section>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> An online marketplace</li><li><strong>Field:</strong> E-commerce and logistics</li><li><strong>Data:</strong> Brazilian E-Commerce Public Dataset by Olist, ~100,000 orders, 2016 to 2018, as CSV files</li><li><strong>Size:</strong> about 120 MB</li><li><strong>Licence:</strong> CC BY-NC-SA 4.0. You must credit Olist.</li><li><strong>The catch:</strong> The site must give a delivery date at checkout. At that moment, most of the useful columns do not exist yet.</li></ul></section>
 <section class="body"><h1 id="p1-the-delivery-promise">P1 · The Delivery Promise</h1>
 <h2 id="the-situation">The situation</h2>
 <p>You work in the analytics team of an online marketplace. It does not hold stock.
-Thousands of small sellers list their goods, a buyer orders, and the seller ships
-through a courier the platform arranged.</p>
-<p>At checkout the site shows the buyer an estimated delivery date. It has to: no
-one buys without one. When the parcel arrives after that date the buyer leaves a
-one or two star review, and that review lands on the seller's page, not the
-courier's and not the platform's. Sellers who collect bad reviews for late
-couriers leave the platform, and replacing a seller costs far more than keeping
-one.</p>
+Thousands of small sellers list their goods on it. A buyer places an order, and
+the seller ships it through a courier that the platform has arranged.</p>
+<p>At checkout the site shows the buyer an estimated delivery date. It must do
+this, because nobody buys without one. When the parcel arrives after that date,
+the buyer gives a one or two star review. That review appears on the seller's
+page. It does not appear on the courier's page or the platform's page. Sellers
+who get bad reviews because of late couriers leave the platform. Getting a new
+seller costs far more than keeping an old one.</p>
 <p>Three people have asked you for something this quarter.</p>
-<p>Operations wants the estimate to be better. The current one is generous and
+<p>Operations wants a better estimate. The current one is too generous. It is
 often wrong in both directions, and nobody knows by how much.</p>
-<p>The seller-support team has capacity to phone about fifty sellers a month. Right
-now they pick by gut. They want to know which fifty.</p>
-<p>The head of the marketplace wants to know, before a parcel has even shipped,
-which orders are heading for a bad review, so something can be done while there
-is still time to do it.</p>
+<p>The seller-support team has time to phone about fifty sellers a month. Right
+now they choose by guesswork. They want to know which fifty to call.</p>
+<p>The head of the marketplace wants to know which orders will get a bad review,
+even before the parcel is shipped. Then something can be done while there is
+still time.</p>
 <h2 id="the-three-questions">The three questions</h2>
-<p>Asked the way the people who need the answers actually asked them.</p>
-<p><strong>1. "If someone orders this today, when is it really going to turn up?"</strong></p>
-<p><strong>2. "Which of the orders going out this week are heading for an angry review?"</strong></p>
+<p>These are the questions in the words the people actually used.</p>
+<p><strong>1. "If someone orders this today, when will it really arrive?"</strong></p>
+<p><strong>2. "Which of the orders going out this week will get an angry review?"</strong></p>
 <p><strong>3. "We can phone fifty sellers a month. Which fifty?"</strong></p>
 <details>
 <summary><strong>Stuck at the very start? Open this.</strong></summary>
-<p>These are not answers. They are the first move, so that nobody loses a week
-working out what kind of problem they are looking at.</p>
-<p><strong>Question 1 is a regression problem.</strong> The thing you are predicting is a
-number: how many days the delivery takes. You have the purchase timestamp and
-the actual delivery timestamp, so you can compute that number for every past
-order and learn from it. Start with plain linear regression from Session 7, on a
-handful of obvious columns, just to get an end-to-end result on the board. Then
-compare it against the platform's own estimate, which is already in the data.
-That comparison, not zero, is the score you have to beat.</p>
+<p>These are not answers. They only tell you where to start, so that nobody wastes
+a week trying to decide what kind of problem this is.</p>
+<p><strong>Question 1 is a regression problem.</strong> You are predicting a number: how many
+days the delivery takes. You have the purchase timestamp and the actual delivery
+timestamp. So you can calculate that number for every past order and learn from
+it. Start with plain linear regression from Session 7. Use a few obvious columns
+and get one complete result first. Then compare it with the platform's own
+estimate, which is already in the data. You have to beat that estimate, not
+zero.</p>
 <p><strong>Question 2 is a binary classification problem.</strong> Every past order either got a
-review of one or two stars, or it did not, so make that column yourself: 1 for a
+review of one or two stars, or it did not. So make that column yourself: 1 for a
 bad review, 0 for everything else. Start with logistic regression from Session 9.
-About fifteen in a hundred orders are bad, so the classes are unbalanced, which
-matters more than you think when you come to judge it.</p>
+About fifteen in a hundred orders are bad. So the classes are unbalanced. This
+matters a lot when you measure how good your model is.</p>
 <p><strong>Question 3 is a clustering problem.</strong> Nobody has labelled any seller, so this
-is Session 11. Build one row per seller first, summarising that seller's orders
-into a few numbers, then run k-means on those rows. PCA down to two dimensions
-will let you see whether the groups are real.</p>
+is Session 11. First build one row per seller. Each row summarises that seller's
+orders in a few numbers. Then run k-means on those rows. Use PCA to bring the
+data down to two dimensions. Then you can see whether the groups are real.</p>
 </details>
 <h2 id="the-data">The data</h2>
 <p>The Brazilian E-Commerce Public Dataset by Olist. Plain CSV files, about one
 hundred thousand orders placed between 2016 and 2018, fifty-two columns in all.</p>
-<p>Five of the files carry everything you need, and they line up on obvious keys:</p>
+<p>Five of the files have everything you need, and they join on simple keys:</p>
 <ul>
-<li><code>olist_orders_dataset.csv</code> is the spine, one row per order, with the purchase
-  timestamp, the estimated delivery date and the actual delivery date</li>
+<li><code>olist_orders_dataset.csv</code> is the main table, one row per order, with the
+  purchase timestamp, the estimated delivery date and the actual delivery date</li>
 <li><code>olist_order_items_dataset.csv</code> joins on <code>order_id</code> and gives price, freight
   and the seller</li>
 <li><code>olist_order_reviews_dataset.csv</code> joins on <code>order_id</code> and gives the star rating</li>
@@ -83,37 +83,39 @@ hundred thousand orders placed between 2016 and 2018, fifty-two columns in all.<
 <li><code>olist_customers_dataset.csv</code> and <code>olist_sellers_dataset.csv</code> join on
   <code>customer_id</code> and <code>seller_id</code> and give the postcode of each</li>
 </ul>
-<p>That is five <code>pd.merge</code> calls and it is not what we are grading. There is also a
-geolocation file of postcodes with latitude and longitude if you want distance.</p>
-<p>It downloads without a Kaggle account:</p>
+<p>That is five <code>pd.merge</code> calls, and we are not grading that part. There is also a
+geolocation file of postcodes with latitude and longitude, if you want distance.</p>
+<p>You can download it without a Kaggle account:</p>
 <pre><code>https://www.kaggle.com/api/v1/datasets/download/olistbr/brazilian-ecommerce
 </code></pre>
 <p>Licensed CC BY-NC-SA 4.0. Credit Olist in your repo and your memo.</p>
 <h2 id="constraints-on-this-brief">Constraints on this brief</h2>
-<p>These are requirements, not suggestions. The rubric marks them.</p>
+<p>These are requirements, not suggestions. The rubric gives marks for them.</p>
 <p><strong>Split by purchase date.</strong> Your test set is the last three months of orders.
-Not a random sample. A marketplace in December is not the marketplace in June,
-and a random split lets your model learn December from December.</p>
-<p><strong>Everything must be knowable at checkout.</strong> The prediction is made the moment
-the buyer clicks pay. The review score, the delivery timestamps, the carrier
-handover date, the freight actually charged: none of that exists yet. Rather more
-than half of the fifty-two columns fail this test. Working out which is a graded
-part of the work, and it is harder than it sounds, because some of the failures
-are subtle.</p>
-<p><strong>Distance is yours to build.</strong> The geolocation file gives you seller and buyer
-coordinates by postcode. Nothing in the data tells you how far apart they are,
-and it is one of the few genuinely predictive things you can add.</p>
+Not a random sample. A marketplace in December is different from the same
+marketplace in June. A random split lets your model learn about December from
+other December orders.</p>
+<p><strong>Everything must be known at checkout.</strong> The prediction is made at the moment
+the buyer clicks pay. At that moment the review score, the delivery timestamps,
+the date the parcel was given to the courier and the freight actually charged
+do not exist yet. More than half of the fifty-two columns fail this test.
+Finding which ones fail is a graded part of the work. It is not easy, because
+some of the failures are hard to spot.</p>
+<p><strong>You must build distance yourself.</strong> The geolocation file gives you seller and
+buyer coordinates by postcode. Nothing in the data tells you how far apart they
+are. Distance is one of the few really useful features you can add.</p>
 <h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
-<p>The honest answer is that the ceiling is lower than you expect. Delivery time
-depends on the courier network, the weather and the season, and almost none of
-that is in your table. Teams that go looking for a model that gets close to
-perfect will waste four weeks. Teams that work out early how much of the
-variation is even knowable from these columns, say so, and then squeeze what is
-there, do well.</p>
-<p>The bad-review target has its own trap. Late delivery causes bad reviews, so
-your delivery-time model is nearly a bad-review model. Whether you feed one into
-the other, and what that does when the first model is wrong, is a decision you
-have to make and defend.</p>
+<p>The honest answer is that the best possible score is lower than you expect.
+Delivery time depends on the courier network, the weather and the season.
+Almost none of that is in your table. Teams that try to build a nearly perfect
+model will waste four weeks. Some teams find out early how much of the variation
+can be predicted from these columns at all. They say so clearly, and then get
+the most out of what is there. Those teams do well.</p>
+<p>The bad-review target has its own difficulty. Late delivery causes bad reviews.
+So your delivery-time model is almost a bad-review model. You must decide
+whether to feed the first model's output into the second. You must also think
+about what happens when the first model is wrong. Make that decision and defend
+it.</p>
 <h2 id="what-to-do-next">What to do next</h2>
 <ol>
 <li>Read <a href="method.html">the method</a>. It lists the eight things every submission
@@ -127,7 +129,7 @@ have to make and defend.</p>
 <li>Split the test set off the way this brief tells you to, and do not look at it
    again until the end.</li>
 </ol>
-<p>If you are stuck before any of that, open the nudge box above.</p></section>
+<p>If you are stuck before any of that, open the help box above.</p></section>
 <p class="back"><a href="index.html">&larr; All projects</a> · <a href="method.html">The method</a> · <a href="rubric.html">The rubric</a></p>
 </main>
 <footer class="foot">

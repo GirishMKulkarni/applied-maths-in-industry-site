@@ -23,37 +23,39 @@
   </nav>
 </header>
 <main>
+<section class="newhere"><p>Finance module: there are also <a href="finance.html">three smaller finance projects</a>, one per team.</p></section>
 <section class="body"><h1 id="projects">Projects</h1>
-<p>Everything up to here has been a lab. The data was small, it was already clean,
-and the answer was somewhere on the page. A project is not that.</p>
-<p>You get a situation, a dataset nobody tidied for you, and three questions a real
-team would actually be asked. Nothing else. There is no starter notebook, no
-hint about which model to use, and no worked example to lean on. That is the
-point. By now you have met every tool you need, in sessions 7 to 13B. The work
-left is deciding which of them to reach for, and being able to say why.</p>
+<p>So far, everything has been a lab. The data was small and already clean. The
+answer was already given in the notebook or the slides. A project is different.</p>
+<p>You get a situation, a dataset that nobody has cleaned for you, and three
+questions that a real team would be asked. Nothing else. There is no starter
+notebook, no hint about which model to use, and no worked example to copy from.
+We have done this on purpose. You have already learnt every tool you need, in
+sessions 7 to 13B. Your job now is to decide which tools to use, and to explain
+why you chose them.</p>
 <p>You will spend about eight weeks on this, alongside the finance and optimization
 modules. You present it in Session 29 and show it working in Session 30.</p>
 <h2 id="how-this-works">How this works</h2>
 <ol>
 <li>Read the six briefs below and pick the one you want. Your team is three or
    four people, fixed in class.</li>
-<li>Open your brief. It gives you a real situation, three questions in the words
-   the client actually used, and the data.</li>
-<li>If you cannot tell what kind of problem a question is, open the nudge box in
-   your brief. It tells you which of the three kinds each question is and which
-   model to start with. Nothing more, on purpose.</li>
+<li>Open your brief. It gives you a real situation, three questions in the same
+   words the client used, and the data.</li>
+<li>If you cannot tell what kind of problem a question is, open the help box in
+   your brief. It tells you which of the three kinds each question is, and which
+   model to start with. It tells you nothing more. This is on purpose.</li>
 <li>Follow <a href="method.html">the method</a>. Eight stages, the same for all six briefs.</li>
 <li>You are marked by <a href="rubric.html">the rubric</a>. Read it in week one, not week eight.</li>
 </ol>
 <h2 id="choose-one">Choose one</h2>
 <p>Six briefs, below. Pick the one you want. Teams are three or four people, fixed
 in class.</p>
-<p>If two teams pick the same brief, that is fine, but you may not share code,
-features or notebooks between teams. The datasets have public solutions online.
-You may read them the way you would read anything else, but a submission that is
-somebody else's notebook with the names changed gets nothing, and it will be
-obvious, because the parts we grade hardest are the parts nobody publishes: your
-cost matrix, your search budget, your error analysis.</p><div class="grid">
+<p>Two teams may pick the same brief. That is fine. But teams may not share code,
+features or notebooks with each other. These datasets have public solutions
+online. You may read them, like any other reading material. But if you submit
+somebody else's notebook with only the names changed, you get zero marks. We
+will be able to tell. The parts we mark most strictly are the parts that nobody
+publishes online: your cost matrix, your search budget and your error analysis.</p><div class="grid">
   <a class="card" href="P1.html">
     <span class="sid">P1</span>
     <span class="ctitle">The Delivery Promise</span>
@@ -87,29 +89,30 @@ cost matrix, your search budget, your error analysis.</p><div class="grid">
 </div><p>Every brief asks for the same three kinds of question, because your submission
 has to cover the whole module: something you predict as a number, something you
 predict as a category, and something you find without any labels at all.</p>
-<p>All six arrive as CSV files you read straight into pandas. Nothing to install,
-no database to set up, no account to register for. The download is two lines and
-your brief gives you the address.</p>
+<p>All six datasets come as CSV files that you can read directly into pandas. You
+do not need to install anything, set up a database or create an account. The
+download is two lines of code, and your brief gives you the address.</p>
 <h2 id="what-you-hand-in">What you hand in</h2>
-<p>Read <a href="method.html">The method</a>. It lists the eight things every submission
-contains, whichever brief you took. It is the specification, not advice, and the
-<a href="rubric.html">rubric</a> marks against it directly.</p>
+<p>Read <a href="method.html">The method</a>. It lists the eight things that every submission
+must contain, whichever brief you took. These are requirements, not suggestions.
+The <a href="rubric.html">rubric</a> gives marks directly against them.</p>
 <p>In short: a GitHub repo with notebooks that run top to bottom on a fresh
 machine, a leaderboard of everything you tried, and a memo of no more than three
 pages that a manager could act on without opening a single notebook.</p>
 <h2 id="two-rules-that-decide-most-of-the-marks">Two rules that decide most of the marks</h2>
-<p><strong>Split the test set off first, and do not look at it again.</strong> Not after
-feature engineering, not to check a hunch, not once. Every brief tells you how
-to split, and it is never a random shuffle. In a 2025 study of students doing
-exactly this exercise, 40.5% preferred the model with the higher score on
-shuffled data, without noticing the score was higher only because the model had
-seen the future. Do not be in that 40.5%.</p>
-<p><strong>Choose your metric before you see any results.</strong> Write down what an error
-costs, in rupees, in the first hour of the project, and commit it to git so the
-timestamp proves when you wrote it. Then compute the full panel of metrics at
-the end and argue from your own cost numbers for the one that decides the
-winner. A metric picked after the results is not a metric, it is a
-justification.</p></section>
+<p><strong>Split the test set off first, and do not look at it again.</strong> Do not look at
+it after feature engineering. Do not look at it to check an idea. Do not look
+at it even once. Every brief tells you how to split, and it is never a random
+shuffle. A 2025 study gave students exactly this exercise. 40.5% of them chose
+the model with the higher score on shuffled data. They did not notice that the
+score was higher only because the model had already seen future data. Make sure
+you do not make the same mistake.</p>
+<p><strong>Choose your metric before you see any results.</strong> In the first hour of the
+project, write down what an error costs in rupees. Commit it to git, so that
+the timestamp proves when you wrote it. At the end, compute the full panel of
+metrics. Then use your own cost numbers to argue which one metric decides the
+winner. If you pick a metric after seeing the results, you are only defending a
+choice you already made. That is not a real metric.</p></section>
 <p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="method.html">The method</a> · <a href="rubric.html">The rubric</a></p>
 </main>
 <footer class="foot">

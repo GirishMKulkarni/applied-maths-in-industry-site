@@ -26,21 +26,21 @@
 <section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A sports broadcaster</li><li><strong>Field:</strong> Sports analytics and live media</li><li><strong>Data:</strong> IPL ball-by-ball, 2008 to 2023 — one CSV, one row per delivery</li><li><strong>Size:</strong> about 25 MB</li><li><strong>Licence:</strong> Derived from Cricsheet, Open Data Commons Attribution 1.0. Credit Cricsheet.</li><li><strong>The catch:</strong> A row is one ball. An outcome is one match. And being right is not enough here.</li></ul></section>
 <section class="body"><h1 id="p6-the-number-on-the-screen">P6 · The Number on the Screen</h1>
 <h2 id="the-situation">The situation</h2>
-<p>You are working for a broadcaster covering the IPL. During the second innings
-the production team wants two numbers in the corner of the screen, updating
-every ball.</p>
-<p>A projected final score, so the commentary has something to argue about.</p>
-<p>And a win probability for each side, because that is the number viewers now
-expect and a rival broadcaster already has one.</p>
-<p>The head of production has been clear about one thing. The graphic will be on
-screen in front of tens of millions of people, and it cannot embarrass them. If
-it says a side has a seventy percent chance and that side loses, that is fine.
-If it says seventy percent about a hundred different situations and the side
-wins forty of them, the number is a lie and people on the internet will work
-that out within a season.</p>
-<p>The commentary team have asked for something else while you are at it. They want
-three or four types of batter, with names they can use on air, worked out from
-what players actually do rather than from reputation.</p>
+<p>You are working for a broadcaster covering the IPL. During the second innings,
+the production team wants two numbers in the corner of the screen. Both numbers
+update after every ball.</p>
+<p>A predicted final score, so the commentators have something to discuss.</p>
+<p>And a win probability for each side. Viewers now expect this number, and a rival
+broadcaster already shows one.</p>
+<p>The head of production has said one thing very clearly. Tens of millions of
+people will see this graphic, so it must not make the broadcaster look foolish.
+If it gives a side a seventy percent chance and that side loses, that is fine.
+But suppose it says seventy percent in a hundred different situations, and the
+side wins only forty of them. Then the number is wrong, and viewers on the
+internet will notice it within one season.</p>
+<p>The commentary team has also asked for one more thing. They want three or four
+types of batter, with names they can use on air. These types should be based on
+what players actually do on the field, not on their reputation.</p>
 <h2 id="the-three-questions">The three questions</h2>
 <p>As the production team asked them.</p>
 <p><strong>1. "It is the end of over twelve. What score are they going to finish on?"</strong></p>
@@ -48,72 +48,75 @@ what players actually do rather than from reputation.</p>
 <p><strong>3. "Give the commentary team three or four types of batter, with names they can say on air."</strong></p>
 <details>
 <summary><strong>Stuck at the very start? Open this.</strong></summary>
-<p>The first move only.</p>
-<p><strong>Question 1 is a regression problem.</strong> Your rows are individual deliveries, but
-the thing you predict from is the state of the match at the end of an over, so
-your first job is to group the deliveries into one row per over: runs so far,
-wickets down, balls remaining, and the final score of that innings as the target.
-Then linear regression from Session 7.</p>
+<p>This only helps you get started.</p>
+<p><strong>Question 1 is a regression problem.</strong> Each row is one delivery. But you predict
+from the state of the match at the end of an over. So your first job is to group
+the deliveries into one row per over: runs so far, wickets down, balls remaining,
+and the final score of that innings as the target. Then use linear regression
+from Session 7.</p>
 <p><strong>Question 2 is a binary classification problem</strong>, one side wins or does not,
 and the winner is already in the data. Start with logistic regression from
-Session 9. Here is the thing that makes this brief different from the others:
-you do not really want the label, you want the <em>probability</em>, because that is
-what goes on the screen. Logistic regression is a good starting point precisely
-because the number it gives you is meant to be read as a probability.</p>
-<p><strong>Question 3 is a clustering problem.</strong> Build one row per batter out of their
-own deliveries, with a few numbers describing how they score, then k-means from
-Session 11. Set a minimum number of balls faced before you include a player, or
-somebody who faced four balls in 2011 will get their own cluster.</p>
+Session 9. This brief is different from the others in one way. You do not really
+want the label. You want the <em>probability</em>, because that is what goes on the
+screen. Logistic regression is a good place to start, because the number it
+gives you is meant to be read as a probability.</p>
+<p><strong>Question 3 is a clustering problem.</strong> Build one row per batter from their own
+deliveries, with a few numbers that describe how they score. Then use k-means
+from Session 11. Set a minimum number of balls faced before you include a
+player. If you do not, somebody who faced four balls in 2011 will get their own
+cluster.</p>
 </details>
 <h2 id="the-data">The data</h2>
 <p>One CSV, <code>ball_by_ball_ipl.csv</code>, one row per delivery for every IPL season from
-2008 to 2023. Each row already carries the match it belongs to, the innings, the
+2008 to 2023. Each row already has the match it belongs to, the innings, the
 over and ball, the batter, the bowler, the runs scored, the wicket if there was
-one, the venue, the two teams, the target, and the eventual match winner.</p>
+one, the venue, the two teams, the target, and the final match winner.</p>
 <p>It downloads without a Kaggle account:</p>
 <pre><code>https://www.kaggle.com/api/v1/datasets/download/jamiewelsh2/ball-by-ball-ipl
 </code></pre>
-<p>The data derives from Cricsheet, which publishes under the Open Data Commons
+<p>The data comes from Cricsheet, which publishes under the Open Data Commons
 Attribution License 1.0, so credit Cricsheet clearly in your repo and your memo.</p>
-<p>You still have to turn deliveries into the thing you actually predict from,
-which is the state of the match at the end of an over: runs so far, wickets
-down, balls left, runs required. That is a group-and-aggregate on the ball rows,
-and it is modelling work rather than plumbing.</p>
+<p>You still have to turn the deliveries into what you actually predict from. That
+is the state of the match at the end of an over: runs so far, wickets down,
+balls left, runs required. You get it by a group-and-aggregate on the ball rows.
+This is real modelling work, not just data handling.</p>
 <h2 id="constraints-on-this-brief">Constraints on this brief</h2>
 <p><strong>Split by match, never by ball.</strong> Every delivery in a game shares that game's
-outcome, its pitch, its weather and its two teams. Put some balls from a match in
-training and some in testing and your model has effectively seen the answer. This
-is the single most common mistake made on this dataset, and it is invisible in
-the scores, which is what makes it dangerous. Later seasons should be your test
-set.</p>
+result, its pitch, its weather and its two teams. If some balls from a match are
+in training and some are in testing, your model has already seen the answer. This
+is the most common mistake made on this dataset. It does not show up in the
+scores, and that is why it is dangerous. Later seasons should be your test set.</p>
 <p><strong>You are marked on calibration, not on accuracy.</strong> Report the Brier score and
-plot the reliability curve. Bucket your predictions by the probability you gave
-and show what fraction actually won in each bucket. A model with worse accuracy
-and honest probabilities beats a confident, badly calibrated one, because the
-first can go on television and the second cannot.</p>
-<p><strong>One model over all overs will disappoint you.</strong> The state at the end of over
+plot the reliability curve. Group your predictions by the probability you gave,
+and show what fraction actually won in each group. A model with lower accuracy
+but honest probabilities is better than an overconfident, badly calibrated one.
+The first can go on television. The second cannot.</p>
+<p><strong>One model for all overs will not work well.</strong> The state at the end of over
 two and the state at the end of over eighteen are different problems. Runs
-required, balls remaining and wickets in hand interact completely differently at
-the two ends of an innings. Noticing this, and deciding what to do about it, is
-the modelling judgement in this brief.</p>
-<p><strong>Decide what you do about rain.</strong> Some matches are shortened and resolved by
-the Duckworth-Lewis-Stern method, some are abandoned, some have revised targets
-mid-innings. Every one of those distorts the relationship you are trying to
-learn. Drop them, model them or flag them, but say which and why.</p>
+required, balls remaining and wickets in hand work together very differently at
+the start and at the end of an innings. You have to notice this and decide what
+to do about it. That is the modelling judgement this brief tests.</p>
+<p><strong>Decide what you do about rain.</strong> Some matches are shortened and decided by
+the Duckworth-Lewis-Stern method, some are abandoned, and some have targets
+changed in the middle of an innings. Each of these changes the relationship you
+are trying to learn. You can drop them, model them or flag them. Say which you
+chose and why.</p>
 <h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
-<p>The temptation is to add everything: player identities, venue, toss, head to
-head. Some of that helps and some of it is a route to memorising which teams
-were good in 2014. The test set is later seasons, and squads change completely
-between them, so a model that leans on player identity ages badly in a way your
-cross-validation will not show you until the final test.</p>
-<p>The second difficulty is the one the production head named. Being accurate and
-being honest about your uncertainty are different properties, most classifiers
-optimise the first, and the fix is not more searching. Session 9 gave you the
-tools to see the problem. What you do about it is yours to work out.</p>
+<p>You will want to add everything: player identities, venue, toss, head to head.
+Some of that helps. Some of it only makes the model memorise which teams were
+good in 2014. The test set is later seasons, and squads change completely
+between seasons. So a model that depends on player identity gets worse as the
+years pass. Your cross-validation will not show you this. You will see it only
+in the final test.</p>
+<p>The second difficulty is the one the head of production pointed out. Being
+accurate and being honest about your uncertainty are two different things. Most
+classifiers try to improve the first one. Searching over more models or settings
+will not fix this. Session 9 gave you the tools to see the problem. You have to
+work out what to do about it.</p>
 <h2 id="what-to-do-next">What to do next</h2>
 <ol>
 <li>Read <a href="method.html">the method</a>. It lists the eight things every submission
-   contains, whichever brief you chose. It is the specification, not advice.</li>
+   contains, whichever brief you chose. These are rules to follow, not suggestions.</li>
 <li>Read <a href="rubric.html">the rubric</a> so you know where the hundred marks are, and
    which four mistakes lose them.</li>
 <li>Before you write any modelling code, write the one-page cost note that stage 1
@@ -123,7 +126,7 @@ tools to see the problem. What you do about it is yours to work out.</p>
 <li>Split the test set off the way this brief tells you to, and do not look at it
    again until the end.</li>
 </ol>
-<p>If you are stuck before any of that, open the nudge box above.</p></section>
+<p>If you are stuck before any of that, open the help box above.</p></section>
 <p class="back"><a href="index.html">&larr; All projects</a> · <a href="method.html">The method</a> · <a href="rubric.html">The rubric</a></p>
 </main>
 <footer class="foot">

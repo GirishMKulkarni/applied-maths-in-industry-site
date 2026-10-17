@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Can a Computer Beat the Market? · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A small stock-broking office</li><li><strong>Field:</strong> Trading and forecasting</li><li><strong>Data:</strong> Daily prices of the Nifty 50 and five NSE shares, 2015 to 2025, from Yahoo Finance</li><li><strong>Size:</strong> less than 1 MB</li><li><strong>Licence:</strong> Yahoo Finance data, for study use only</li><li><strong>The catch:</strong> A rule can look very good on past data and still lose money on new data.</li></ul></section>
+<section class="body"><h1 id="f2-can-a-computer-beat-the-market">F2 · Can a Computer Beat the Market?</h1>
+<h2 id="the-situation">The situation</h2>
+<p>Mr. Agarwal runs a small stock-broking office in Indore. He has about four
+hundred customers. Most of them are shopkeepers, teachers and retired people
+who trade a little on the side.</p>
+<p>In the last two years the same questions keep coming to his office. A customer
+saw an advertisement for "AI trading software". Another one is in a WhatsApp
+group that sends a buy signal every morning. A third one watched a YouTube video
+about a moving-average rule that "never fails".</p>
+<p>Mr. Agarwal does not want to sell anything to them. He wants to give them honest
+answers, with numbers, that he can show on his computer screen. He has asked you
+for three things.</p>
+<h2 id="the-three-questions">The three questions</h2>
+<p>In his own words.</p>
+<p><strong>1. "Can a computer tell me where the Nifty will be next week?"</strong></p>
+<p><strong>2. "This YouTube video says: buy when the 20-day average goes above the 50-day average, sell when it goes below. After brokerage, does it make money?"</strong></p>
+<p><strong>3. "One customer says 10 and 30 work much better than 20 and 50. Is he right, or was he just lucky?"</strong></p>
+<details>
+<summary><strong>Not sure where to start? Open this.</strong></summary>
+<p>This tells you which class notebook to start from. It does not give the answer.</p>
+<p><strong>Question 1 is Session 15.</strong> Use the Nifty closing value. Fit ARIMA and the
+three exponential smoothing models from the class code. Forecast five trading
+days ahead. Now the important part: compare every model against the simplest
+forecast of all, "next week will be the same as today". Call it the naive
+forecast. Measure all of them with RMSE on the checking period. Do it many
+times, not once: stand on each Friday of the checking period, forecast the next
+five days, and average the errors. Session 14 tells you what to expect here,
+from the ACF of the returns.</p>
+<p><strong>Question 2 is Session 19, notebook 01 and the cost part of notebook 02.</strong>
+Run the 20/50 rule on the Nifty and on each of the five shares. Trade on the
+next day, with <code>shift(1)</code>. Take off 0.1% on every buy and every sell. Compare
+with simply buying and holding: final value of ₹1, Sharpe ratio, worst
+drawdown, and number of trades.</p>
+<p><strong>Question 3 is Session 19, notebook 02, trap 2.</strong> Try many pairs of averages
+on the learning period only. Pick the best pair. Then run that same pair on the
+checking period and see what happens. Do the same for 10/30 as the customer
+asked.</p>
+</details>
+<h2 id="the-data">The data</h2>
+<p>Daily closing prices from Yahoo Finance:</p>
+<pre><code class="language-python">import yfinance as yf
+
+tickers = [&quot;^NSEI&quot;, &quot;HDFCBANK.NS&quot;, &quot;ICICIBANK.NS&quot;, &quot;TCS.NS&quot;, &quot;RELIANCE.NS&quot;, &quot;ITC.NS&quot;]
+
+prices = yf.download(tickers, start=&quot;2015-01-01&quot;, end=&quot;2026-01-01&quot;,
+                     auto_adjust=True, progress=False)[&quot;Close&quot;]
+</code></pre>
+<p>The class file from Session 19 has HDFC Bank and ICICI Bank from 2019 to 2025.
+You can use it to check your code against the class numbers:</p>
+<pre><code>https://girishmkulkarni.github.io/applied-maths-in-industry-site/sessions/S19/data/hdfc_icici_2019_2025.csv
+</code></pre>
+<p>If Yahoo Finance does not work on the day you need it, save the table once with
+<code>prices.to_csv(...)</code> and put the CSV in your repo.</p>
+<h2 id="rules-for-this-brief">Rules for this brief</h2>
+<p><strong>Two periods, and keep them apart.</strong></p>
+<ul>
+<li>The learning period is 1 January 2015 to 31 December 2021. Fit your models
+  and choose your rule settings using only this period.</li>
+<li>The checking period is 1 January 2022 to 31 December 2025. Use it at the end
+  to see how your choices really do.</li>
+</ul>
+<p><strong>Today's signal is traded tomorrow.</strong> The 20-day average for today is known
+only after the market closes today. So you can act on it only tomorrow. If you
+forget <code>shift(1)</code>, your rule will look far better than it really is. Show us
+once, on purpose, what happens to the result when you forget it.</p>
+<p><strong>Every buy and every sell costs 0.1%.</strong> That is a rough number for brokerage,
+taxes and charges together. Then try 0.2% and say if your answer changes.</p>
+<p><strong>Always compare with buy and hold.</strong> A rule that turns ₹1 into ₹1.50 sounds
+good. If just holding the share turned ₹1 into ₹2, the rule lost money for you.</p>
+<h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
+<p>The hard part is not the code. The code is short, and most of it is in your
+class notebooks. The hard part is being honest about the result.</p>
+<p>On the class data from Session 19, the 20/50 rule on HDFC Bank turned ₹1 into
+about ₹1.05 from 2019 to 2025, before any costs. Simply holding the share turned
+₹1 into about ₹1.97. Your job is to find out whether that was bad luck with one
+share, or whether it happens for the Nifty and the other shares too.</p>
+<p>For Question 3, remember the 200 random rules from Session 19. If you try enough
+settings, one of them will look very good on the past just by chance. The only
+fair test is new data that was not used to choose the setting. When you explain
+this to Mr. Agarwal, do not use the word "overfitting". Explain it the way you
+would explain it to his customers.</p>
+<p>For Question 1, a result of "no model beats the naive forecast" is a correct and
+useful answer. Do not hide it. Explain why in simple words, using what you saw
+in the ACF of the daily returns.</p>
+<h2 id="extra-only-if-you-finish-early">Extra, only if you finish early</h2>
+<p>Session 19 also did pairs trading on HDFC Bank and ICICI Bank. Mr. Agarwal's
+customers have heard of it too. Pick one other pair of companies in the same
+business, for example TCS and Infosys. Test whether the gap between them stays steady
+(the cointegration test), and run the z-score rule with costs. This is not
+marked, but you can show it in your talk.</p>
+<h2 id="what-to-do-next">What to do next</h2>
+<ol>
+<li>Read <a href="finance.html">the finance projects page</a> for what to hand in and how
+   it is marked.</li>
+<li>Download the data with code and plot every series. Check for missing days.</li>
+<li>Split the two periods before you fit or tune anything.</li>
+<li>Answer the three questions, then write the note to Mr. Agarwal.</li>
+</ol></section>
+<p class="back"><a href="finance.html">&larr; All finance projects</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

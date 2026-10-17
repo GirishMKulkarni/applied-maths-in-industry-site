@@ -23,51 +23,52 @@
   </nav>
 </header>
 <main>
-<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A semiconductor fabrication plant</li><li><strong>Field:</strong> Manufacturing and process control</li><li><strong>Data:</strong> UCI SECOM — 1,567 production lots, 590 sensors, 104 failures</li><li><strong>Size:</strong> about 5 MB</li><li><strong>Licence:</strong> CC BY 4.0</li><li><strong>The catch:</strong> Predict pass for everything and you score 93.4% accuracy. This is the brief where accuracy is a lie.</li></ul></section>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A semiconductor fabrication plant</li><li><strong>Field:</strong> Manufacturing and process control</li><li><strong>Data:</strong> UCI SECOM, 1,567 production lots, 590 sensors, 104 failures</li><li><strong>Size:</strong> about 5 MB</li><li><strong>Licence:</strong> CC BY 4.0</li><li><strong>The catch:</strong> Predict pass for every lot and you get 93.4% accuracy. In this brief, accuracy is completely misleading.</li></ul></section>
 <section class="body"><h1 id="p3-the-lot-that-fails-final-test">P3 · The Lot That Fails Final Test</h1>
 <h2 id="the-situation">The situation</h2>
-<p>A semiconductor fab runs wafers through several hundred process steps. At the
-end of the line every lot goes through final electrical test, and a lot that
-fails is scrapped. Not reworked. Scrapped. A scrapped lot is worth more than a
-new engineer's annual salary, and by the time the test says so, six weeks of
-plant time have already been spent on it.</p>
-<p>The line is covered in sensors. Temperatures, pressures, flows, gas
-concentrations, timings, five hundred and ninety signals in all, recorded for
-every lot. The process engineers have a nagging feeling that the failures are
-visible in that data long before final test, but nobody has ever been able to
-show it, because nobody can look at five hundred and ninety charts.</p>
+<p>A semiconductor fab passes wafers through several hundred process steps. At the
+end of the line, every lot goes through a final electrical test. A lot that
+fails is scrapped. It is not repaired. It is thrown away. One scrapped lot is
+worth more than a new engineer's yearly salary. And by the time the test shows
+the failure, six weeks of plant time have already been spent on that lot.</p>
+<p>The line has sensors everywhere. They record temperatures, pressures, flows, gas
+concentrations and timings, five hundred and ninety signals in all, for every
+lot. The process engineers strongly suspect that the failures can be seen in
+this data long before final test. But nobody has been able to prove it, because
+nobody can study five hundred and ninety charts.</p>
 <p>The plant manager wants three things.</p>
-<p>A warning, before final test, that a lot is heading for a fail, so it can be
-pulled and inspected rather than finished.</p>
-<p>A short list of the sensors that actually matter, small enough to fit on the
-screen above the line. Five hundred and ninety is not a dashboard.</p>
-<p>And, quietly, an answer to a question the engineers have been arguing about:
-whether one particular measurement, which requires stopping the tool and takes
-twenty minutes, could be inferred from the sensors that are free.</p>
+<p>First, a warning before final test that a lot is likely to fail. Then the lot
+can be taken out and inspected instead of being finished.</p>
+<p>Second, a short list of the sensors that really matter. It must be small enough
+to fit on the screen above the line. Five hundred and ninety sensors cannot fit
+on one dashboard.</p>
+<p>Third, an answer to a question the engineers have been arguing about. One
+particular measurement needs the tool to be stopped, and it takes twenty
+minutes. Can it be calculated from the sensors that cost nothing to read?</p>
 <h2 id="the-three-questions">The three questions</h2>
 <p>As the plant asked them.</p>
 <p><strong>1. "Before this lot goes to final test, can you tell me whether it is going to fail?"</strong></p>
 <p><strong>2. "Which of these five hundred and ninety sensors actually deserve a place on the screen above the line?"</strong></p>
-<p><strong>3. "That measurement that costs us twenty minutes and a tool stop — can you work it out from the sensors that are free?"</strong></p>
+<p><strong>3. "That measurement costs us twenty minutes and a tool stop. Can you calculate it from the sensors that are free?"</strong></p>
 <details>
 <summary><strong>Stuck at the very start? Open this.</strong></summary>
-<p>The first move only.</p>
+<p>This only tells you where to start.</p>
 <p><strong>Question 1 is a binary classification problem</strong>, and it is the hardest one in
 the six briefs, because only 104 of the 1,567 lots failed. Start with logistic
-regression from Session 9, but expect your first attempt to predict "pass" for
-absolutely everything and look like it is doing well. That is not a bug in your
-code, it is the whole lesson. Look up what <code>class_weight="balanced"</code> does before
-you decide something is broken.</p>
-<p><strong>Question 2 is Session 11, twice over.</strong> PCA will squash the 590 sensors into
+regression from Session 9. Your first model will probably predict "pass" for
+every single lot and still seem to do well. This is not a bug in your code. It
+is the main lesson of this project. Find out what <code>class_weight="balanced"</code> does
+before you decide something is broken.</p>
+<p><strong>Question 2 uses Session 11 in two ways.</strong> PCA will reduce the 590 sensors to
 a few components and tell you how much of the variation you kept. Separately,
-the tree models from Session 10 will rank the sensors by how much they actually
-help, and a clustering of the sensors themselves will show you which ones are
-near-copies of each other. Before any of that, throw out the 116 columns that
-hold the same value in every row: they cannot possibly carry information.</p>
-<p><strong>Question 3 is a regression problem.</strong> Pick one sensor column, take it out of
-the inputs, and predict it from the rest. With 590 columns and only 1,567 rows
-this is exactly the situation Session 8 was about, so start with Ridge rather
-than plain least squares and you will see why immediately.</p>
+the tree models from Session 10 will rank the sensors by how much they really
+help. A clustering of the sensors themselves will show you which ones are
+almost copies of each other. Before any of this, remove the 116 columns that
+have the same value in every row. They cannot carry any information.</p>
+<p><strong>Question 3 is a regression problem.</strong> Pick one sensor column, remove it from
+the inputs, and predict it from the rest. You have 590 columns and only 1,567
+rows. This is exactly the situation Session 8 was about. So start with Ridge,
+not plain least squares, and you will quickly see why.</p>
 </details>
 <h2 id="the-data">The data</h2>
 <p>The SECOM dataset from the UCI repository. One thousand five hundred and
@@ -77,43 +78,45 @@ recorded as 1 for a failure and -1 for a lot that passed.</p>
 <pre><code>https://archive.ics.uci.edu/static/public/179/secom.zip
 </code></pre>
 <p>Licensed CC BY 4.0. The sensors are anonymised, so you will not know what any of
-them physically measures. That is normal in this industry and it is part of the
+them physically measures. This is normal in this industry, and it is part of the
 exercise.</p>
 <h2 id="constraints-on-this-brief">Constraints on this brief</h2>
-<p><strong>Accuracy is banned unless you defend it.</strong> One hundred and four failures in
-one thousand five hundred and sixty-seven lots. A model that predicts "pass" for
-every lot, and is therefore completely useless, scores 93.4%. If the word
-accuracy appears anywhere in your conclusions you must justify it in the same
-paragraph.</p>
+<p><strong>Do not use accuracy unless you can defend it.</strong> There are one hundred and four
+failures in one thousand five hundred and sixty-seven lots. A model that
+predicts "pass" for every lot is completely useless, but it scores 93.4%. If the
+word accuracy appears anywhere in your conclusions, you must justify it in the
+same paragraph.</p>
 <p><strong>Write the two costs first, in rupees.</strong> What does it cost to miss a failing
-lot? What does it cost to pull a good lot off the line for inspection? Those two
-numbers, and nothing else, decide your threshold. Show the curve of expected
-cost against threshold and mark where you set it.</p>
-<p><strong>Split by time.</strong> The lots are timestamped and the process drifts. Train on the
-earlier lots, test on the later ones. A random split lets your model learn a
-process condition from lots recorded on either side of it.</p>
-<p><strong>The data is a mess, and clearing it is the work.</strong> There are around forty-two
-thousand missing values. One hundred and sixteen columns hold the same value in
-every single row and carry no information at all. Around three hundred and forty
-of the five hundred and ninety have almost no variance. Many are near-duplicates
-of each other. All of that has to be dealt with inside a pipeline, which is
-harder than dealing with it in a notebook cell, and is the reason we require it.</p>
-<p><strong>Search harder here than anywhere else.</strong> This is the smallest dataset of the
-six by a wide margin. A cross-validated fit takes a second. You genuinely have
-the compute to explore the hyperparameter space properly, so your budget from
-stage 6 should be the largest of any team in the class, and your report should
-say so and show what the extra searching bought you. If it bought nothing, that
-is a finding worth more than a better score.</p>
+lot? What does it cost to take a good lot off the line for inspection? Only
+these two numbers decide your threshold. Show the curve of expected cost against
+threshold, and mark where you set it.</p>
+<p><strong>Split by time.</strong> The lots are timestamped, and the process changes slowly over
+time. Train on the earlier lots and test on the later ones. A random split lets
+your model learn a process condition from lots recorded both before and after
+it.</p>
+<p><strong>The data is very messy, and cleaning it is the main work.</strong> There are about
+forty-two thousand missing values. One hundred and sixteen columns have the same
+value in every row and carry no information at all. About three hundred and
+forty of the five hundred and ninety columns have almost no variance. Many
+columns are almost duplicates of each other. You must handle all of this inside
+a pipeline. That is more difficult than handling it in a notebook cell, and that
+is why we require it.</p>
+<p><strong>Search more here than in any other brief.</strong> This is by far the smallest
+dataset of the six. A cross-validated fit takes one second. So you really do
+have the computing power to search the hyperparameter space properly. Your
+budget from stage 6 should be the largest of any team in the class. Your report
+should say this and show what the extra search gave you. If it gave you
+nothing, that finding is worth more than a better score.</p>
 <h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
-<p>Five hundred and ninety columns and one thousand five hundred rows is the wrong
-way round. There are more things to measure than there are lots to learn from,
-and in that situation a model can find a pattern that is pure coincidence and be
-completely convinced by it. Everything you know about regularisation from
-Session 8, and everything about dimension reduction from Session 11, exists for
-exactly this.</p>
-<p>The other hard thing is that the gap between your tuned score and your nested
-cross-validation score will be embarrassing. It is meant to be. Explaining that
-gap honestly is the most valuable paragraph you will write in this course.</p>
+<p>You have five hundred and ninety columns and only one thousand five hundred
+rows. Usually you want more rows than columns. Here there are more things measured than
+there are lots to learn from. In this situation a model can find a pattern that
+is only chance, and fully believe it. Regularisation from Session 8 and
+dimension reduction from Session 11 were made for exactly this problem.</p>
+<p>The other hard thing is this. Your tuned score will be much better than your
+nested cross-validation score, and the gap will be large. We expect this.
+Explaining that gap honestly is the most valuable paragraph you will write in
+this course.</p>
 <h2 id="what-to-do-next">What to do next</h2>
 <ol>
 <li>Read <a href="method.html">the method</a>. It lists the eight things every submission
@@ -127,7 +130,7 @@ gap honestly is the most valuable paragraph you will write in this course.</p>
 <li>Split the test set off the way this brief tells you to, and do not look at it
    again until the end.</li>
 </ol>
-<p>If you are stuck before any of that, open the nudge box above.</p></section>
+<p>If you are stuck before any of that, open the help box above.</p></section>
 <p class="back"><a href="index.html">&larr; All projects</a> · <a href="method.html">The method</a> · <a href="rubric.html">The rubric</a></p>
 </main>
 <footer class="foot">

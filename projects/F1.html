@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>The Retirement Money · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A retired school teacher</li><li><strong>Field:</strong> Personal finance and portfolios</li><li><strong>Data:</strong> Daily NSE prices of ten shares and the Nifty 50, 2020 to 2025, from Yahoo Finance</li><li><strong>Size:</strong> less than 1 MB</li><li><strong>Licence:</strong> Yahoo Finance data, for study use only</li><li><strong>The catch:</strong> The best mix on past data changes a lot when you move the dates by a few months.</li></ul></section>
+<section class="body"><h1 id="f1-the-retirement-money">F1 · The Retirement Money</h1>
+<h2 id="the-situation">The situation</h2>
+<p>Mrs. Joshi taught mathematics in a government school for thirty-two years. She
+retired this year. After the house loan was closed she has ₹10 lakh left over.
+Her pension pays for the monthly expenses, so she does not need this money for
+three or four years. She wants it to grow faster than a fixed deposit.</p>
+<p>She has decided to buy shares directly, not mutual funds, because her
+neighbour does the same and showed her the broker app. She has made a list of
+ten large companies she has heard of. She has two conditions. She does not want
+more than a quarter of the money in any one company. And she wants to know, in
+rupees, how much she can lose in a bad month, before she puts in a single
+rupee.</p>
+<p>Her son works at an IT company in Bengaluru. His advice is simple: "Put
+everything in TCS and Infosys. IT always does well." Her neighbour says just
+buy a Nifty index fund and forget about it.</p>
+<p>She has asked you to help her decide.</p>
+<h2 id="the-three-questions">The three questions</h2>
+<p>In her own words.</p>
+<p><strong>1. "How much of my ₹10 lakh should go into each of these ten shares?"</strong></p>
+<p><strong>2. "In a bad month, how much money can I lose? Tell me in rupees, not in percent."</strong></p>
+<p><strong>3. "My son says put everything in TCS and Infosys. My neighbour says buy the Nifty. Which is better, your mix or theirs?"</strong></p>
+<details>
+<summary><strong>Not sure where to start? Open this.</strong></summary>
+<p>This tells you which class notebook to start from. It does not give the answer.</p>
+<p><strong>Question 1 is Session 16.</strong> Start from notebook 03, the ten-stock NSE
+portfolio. It already finds the maximum-Sharpe mix with no short selling. Add
+Mrs. Joshi's rule, no share above 25%. The stretch cell at the end of that
+notebook shows how. Also find the minimum-risk mix, and the simple equal mix of
+10% in each share. Show all three as rupee amounts out of ₹10 lakh.</p>
+<p><strong>Question 2 is Session 17.</strong> Your class code already does historical VaR,
+parametric VaR, Monte Carlo VaR and CVaR for a five-stock portfolio. Do the same
+for your mix, but for 21 trading days (one month), not one day. One easy way:
+add up the daily log returns in each 21-day window and use those as your monthly
+returns. Then do the stress test: what would March 2020 have done to her money?</p>
+<p><strong>Question 3 is Session 14.</strong> The growth of ₹100 chart, the Sharpe ratio and
+the worst drawdown. Put the four choices on one chart: your mix, the equal mix,
+50% TCS plus 50% Infosys, and the Nifty 50. Do this on the checking period only.</p>
+</details>
+<h2 id="the-data">The data</h2>
+<p>Daily closing prices from Yahoo Finance. These are the ten shares from Session
+16, plus the Nifty 50 index:</p>
+<pre><code class="language-python">import yfinance as yf
+
+shares = [&quot;TCS.NS&quot;, &quot;INFY.NS&quot;, &quot;HDFCBANK.NS&quot;, &quot;RELIANCE.NS&quot;, &quot;ITC.NS&quot;,
+          &quot;MARUTI.NS&quot;, &quot;SUNPHARMA.NS&quot;, &quot;LT.NS&quot;, &quot;NESTLEIND.NS&quot;, &quot;TATASTEEL.NS&quot;]
+
+prices = yf.download(shares + [&quot;^NSEI&quot;], start=&quot;2020-01-01&quot;, end=&quot;2026-01-01&quot;,
+                     auto_adjust=True, progress=False)[&quot;Close&quot;]
+</code></pre>
+<p>Use <code>auto_adjust=True</code>. Some of these companies gave bonus shares or split their
+shares in these years. Without adjusted prices you will see a fall of 50% on one
+day that never happened.</p>
+<p>If Yahoo Finance does not work on the day you need it, save the table once with
+<code>prices.to_csv(...)</code> and put the CSV in your repo.</p>
+<h2 id="rules-for-this-brief">Rules for this brief</h2>
+<p><strong>Two periods, and keep them apart.</strong></p>
+<ul>
+<li>The learning period is 1 January 2021 to 31 December 2023. Use only this to
+  find the weights.</li>
+<li>The checking period is 1 January 2024 to 31 December 2025. Use it only for
+  Question 3, at the end.</li>
+</ul>
+<p>March 2020 is kept out of both periods on purpose. Use it only for the stress
+test in Question 2.</p>
+<p><strong>No short selling, and no share above 25%.</strong> Mrs. Joshi cannot sell shares
+she does not own, and she gave you the 25% rule herself.</p>
+<p><strong>Use 6% a year as the safe return</strong> for the Sharpe ratio. That is roughly what
+a bank fixed deposit pays.</p>
+<p><strong>Remember that shares come in whole numbers.</strong> You cannot buy 3.7 shares of
+Nestle India. At the end of Question 1, turn your weights into the number of
+shares she should buy at the price on 31 December 2023, and say how much money
+is left over in cash.</p>
+<h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
+<p>The weights from the optimiser look exact, like 23.4% in one share and 0% in
+another. They are not exact. They come from past average returns, and past
+average returns are a weak guide to the future.</p>
+<p>Check this for yourself. Move the learning period by six months, to July 2021
+to June 2024, and find the weights again. Put the two sets of weights side by
+side. If a share goes from 25% to 0%, Mrs. Joshi should know that. Tell her
+which part of your answer you trust and which part you do not.</p>
+<p>The second hard part is Question 3. Over a short period one sector can do very
+well, and then the son's advice looks clever. Over a different period it does
+badly. Say what happened in the checking period, and also say what you think
+can happen to someone who puts all their money in one sector.</p>
+<h2 id="what-to-do-next">What to do next</h2>
+<ol>
+<li>Read <a href="finance.html">the finance projects page</a> for what to hand in and how
+   it is marked.</li>
+<li>Download the data with code and look at it. Plot all ten prices. Check for
+   missing days and for any sudden jump.</li>
+<li>Split the two periods before you calculate anything.</li>
+<li>Answer the three questions, then write the note to Mrs. Joshi.</li>
+</ol></section>
+<p class="back"><a href="finance.html">&larr; All finance projects</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

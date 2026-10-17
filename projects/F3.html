@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Insurance for Your Shares · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A parent who must pay college fees next month</li><li><strong>Field:</strong> Options and risk</li><li><strong>Data:</strong> Daily Reliance Industries prices, 2023 to 2025, from Yahoo Finance, plus option prices you note down from the NSE website</li><li><strong>Size:</strong> less than 1 MB</li><li><strong>Licence:</strong> Yahoo Finance data, for study use only. NSE option prices are public.</li><li><strong>The catch:</strong> Insurance costs money every month. It pays back only in the months when the price falls a lot.</li></ul></section>
+<section class="body"><h1 id="f3-insurance-for-your-shares">F3 · Insurance for Your Shares</h1>
+<h2 id="the-situation">The situation</h2>
+<p>Mr. Deshmukh works in a bank in Nashik. Years ago he started buying Reliance
+shares a few at a time, and today he holds 500 of them. His daughter got
+admission to an engineering college. The first-year fees and hostel deposit are
+due in about one month, and he plans to sell the shares to pay for it.</p>
+<p>The fees, the hostel deposit and the first year's expenses come to about ₹7
+lakh. Today his shares are worth a little more than that. He is worried. If
+Reliance falls 10% before he sells, he will have about ₹75,000 less than he
+needs, and the college will not give him more time.</p>
+<p>He has received two suggestions.</p>
+<p>His broker says: "Buy a put option. It works like insurance. If the price falls
+below a level you choose, the put pays you the difference."</p>
+<p>His colleague says: "Don't pay for insurance. Sell a call option instead. You
+get money today. You only lose some of the profit if the price goes up a lot."</p>
+<p>He does not understand either suggestion properly, and he does not want to
+simply believe one of them. He has asked you to explain it with numbers.</p>
+<h2 id="the-three-questions">The three questions</h2>
+<p>In his own words.</p>
+<p><strong>1. "What is a fair price for one month of insurance on my shares? Is the price on the NSE website too high?"</strong></p>
+<p><strong>2. "If I do nothing, buy the put, or sell the call, how much money will I have in my hand at the end of the month? Show me the good case and the bad case."</strong></p>
+<p><strong>3. "Looking at the last three years, would this insurance really have been worth the money?"</strong></p>
+<details>
+<summary><strong>Not sure where to start? Open this.</strong></summary>
+<p>This tells you which class notebook to start from. It does not give the answer.</p>
+<p><strong>Question 1 is Session 18, with one input from Session 14.</strong> The class code
+has a <code>black_scholes</code> function. It needs the volatility, and in class we just
+used 20%. Here you calculate it from Reliance's daily returns, the way we did
+annual volatility in Session 14. Price a one-month put at three strikes: at
+today's price, 5% below, and 10% below. Check one of them with the Monte Carlo
+method from notebook 03. Then compare with the real premiums you noted down from
+NSE (see the data section). If the market premium is higher than yours, find the
+volatility that gives the market premium. A simple loop over volatilities from
+10% to 60% is enough.</p>
+<p><strong>Question 2 is Session 18, notebook 01.</strong> You already drew the profit charts
+for the share alone, the protective put and the covered call. Now draw them for
+Mr. Deshmukh's real numbers: 500 shares, the strike and premium you chose, and
+the money he needs for the fees. Make one simple table: Reliance at expiry 15%
+down, 10% down, 5% down, unchanged, 5% up, 10% up, and the rupees he gets in each
+plan.</p>
+<p><strong>Question 3 is Session 17 thinking with Session 18 tools.</strong> Take every 21-day
+window in 2023 to 2025. For each window, imagine he bought the put at the start
+at the Black-Scholes price, and see what he had at the end. Do the same with no
+insurance and with the covered call. Now you have hundreds of possible months
+for each plan. Find the average, the worst 5% (this is VaR from Session 17) and
+the average of the worst 5% (CVaR). Also count in how many months the put paid
+back more than it cost.</p>
+</details>
+<h2 id="the-data">The data</h2>
+<p>Reliance daily closing prices from Yahoo Finance:</p>
+<pre><code class="language-python">import yfinance as yf
+
+reliance = yf.download(&quot;RELIANCE.NS&quot;, start=&quot;2023-01-01&quot;, end=&quot;2026-01-01&quot;,
+                       auto_adjust=True, progress=False)[&quot;Close&quot;]
+</code></pre>
+<p>Use <code>auto_adjust=True</code>. Reliance gave one bonus share for every share held in
+October 2024. Without adjusted prices you will see a 50% fall that never
+happened.</p>
+<p>The class file from Session 18 has the same prices, if Yahoo Finance does not
+work:</p>
+<pre><code>https://girishmkulkarni.github.io/applied-maths-in-industry-site/sessions/S18/data/reliance_2023_2025.csv
+</code></pre>
+<p><strong>The real option prices you note down yourself.</strong> Open the option chain for
+Reliance on the NSE website (nseindia.com, then Option Chain). Choose the expiry
+nearest to one month away. Write down, in a small table in your repo:</p>
+<ul>
+<li>the date and time you looked</li>
+<li>Reliance's price at that moment</li>
+<li>the expiry date</li>
+<li>the strike prices and the last traded price (LTP) of the put and the call at
+  each strike, for at least five strikes around the current price</li>
+<li>the lot size for Reliance options on that day</li>
+</ul>
+<p>Take a screenshot of the page and put it in your repo too. This is real market
+data, and the date matters, because the prices change every minute.</p>
+<h2 id="rules-for-this-brief">Rules for this brief</h2>
+<p><strong>Use 6% a year as the interest rate.</strong> That is roughly what a one-year
+government treasury bill pays.</p>
+<p><strong>Check the lot size.</strong> NSE does not sell options for any number of shares you
+like. They come in lots. If one lot is not exactly 500 shares, say what Mr.
+Deshmukh can actually buy and what part of his shares stays uninsured.</p>
+<p><strong>Count the cost every month.</strong> Insurance is not bought once. If he did this
+every month for a year, how much would he pay in total premiums? Put that
+number next to the losses the insurance saved him in Question 3.</p>
+<p><strong>The price on the screen is not the price you pay.</strong> There is brokerage and
+tax on options too. Take 0.1% of the premium for each trade, and say if it
+changes your answer. It usually does not change much here, but check.</p>
+<h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
+<p>The question "was the insurance worth it?" has two honest answers, and you have
+to give both.</p>
+<p>Most months, the put expires worthless and the premium is lost. If you only
+count rupees on average, insurance usually looks like a bad deal. That is how
+all insurance works. Your car insurance also "loses money" in every year you do
+not have an accident.</p>
+<p>But Mr. Deshmukh's problem is not the average month. His problem is one month in
+which the fees must be paid. Going 10% short in that one month hurts him much
+more than a small premium does. So Question 3 is really about the bad months,
+not the average. Use the worst 5% and the CVaR to show him this.</p>
+<p>The other hard part is volatility. Black-Scholes needs a number for future
+volatility, and you can only measure past volatility. If your price and the NSE
+price do not match, that is not a mistake in your code. The difference tells you
+what the market expects. Explain that to him in plain words.</p>
+<h2 id="what-to-do-next">What to do next</h2>
+<ol>
+<li>Read <a href="finance.html">the finance projects page</a> for what to hand in and how
+   it is marked.</li>
+<li>Note down the NSE option prices in the first week, on one day, with a
+   screenshot. You cannot go back and get them later.</li>
+<li>Download the Reliance prices with code, plot them, and calculate the
+   volatility.</li>
+<li>Answer the three questions, then write the note to Mr. Deshmukh.</li>
+</ol></section>
+<p class="back"><a href="finance.html">&larr; All finance projects</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

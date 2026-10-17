@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Finance projects · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="finance-projects">Finance projects</h1>
+<p>These three projects use only what we did in the finance module, Sessions 14
+to 19. Prices and returns, forecasting, building a portfolio, VaR and CVaR,
+options and backtesting. Nothing new to learn. The new part is that nobody
+tells you which step comes next.</p>
+<p>Each project is small. It has one person with a real money problem, three
+questions in that person's own words, and data you can download in two lines.
+The code you need is already in your class notebooks. Your job is to put the
+right pieces together and then explain the answer to someone who does not know
+any finance.</p>
+<h2 id="how-this-works">How this works</h2>
+<ol>
+<li>Work in your project team. Each team picks one of the three projects below.</li>
+<li>Read your brief fully before you write any code.</li>
+<li>Answer the three questions. One notebook per question is fine.</li>
+<li>If you do not know where to start a question, open the help box in your
+   brief. It tells you which session and which notebook to start from.</li>
+<li>Write a short note for the person in your brief. Two pages, plain words,
+   numbers in rupees, no code.</li>
+</ol>
+<p>You have about two weeks. This is much smaller than your ML project, and it is
+marked out of 50, not 100.</p>
+<h2 id="choose-one">Choose one</h2><div class="grid">
+  <a class="card" href="F1.html">
+    <span class="sid">F1</span>
+    <span class="ctitle">The Retirement Money</span>
+    <span class="cmeta">A retired school teacher · Personal finance and portfolios</span>
+  </a>
+  <a class="card" href="F2.html">
+    <span class="sid">F2</span>
+    <span class="ctitle">Can a Computer Beat the Market?</span>
+    <span class="cmeta">A small stock-broking office · Trading and forecasting</span>
+  </a>
+  <a class="card" href="F3.html">
+    <span class="sid">F3</span>
+    <span class="ctitle">Insurance for Your Shares</span>
+    <span class="cmeta">A parent who must pay college fees next month · Options and risk</span>
+  </a>
+</div><h2 id="what-you-hand-in">What you hand in</h2>
+<ol>
+<li><strong>A GitHub repo</strong> with your notebooks. Every notebook must run from top to
+   bottom on Google Colab. It must download its own data. Fix the random seed
+   so we get the same numbers as you.</li>
+<li><strong>A note of two pages</strong> for the person in your brief. They are not a
+   finance person. Tell them what to do, how much money is at stake, and what
+   could go wrong. If the note needs a formula or a line of code to make sense,
+   rewrite it.</li>
+<li><strong>A five-minute talk</strong> in class. Show one chart and give your answer to each
+   of the three questions.</li>
+</ol>
+<h2 id="three-rules-for-all-three-projects">Three rules for all three projects</h2>
+<p><strong>Fix your dates.</strong> Every brief gives you a start date and an end date. Use
+those dates, not <code>period="3y"</code>. Otherwise your numbers change every day and
+nobody can check them.</p>
+<p><strong>Do not use the future.</strong> If a brief splits the data into a learning period
+and a checking period, choose everything (weights, settings, models) using the
+learning period only. Then look at the checking period once, at the end, and
+report what you see, good or bad. In a backtest, today's signal is traded
+tomorrow. This is the <code>shift(1)</code> from Session 19.</p>
+<p><strong>Talk in rupees.</strong> "VaR is 2.1%" means nothing to the people in these briefs.
+"On one bad day in twenty you can lose ₹21,000 or more" means something.</p>
+<h2 id="how-it-is-marked">How it is marked</h2>
+<p>Out of 50.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Marks</th>
+<th>What gets the marks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Question 1</td>
+<td>12</td>
+<td>Correct method, correct code, and the answer stated in one plain sentence</td>
+</tr>
+<tr>
+<td>Question 2</td>
+<td>12</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Question 3</td>
+<td>12</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>The note</td>
+<td>10</td>
+<td>Two pages that the person in your brief could read and act on, with rupee numbers and one honest paragraph on what could go wrong</td>
+</tr>
+<tr>
+<td>The notebooks run</td>
+<td>4</td>
+<td>We open them on Colab and run everything. They download their own data and finish without any help from us</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Minus 10</strong> for using the checking period to make a choice. For example,
+choosing weights or rule settings by looking at 2024 and 2025 results.</p>
+<p>We do not mark how much money your portfolio or rule makes. A team that finds
+its rule loses money, and shows clearly why, can get full marks.</p></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a> · <a href="index.html">ML projects</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

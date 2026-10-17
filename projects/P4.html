@@ -23,25 +23,24 @@
   </nav>
 </header>
 <main>
-<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A city administration</li><li><strong>Field:</strong> Environment and public health</li><li><strong>Data:</strong> Air Quality Data in India 2015-2020, from CPCB — 26 cities, daily and hourly</li><li><strong>Size:</strong> about 10 MB</li><li><strong>Licence:</strong> Open data from the Central Pollution Control Board, published on Kaggle</li><li><strong>The catch:</strong> The obvious model scores 0.99 and is worth nothing. Finding out why is the project.</li></ul></section>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A city administration</li><li><strong>Field:</strong> Environment and public health</li><li><strong>Data:</strong> Air Quality Data in India 2015-2020, from CPCB — 26 cities, daily and hourly</li><li><strong>Size:</strong> about 10 MB</li><li><strong>Licence:</strong> Open data from the Central Pollution Control Board, published on Kaggle</li><li><strong>The catch:</strong> The obvious model scores 0.99 and is of no use. Your project is to find out why.</li></ul></section>
 <section class="body"><h1 id="p4-tomorrows-air">P4 · Tomorrow's Air</h1>
 <h2 id="the-situation">The situation</h2>
-<p>You are working with a city administration. On bad-air days schools are supposed
-to move games indoors, construction is supposed to pause, and people with asthma
-are supposed to be told to stay in. None of that can be arranged on the morning
-of, because by the morning of, the children are already at school and the
-construction crew is already on site.</p>
+<p>You are working with a city administration. On bad-air days, schools are supposed
+to move games indoors, construction is supposed to stop, and people with asthma
+are supposed to be told to stay at home. None of this can be arranged on the same
+morning. By then the children are already at school and the construction workers
+are already on site.</p>
 <p>The administration needs to know the evening before.</p>
-<p>At the moment it does not. It has an air quality board that reports what the air
-is like right now, which is useful for deciding whether to go for a walk and
-useless for planning anything. The health department wants a warning issued at
-about six in the evening for the following day, and it wants that warning in the
-same language the public already knows: Good, Satisfactory, Moderate, Poor, Very
-Poor, Severe.</p>
+<p>Right now it does not. It has an air quality board that shows what the air is
+like at this moment. That helps you decide whether to go for a walk. It does not
+help you plan anything. The health department wants a warning at about six in
+the evening for the next day. It wants the warning in the same words the public
+already knows: Good, Satisfactory, Moderate, Poor, Very Poor, Severe.</p>
 <p>They have also asked a question the environment department cannot answer. Delhi
-and Chennai both have bad days, but they are not bad in the same way, and the
-measures that work in one may be pointless in the other. Nobody has grouped the
-cities by what actually pollutes them.</p>
+and Chennai both have bad days, but the causes are not the same. A measure that
+works in one city may be useless in the other. Nobody has grouped the cities by
+what actually pollutes their air.</p>
 <h2 id="the-three-questions">The three questions</h2>
 <p>As the health and environment departments asked them.</p>
 <p><strong>1. "Tell me this evening what the air is going to be like tomorrow."</strong></p>
@@ -49,24 +48,24 @@ cities by what actually pollutes them.</p>
 <p><strong>3. "Delhi and Chennai both have bad days. Are they bad in the same way, or do we need different measures in each city?"</strong></p>
 <details>
 <summary><strong>Stuck at the very start? Open this.</strong></summary>
-<p>The first move only.</p>
-<p><strong>Question 1 is a regression problem</strong>, and there is a trap in it that will cost
-you the project if you walk into it. The AQI number in each row is calculated
-from the pollutant numbers in that same row. Predict today's AQI from today's
-pollutants and you will get an almost perfect score, and you will have built a
-calculator, not a forecast. You are predicting <em>tomorrow</em>, using only what you
-could know this evening. That means building lagged columns: today's PM2.5,
-yesterday's, the average of the last week. Once those exist, start with linear
-regression from Session 7.</p>
-<p><strong>Question 2 is a multi-class classification problem.</strong> Six classes instead of
-two, and the AQI_Bucket column already gives you the label. Start with logistic
-regression from Session 9, which handles more than two classes without any extra
-work. The classes are ordered, Severe is further from Good than Moderate is, and
-your first model will not know that. Notice it.</p>
-<p><strong>Question 3 is a clustering problem.</strong> One row per city, the columns being that
-city's typical levels of each pollutant, then k-means from Session 11. A city
-choked by vehicle exhaust and a city choked by dust should not land in the same
-group.</p>
+<p>This only helps you get started.</p>
+<p><strong>Question 1 is a regression problem</strong>, and it has one mistake that can make your
+whole project fail. The AQI number in each row is calculated from the pollutant
+numbers in that same row. If you predict today's AQI from today's pollutants, you
+will get an almost perfect score. But you will have built a calculator, not a
+forecast. You are predicting <em>tomorrow</em>, using only what you can know this
+evening. So you need to build lagged columns: today's PM2.5, yesterday's, the
+average of the last week. Once you have these, start with linear regression from
+Session 7.</p>
+<p><strong>Question 2 is a multi-class classification problem.</strong> There are six classes
+instead of two, and the AQI_Bucket column already gives you the label. Start with
+logistic regression from Session 9, which handles more than two classes with no
+extra work. The classes are in order. Severe is further from Good than Moderate
+is. Your first model will not know that. Notice it.</p>
+<p><strong>Question 3 is a clustering problem.</strong> Make one row per city. The columns are
+that city's typical levels of each pollutant. Then use k-means from Session 11. A
+city polluted mostly by vehicle smoke and a city polluted mostly by dust should
+not land in the same group.</p>
 </details>
 <h2 id="the-data">The data</h2>
 <p>Air Quality Data in India, 2015 to 2020, collected by the Central Pollution
@@ -78,43 +77,45 @@ NOx, NH3, CO, SO2, O3, Benzene, Toluene, Xylene, AQI and AQI_Bucket.</p>
 </code></pre>
 <h2 id="constraints-on-this-brief">Constraints on this brief</h2>
 <p><strong>The index is calculated from the pollutant columns in the same row.</strong> Read
-that sentence again, because it is the whole brief. AQI is not measured, it is
-computed from PM2.5, PM10 and the rest by a published formula. A model that uses
-today's pollutants to predict today's AQI will score an R squared of about 0.99
-and has learned arithmetic, not air quality. It cannot be deployed, because at
-six in the evening you do not have tomorrow's pollutant readings.</p>
-<p>You are forecasting tomorrow from today and earlier. Only. Every feature you
-build has to be something a person could actually know at six o'clock on the
-evening before.</p>
-<p><strong>Test on 2020, by date.</strong> Then look up what happened in India in the last week
-of March 2020, and write honestly about what it does to your test scores. Some
-teams will find their model looks better in 2020 and some will find it looks
-worse, and both need explaining. A model evaluated on a period unlike anything it
-trained on is a genuine industrial situation, not a spoiled experiment.</p>
+that sentence again. The whole brief depends on it. AQI is not measured. It is
+computed from PM2.5, PM10 and the rest using a published formula. A model that
+uses today's pollutants to predict today's AQI will get an R squared of about
+0.99. It has learned arithmetic, not air quality. It cannot be used in practice,
+because at six in the evening you do not have tomorrow's pollutant readings.</p>
+<p>You forecast tomorrow using only today and earlier days. Nothing else. Every
+feature you build has to be something a person could actually know at six
+o'clock on the evening before.</p>
+<p><strong>Test on 2020, by date.</strong> Then find out what happened in India in the last week
+of March 2020. Write honestly about how it affects your test scores. Some teams
+will find their model looks better in 2020 and some will find it looks worse.
+Both need explaining. In real industry, a model is often tested on a period very
+different from its training data. This does not mean your experiment has failed.</p>
 <p><strong>Your metric must know the classes are ordered.</strong> Calling a Severe day
-Satisfactory is not the same size of mistake as calling it Poor, and plain
-accuracy, plain F1 and the ordinary Cohen's kappa all treat those two errors as
-identical. Something in your evaluation has to understand the ordering, and
-choosing what is part of the work.</p>
+Satisfactory is a bigger mistake than calling it Poor. But plain accuracy, plain
+F1 and the ordinary Cohen's kappa all treat these two errors as the same.
+Something in your evaluation has to understand the order. Choosing that metric
+is part of the work.</p>
 <p><strong>Missing readings are everywhere, and they are not missing at random.</strong> Some
 stations do not measure some pollutants at all. Some go offline for months.
-Sometimes a station is offline precisely because conditions were extreme. How you
-fill those gaps is a modelling decision that changes your answer, and it belongs
-inside the pipeline, with the reasoning written down.</p>
+Sometimes a station is offline exactly because conditions were extreme. How you
+fill these gaps is a modelling decision, and it changes your answer. Do it inside
+the pipeline, and write down your reasons.</p>
 <h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
-<p>Two things fight each other. The costs are wildly asymmetric, because telling a
-city it is fine when it is Severe hurts children, while a false alarm costs a
-morning of inconvenience. But the Severe class is also the rarest, so it is the
-one your model will be worst at, and the one every default setting in
-scikit-learn will quietly ignore. Reconciling those two facts is the project.</p>
-<p>The second is seasonality. North Indian winter air is a different phenomenon
-from the rest of the year. A model trained across all months will be mediocre
-in both regimes, and a model per season has less data to learn from. There is no
-clean answer, and we want to see you choose one and say what it cost.</p>
+<p>Two facts pull in opposite directions. First, the two kinds of mistake have very
+different costs. If you tell a city the air is fine when it is Severe, children
+get hurt. A false alarm only costs one morning of trouble. Second, the Severe
+class is also the rarest. So your model will be worst at it, and every default
+setting in scikit-learn will mostly ignore it. Handling both facts together is
+the project.</p>
+<p>The second difficulty is the seasons. In North India, winter air behaves very
+differently from the rest of the year. A model trained on all months together
+will be only average in both seasons. A separate model for each season has less
+data to learn from. There is no perfect answer. We want to see you choose one and
+say what you lost by choosing it.</p>
 <h2 id="what-to-do-next">What to do next</h2>
 <ol>
 <li>Read <a href="method.html">the method</a>. It lists the eight things every submission
-   contains, whichever brief you chose. It is the specification, not advice.</li>
+   contains, whichever brief you chose. These are rules to follow, not suggestions.</li>
 <li>Read <a href="rubric.html">the rubric</a> so you know where the hundred marks are, and
    which four mistakes lose them.</li>
 <li>Before you write any modelling code, write the one-page cost note that stage 1
@@ -124,7 +125,7 @@ clean answer, and we want to see you choose one and say what it cost.</p>
 <li>Split the test set off the way this brief tells you to, and do not look at it
    again until the end.</li>
 </ol>
-<p>If you are stuck before any of that, open the nudge box above.</p></section>
+<p>If you are stuck before any of that, open the help box above.</p></section>
 <p class="back"><a href="index.html">&larr; All projects</a> · <a href="method.html">The method</a> · <a href="rubric.html">The rubric</a></p>
 </main>
 <footer class="foot">
