@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>What to Make from the Milk · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A village milk co-operative</li><li><strong>Field:</strong> Production planning</li><li><strong>Data:</strong> All numbers are given in this brief: milk, workers&#x27; hours, profit and demand for four products</li><li><strong>Size:</strong> one small table</li><li><strong>Licence:</strong> Made-up numbers, close to a real small dairy</li><li><strong>The catch:</strong> The most profitable product is not the answer, because something else runs out first.</li></ul></section>
+<section class="body"><h1 id="o1-what-to-make-from-the-milk">O1 · What to Make from the Milk</h1>
+<h2 id="the-situation">The situation</h2>
+<p>A milk co-operative near Kolhapur collects about 2,000 litres of milk every
+morning from the farmers of four villages. It can sell the milk in four ways:
+as packed milk, as curd, as paneer or as ghee.</p>
+<p>Mr. Patil, the secretary of the co-operative, decides every morning how much
+milk goes into each product. Today he does it by habit. Half the milk goes into
+packets, because that is how it was always done, and the rest is divided
+between the others.</p>
+<p>The co-operative has eight workers, each working eight hours, so 64 working
+hours a day. It has one paneer machine. Each product sells only up to a certain
+amount a day. The shops will not take more than that.</p>
+<p>Here are the numbers. "Profit" is what the co-operative keeps after paying the
+farmers for the milk and paying for packing.</p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Milk needed</th>
+<th>Workers' time</th>
+<th>Profit</th>
+<th>Most that sells in a day</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Packed milk</td>
+<td>1 litre per litre</td>
+<td>0.01 hours per litre</td>
+<td>₹6 per litre</td>
+<td>1,200 litres</td>
+</tr>
+<tr>
+<td>Curd</td>
+<td>1 litre per kg</td>
+<td>0.05 hours per kg</td>
+<td>₹12 per kg</td>
+<td>400 kg</td>
+</tr>
+<tr>
+<td>Paneer</td>
+<td>5 litres per kg</td>
+<td>0.3 hours per kg</td>
+<td>₹90 per kg</td>
+<td>150 kg</td>
+</tr>
+<tr>
+<td>Ghee</td>
+<td>25 litres per kg</td>
+<td>1 hour per kg</td>
+<td>₹200 per kg</td>
+<td>20 kg</td>
+</tr>
+</tbody>
+</table>
+<p>The paneer machine can make at most 100 kg of paneer a day.</p>
+<h2 id="the-three-questions">The three questions</h2>
+<p>In Mr. Patil's own words.</p>
+<p><strong>1. "From 2,000 litres, how much packed milk, curd, paneer and ghee should we make every day to earn the most?"</strong></p>
+<p><strong>2. "Farmers from the next village want to sell us 300 more litres a day, but they want ₹5 a litre more than we pay now. Should we take it?"</strong></p>
+<p><strong>3. "A second paneer machine will cost us ₹1,500 a day in loan instalments. Should we buy it? And what if we also hire one more worker for ₹500 a day?"</strong></p>
+<details>
+<summary><strong>Not sure where to start? Open this.</strong></summary>
+<p>This tells you which class notebook to start from. It does not give the answer.</p>
+<p><strong>Question 1 is Session 20, notebook 02, the cheapest thali.</strong> It is the same
+kind of problem turned the other way. In the thali you chose how many katoris of
+each food to make the cost as small as possible. Here you choose how much of
+each product to make the profit as big as possible. One variable per product.
+One rule for milk, one for workers' hours, one for the paneer machine, and one
+for each product's demand. Solve, read the status, then check every rule by hand.</p>
+<p><strong>Question 2 is Session 20 again.</strong> Change the milk from 2,000 to 2,300 litres
+and solve again. How much did the profit go up? Divide by 300. That is what one
+more litre of milk is worth to the co-operative. Compare it with the extra ₹5 a
+litre the farmers want.</p>
+<p><strong>Question 3 is Session 21.</strong> Buying the machine is a yes/no decision, so it is
+a binary variable, like opening a dark store. If you buy it, the paneer limit
+goes from 100 kg to 200 kg and you pay ₹1,500 a day. Write the paneer rule so
+that it uses the yes/no variable. Then solve the same model again with 72
+working hours instead of 64, and take off ₹500 for the new worker.</p>
+</details>
+<h2 id="rules-for-this-brief">Rules for this brief</h2>
+<p><strong>Write the problem in words first.</strong> Before any code, write three short lists
+in your notebook: what you decide, what you make as big as possible, and every
+rule that must be followed. Mr. Patil should be able to read those lists and
+say "yes, that is my dairy".</p>
+<p><strong>Check which rules are "full".</strong> After you solve, find which rules are used up
+completely (all the milk used, all the hours used, the machine at 100 kg) and
+which still have room. This is the most useful thing you can tell Mr. Patil,
+because it tells him what is really holding the dairy back.</p>
+<p><strong>Compare with what he does today.</strong> Work out the profit of his habit: 1,000
+litres into packets and the rest split evenly by milk between the other three
+products, within their limits. Show how many rupees a day, and a month, your
+plan adds.</p>
+<h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
+<p>Paneer earns the most per litre of milk. So the first idea is to make as much
+paneer as possible. But paneer also needs a lot of workers' time and it needs
+the machine. When one of those runs out, making more paneer is not possible, no
+matter how profitable it is.</p>
+<p>The same thing happens in Question 3. A second machine sounds like an easy
+"yes", because paneer makes so much money. Find out what actually stops the
+dairy from making more paneer. If it is not the machine, the machine will not
+help on its own.</p>
+<p>In Question 2 there is a second lesson. Extra milk is worth something, but not
+the full profit of any one product, because the extra milk has to go to
+whatever is still possible to make. Explain this to Mr. Patil without using the
+words "shadow price".</p>
+<h2 id="what-to-do-next">What to do next</h2>
+<ol>
+<li>Read <a href="optimization.html">the optimization projects page</a> for what to hand
+   in and how it is marked.</li>
+<li>Write the three lists (decisions, goal, rules) before you write any code.</li>
+<li>Answer the three questions, checking every solution by hand.</li>
+<li>Write the note to Mr. Patil.</li>
+</ol></section>
+<p class="back"><a href="optimization.html">&larr; All Optimization projects</a> · <a href="index.html">All projects</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

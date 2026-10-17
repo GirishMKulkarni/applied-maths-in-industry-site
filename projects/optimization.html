@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Optimization projects · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="body"><h1 id="optimization-projects">Optimization projects</h1>
+<p>These three projects use only what we did in the optimization module, Sessions
+20 to 24. Linear programming, yes/no decisions with integer programming, convex
+problems in cvxpy, simulation with SimPy, inventory and Markov chains. Nothing
+new to learn.</p>
+<p>Each project is small. There is one person with a real problem and three
+questions in that person's own words. All the numbers you need are in the brief
+itself, so there is nothing to download. The code you need is already in your
+class notebooks. Your job is to write the problem in maths, solve it, check the
+answer, and explain it to someone who has never heard of a solver.</p>
+<h2 id="how-this-works">How this works</h2>
+<ol>
+<li>Work in your project team. Each team picks one of the three projects below.</li>
+<li>Read your brief fully before you write any code.</li>
+<li>For every question, first write the problem in words: what you decide, what
+   you want to make as big or as small as possible, and what rules must be
+   followed. Then write the code.</li>
+<li>If you do not know where to start a question, open the help box in your
+   brief. It tells you which session and which notebook to start from.</li>
+<li>Write a short note for the person in your brief. Two pages, plain words,
+   numbers in rupees, no code.</li>
+</ol>
+<p>You have about two weeks. It is marked out of 50.</p>
+<h2 id="choose-one">Choose one</h2><div class="grid">
+  <a class="card" href="O1.html">
+    <span class="sid">O1</span>
+    <span class="ctitle">What to Make from the Milk</span>
+    <span class="cmeta">A village milk co-operative · Production planning</span>
+  </a>
+  <a class="card" href="O2.html">
+    <span class="sid">O2</span>
+    <span class="ctitle">The Fertiliser Money</span>
+    <span class="cmeta">A farmer in Vidarbha · Budget allocation</span>
+  </a>
+  <a class="card" href="O3.html">
+    <span class="sid">O3</span>
+    <span class="ctitle">The Chemist Shop</span>
+    <span class="cmeta">A medical store owner · Queues, stock and customers</span>
+  </a>
+</div><h2 id="what-you-hand-in">What you hand in</h2>
+<ol>
+<li><strong>A GitHub repo</strong> with your notebooks. Every notebook must run from top to
+   bottom on Google Colab. Fix the random seed so we get the same numbers as
+   you.</li>
+<li><strong>A note of two pages</strong> for the person in your brief. Tell them what to do,
+   how much money it makes or saves, and what could go wrong. If the note needs
+   a formula or a line of code to make sense, rewrite it.</li>
+<li><strong>A five-minute talk</strong> in class. Show one chart or one table and give your
+   answer to each of the three questions.</li>
+</ol>
+<h2 id="three-rules-for-all-three-projects">Three rules for all three projects</h2>
+<p><strong>Read the solver's status first.</strong> Before you look at any answer, print the
+status. "Optimal" means the answer can be used. "Infeasible" means your rules
+cannot all be true at once, and the numbers printed after it mean nothing.</p>
+<p><strong>Check the answer by hand.</strong> After every solve, take the answer and check each
+rule yourself, the way we did with the thali in Session 20. Is the milk used
+less than the milk available? Does the money add up to the budget? A wrong sign
+in one constraint gives a wrong answer that looks perfectly fine.</p>
+<p><strong>Talk in rupees.</strong> "The shadow price is 4.5" means nothing to the people in
+these briefs. "One more hour of work earns you ₹4.50 more" means something.</p>
+<h2 id="how-it-is-marked">How it is marked</h2>
+<p>Out of 50.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Marks</th>
+<th>What gets the marks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Question 1</td>
+<td>12</td>
+<td>The problem written clearly in words and in maths, correct code, the answer checked by hand and stated in one plain sentence</td>
+</tr>
+<tr>
+<td>Question 2</td>
+<td>12</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Question 3</td>
+<td>12</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>The note</td>
+<td>10</td>
+<td>Two pages that the person in your brief could read and act on, with rupee numbers and one honest paragraph on what could go wrong</td>
+</tr>
+<tr>
+<td>The notebooks run</td>
+<td>4</td>
+<td>We open them on Colab and run everything. They finish without any help from us</td>
+</tr>
+</tbody>
+</table>
+<p>We do not mark you on finding a big number. If your answer is "do not buy the
+machine" or "do not take the loan", and you show clearly why, that can get full
+marks.</p></section>
+<p class="back"><a href="index.html">&larr; All projects</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

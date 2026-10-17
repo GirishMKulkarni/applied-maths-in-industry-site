@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>The Fertiliser Money · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A farmer in Vidarbha</li><li><strong>Field:</strong> Budget allocation</li><li><strong>Data:</strong> All numbers are given in this brief: the budget and a rule from the agriculture officer for each crop</li><li><strong>Size:</strong> three numbers</li><li><strong>Licence:</strong> Made-up numbers, close to a real small farm</li><li><strong>The catch:</strong> Every extra rupee earns less than the one before it.</li></ul></section>
+<section class="body"><h1 id="o2-the-fertiliser-money">O2 · The Fertiliser Money</h1>
+<h2 id="the-situation">The situation</h2>
+<p>Mrs. Wankhede farms four and a half acres near Akola. This season she has three
+crops: cotton on two acres, soybean on one and a half acres, and tur on one
+acre. She has ₹60,000 to spend on fertiliser and spray for all three.</p>
+<p>Every year she splits the money equally, ₹20,000 for each crop. This year she
+went to the Krishi Vigyan Kendra, and the agriculture officer gave her a rough
+rule for her own fields. For each crop:</p>
+<blockquote>
+<p>extra income from the crop (in ₹ thousand) = k × √(money spent on it, in ₹ thousand)</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Crop</th>
+<th>k</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cotton</td>
+<td>12</td>
+</tr>
+<tr>
+<td>Soybean</td>
+<td>8.5</td>
+</tr>
+<tr>
+<td>Tur</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>So, for example, ₹16,000 on cotton gives 12 × √16 = 48, which is ₹48,000
+of extra income. ₹36,000 on cotton gives 12 × √36 = 72, which is ₹72,000. The
+money went up by more than double, but the income went up by only half. This is
+what the officer meant when he said "after some point, more fertiliser does
+not help much".</p>
+<p>She has also been offered a crop loan of ₹20,000 from the bank at 12% a year.
+She would repay it after the harvest, in six months.</p>
+<h2 id="the-three-questions">The three questions</h2>
+<p>In Mrs. Wankhede's own words.</p>
+<p><strong>1. "How should I split my ₹60,000 between cotton, soybean and tur? How much more will I earn than with my equal split?"</strong></p>
+<p><strong>2. "The government pulse scheme wants me to spend at least ₹10,000 on tur. What does that rule cost me?"</strong></p>
+<p><strong>3. "Should I take the ₹20,000 loan and put it into fertiliser too?"</strong></p>
+<details>
+<summary><strong>Not sure where to start? Open this.</strong></summary>
+<p>This tells you which class notebook to start from. It does not give the answer.</p>
+<p><strong>Question 1 is Session 22, the advertising budget in your class code.</strong> It is
+the same problem. TV, Instagram and Google become cotton, soybean and tur. The
+money spent is a cvxpy variable with three entries, all at least zero, adding up
+to 60. The income is the sum of k times the square root. Solve it and then
+work out the income of the equal split by hand, to compare.</p>
+<p><strong>Question 2 is Session 22 again.</strong> Add one more rule: the money on tur is at
+least 10. Solve again. The fall in income is the cost of the scheme's rule.</p>
+<p><strong>Question 3 is the equal-marginal rule from Session 22.</strong> At the best split,
+the last ₹1,000 earns the same amount in every crop. Print that number. If the
+last ₹1,000 earns less than ₹1,000 plus the interest, borrowing more to spend on
+fertiliser loses money. Then solve again with ₹80,000 and compare the extra
+income with what she must pay back to the bank.</p>
+</details>
+<h2 id="rules-for-this-brief">Rules for this brief</h2>
+<p><strong>Work in ₹ thousand.</strong> Write 60, not 60000. The numbers stay small, and that is easier
+for the solver.</p>
+<p><strong>Check the equal-marginal rule.</strong> After every solve, print what the last
+₹1,000 earns in each crop. The formula is k / (2 × √spend). At the best answer
+these numbers are equal for every crop that gets money. If they are not equal,
+something is wrong in your model.</p>
+<p><strong>Draw one picture.</strong> For each crop, plot income against money spent, from 0 to
+60. Mark the amount you chose on each curve. Mrs. Wankhede will understand the
+answer from this picture faster than from any table.</p>
+<p><strong>Remember that the rule is rough.</strong> The officer's formula is an
+approximation. It does not know about rain or pests. In your note, say how much
+your answer would change if k for cotton were 10 instead of 12.</p>
+<h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
+<p>The first idea most people have is "cotton earns the most, so put everything in
+cotton". Try it and see what happens. Because the income grows like a square
+root, the first few thousand rupees on any crop earn a lot, and the later ones
+earn little. So the best answer gives some money to every crop, but not equal
+amounts.</p>
+<p>Question 3 needs care. ₹20,000 more fertiliser will bring in more income. That
+part is true. But she has to pay the loan back with interest. The question is
+not "does income go up?". The question is "does income go up by more than she
+repays?". Explain this to her in one simple sentence.</p>
+<h2 id="what-to-do-next">What to do next</h2>
+<ol>
+<li>Read <a href="optimization.html">the optimization projects page</a> for what to hand
+   in and how it is marked.</li>
+<li>Work out the equal split by hand first, so you have a number to beat.</li>
+<li>Answer the three questions in cvxpy, checking the equal-marginal rule each
+   time.</li>
+<li>Write the note to Mrs. Wankhede.</li>
+</ol></section>
+<p class="back"><a href="optimization.html">&larr; All Optimization projects</a> · <a href="index.html">All projects</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

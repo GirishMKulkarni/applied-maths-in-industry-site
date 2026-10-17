@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>The Chemist Shop · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="newhere"><h2>At a glance</h2><ul><li><strong>Client:</strong> A medical store owner</li><li><strong>Field:</strong> Queues, stock and customers</li><li><strong>Data:</strong> All numbers are given in this brief: arrival and service times, daily sales, costs and how customers move between groups</li><li><strong>Size:</strong> a few numbers and one 3 by 3 table</li><li><strong>Licence:</strong> Made-up numbers, close to a real medical store</li><li><strong>The catch:</strong> The answers are random. One run of the simulation is one story, not the answer.</li></ul></section>
+<section class="body"><h1 id="o3-the-chemist-shop">O3 · The Chemist Shop</h1>
+<h2 id="the-situation">The situation</h2>
+<p>Mr. Shaikh runs a medical store in Solapur, next to a busy clinic. He has three
+problems.</p>
+<p><strong>The evening queue.</strong> Between 6 and 9 in the evening, when the clinic's
+patients come out with their prescriptions, a customer walks in on average every
+2.5 minutes. Serving one customer takes on average 2 minutes. Only one
+pharmacist works at the counter. People complain about the wait, and some walk
+across the road to the new pharmacy. A second pharmacist for the evening would
+cost ₹600 an evening.</p>
+<p><strong>Empty shelves.</strong> His biggest seller is paracetamol. He sells on average 30
+strips a day, some days more and some days less. When he orders, the supplier
+delivers two days later. Every order costs ₹150 for delivery. Keeping one strip
+on the shelf for a day costs about 20 paise, counting the money locked up in
+stock and the space. When a customer asks for paracetamol and he has none, he
+loses about ₹5 of profit, and the customer may not come back.</p>
+<p><strong>Customers going away.</strong> He thinks of his customers in three groups.
+Regulars buy every month. Occasional customers buy sometimes. Lost customers
+now buy elsewhere. From his billing records he has worked out how people move
+between these groups from one month to the next:</p>
+<table>
+<thead>
+<tr>
+<th>This month \ Next month</th>
+<th>Regular</th>
+<th>Occasional</th>
+<th>Lost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regular</td>
+<td>0.85</td>
+<td>0.10</td>
+<td>0.05</td>
+</tr>
+<tr>
+<td>Occasional</td>
+<td>0.20</td>
+<td>0.60</td>
+<td>0.20</td>
+</tr>
+<tr>
+<td>Lost</td>
+<td>0.05</td>
+<td>0.10</td>
+<td>0.85</td>
+</tr>
+</tbody>
+</table>
+<p>Today he has 600 regular and 300 occasional customers. A regular customer
+brings him about ₹400 of profit a month. An occasional one brings about ₹100.</p>
+<p>He is thinking about starting free home delivery. He thinks it would make
+regulars much less likely to leave: 0.92 stay regular, 0.05 become occasional
+and only 0.03 are lost each month. Home delivery would cost him ₹15,000 a month
+for a delivery boy and fuel.</p>
+<h2 id="the-three-questions">The three questions</h2>
+<p>In Mr. Shaikh's own words.</p>
+<p><strong>1. "In the evening rush, how long do my customers really wait? Is a second pharmacist worth ₹600 an evening?"</strong></p>
+<p><strong>2. "When should I order paracetamol, and how much, so that I almost never say 'not available'?"</strong></p>
+<p><strong>3. "After one year, how many regular customers will I still have? Is home delivery worth ₹15,000 a month?"</strong></p>
+<details>
+<summary><strong>Not sure where to start? Open this.</strong></summary>
+<p>This tells you which class notebook to start from. It does not give the answer.</p>
+<p><strong>Question 1 is Session 23, notebook 03, the bank queue.</strong> Change the numbers:
+an arrival every 2.5 minutes on average, 2 minutes of service on average, and
+180 minutes for one evening. Run one counter, then two counters (the stretch
+cell shows how). Report the average wait and the share of customers who wait
+more than 10 minutes. Then run the same evening 100 times with different seeds,
+because one evening is just one story.</p>
+<p><strong>Question 2 is Session 24, notebooks 02 and 03, the (s, S) policy.</strong> When the
+stock falls to s or below, order enough to bring it back up to S. Daily demand
+is random. Use a Poisson distribution with an average of 30, as in class. The
+lead time is 2 days. Add the ₹150 delivery charge to the cost every time an
+order is placed. The class code does not have this cost, so you must add it.
+Try many pairs of s and S. Keep the cheapest pair that meets demand on at least
+95% of the strips asked for.</p>
+<p><strong>Question 3 is Session 24, notebook 01, the Markov chain.</strong> The table above is
+the transition matrix. Start with the row of counts [600, 300, 0] and multiply
+by the matrix twelve times, once for each month. Then do it again with the home
+delivery numbers. Turn the difference in regular and occasional customers into
+rupees of profit, month by month, and compare with ₹15,000 a month.</p>
+</details>
+<h2 id="rules-for-this-brief">Rules for this brief</h2>
+<p><strong>Fix your seeds, and do not trust one run.</strong> Questions 1 and 2 use random
+numbers. Set a seed so that we get the same numbers as you. But base your
+answer on many runs, not one. For Question 1 use at least 100 evenings. For
+Question 2 run each policy for at least 300 days.</p>
+<p><strong>Say what "almost never" means.</strong> Mr. Shaikh said "almost never". You turn
+that into a number, such as 95% or 99% of the strips asked for. Choose one, say
+why, and then show what the stock and the cost would be if you had chosen the
+other one.</p>
+<p><strong>Show the waiting in minutes, not only the average.</strong> An average of 9 minutes
+can hide some people waiting 40 minutes. Draw a histogram of the waiting times
+for one counter and for two counters, side by side.</p>
+<p><strong>Remember that the matrix is his guess.</strong> Mr. Shaikh worked out the first
+table from records. The home delivery numbers are only his hope. In your note,
+say how much better than today the home delivery numbers must be for it to pay
+for itself.</p>
+<h2 id="what-is-hard-about-this-one">What is hard about this one</h2>
+<p>Each of the three questions has an answer that is a number with some
+randomness in it. The average waiting time changes from one evening to the
+next. The best (s, S) pair changes a little if you change the seed. A good
+answer says this honestly: "with one pharmacist, the average wait is around so
+many minutes, and on a bad evening it goes up to so many".</p>
+<p>The other hard part is putting everything in rupees, so that Mr. Shaikh can
+compare. Waiting time is not in rupees. You will have to make a sensible
+assumption, for example that a customer who waits more than 10 minutes goes to
+the other shop, and lose ₹400 a month if that customer was a regular. Write
+your assumption down clearly, and check if your answer changes when the
+assumption changes.</p>
+<h2 id="what-to-do-next">What to do next</h2>
+<ol>
+<li>Read <a href="optimization.html">the optimization projects page</a> for what to hand
+   in and how it is marked.</li>
+<li>Get the class bank queue running with Mr. Shaikh's numbers first. It is the
+   quickest of the three.</li>
+<li>Answer the three questions, using many runs for the random ones.</li>
+<li>Write the note to Mr. Shaikh.</li>
+</ol></section>
+<p class="back"><a href="optimization.html">&larr; All Optimization projects</a> · <a href="index.html">All projects</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>
