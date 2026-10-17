@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Put Your Model Online — a Web App Anyone Can Use · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 5 — Statistics, Communication &amp; Light Deployment</p>
+  <h1>S27 · Put Your Model Online — a Web App Anyone Can Use</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>Over the last weeks you have trained real models: a flat-price estimator, a
+loan-risk classifier, a demand forecast. Each one works beautifully, but only in
+one place: a notebook, on your laptop, where only you can run it. Your family
+cannot try it. A recruiter cannot click it. A client cannot use it. A model that
+nobody else can reach might as well not exist.</p>
+<p>Today you fix that. You take one trained model and put it online as a tiny web
+app, so anyone with the link can open it on their phone and use it. Free, no
+credit card, no servers to rent. By the end you have a working link you can text
+to whoever you like.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>A trained model is just a function: numbers go in, an answer comes out. Give it a
+flat's size and locality, it hands back a price. Give it a flower's four
+measurements, it hands back a species. That is all a model is once it is trained.</p>
+<p>Deploying it means giving that function a public address on the internet. Picture
+your model as a vending machine. Right now it sits in your bedroom, so only you
+can buy from it. Deployment wheels the same machine into a busy market: same
+buttons, same output, but now anyone walking past can use it. Nothing about the
+model changes. Only its reach does.</p>
+<p>Everything today is plumbing around that one function: collect the inputs a user
+types, call the function, show the answer back.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Train a tiny classifier and check it honestly on data it has never seen.</li>
+<li>Save the trained model to a file with <code>joblib</code>, then load it back and predict,
+   with no retraining.</li>
+<li>Write the web app (<code>app.py</code>) straight from the notebook and read it block by
+   block.</li>
+<li>Follow the exact free steps to put it online at a public URL, and learn the few
+   pitfalls that break a deployment.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>how to save a trained model to a file and load it back,</li>
+<li>what a "web app" is, and how a handful of Python lines becomes a web page,</li>
+<li>how deploying to a free public URL actually works, click by click.</li>
+</ul>
+<p>The little we assume: that you can run a notebook cell, and that you have met a
+trained model once before (any of the earlier machine-learning sessions is
+plenty). If either feels shaky:</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>You do not need any web, HTML, or server knowledge. Streamlit lets you build the
+whole page in plain Python, and the free hosting does the server part for you.</p>
+<p>If you already code, skip ahead and look for the cells marked
+<strong>Stretch (optional)</strong> in the notebook.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Explain a trained model as a function <code>f(x)</code>, and deployment as putting that
+  function on the internet.</li>
+<li>Save a fitted model with <code>joblib.dump</code> and load it back with <code>joblib.load</code>, no
+  retraining.</li>
+<li>Read a small Streamlit app and find its four blocks: load the model, collect
+  inputs, predict, display.</li>
+<li>Write that app to a file, know the one command that runs it, and deploy it free
+  to a public URL.</li>
+<li>Show a prediction with units and context, not a bare number.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is a bonus, and none of it is
+needed to finish.</p>
+<p>Today's mathematical object is deliberately light: a trained model is a function,
+<code>ŷ = f(x)</code>. It takes an input (here, four flower measurements; in your projects, a
+flat's size or a borrower's details) and returns a prediction. That is the same
+function idea from first-year calculus and the linear maps of the earlier
+machine-learning sessions. Deployment adds nothing to the mathematics. It takes
+that finished function and gives it a public address, so a call to <code>f(x)</code> can come
+from anyone's browser instead of only from your notebook. The trade name for this
+move is <strong>exposing a function as a service</strong>. The whole session is engineering
+around an <code>f</code> you already built.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>deploy</strong> — put your app on the internet at a public link so other people can use it.</li>
+<li><strong>Streamlit</strong> — a library that turns a plain Python script into a web page, with no HTML.</li>
+<li><strong>widget</strong> — an on-screen control (a slider, a box, a dropdown) that collects one input.</li>
+<li><strong>serialize (joblib.dump)</strong> — write a trained model to a file so it loads later without retraining.</li>
+<li><strong>requirements.txt</strong> — the list of exact package versions the hosting machine must install.</li>
+<li><strong>classifier</strong> — a model that sorts each case into one of a few named groups (here, the species).</li>
+<li><strong>caching (st.cache_resource)</strong> — load the model once and reuse it, instead of on every click.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Save your model, then write the web app that serves it</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S27/notebooks/01_save_load_and_deploy.ipynb">Open in Colab</a>
+      <a class="btn" href="S27/notebooks/01_save_load_and_deploy.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S27/notebooks/01_save_load_and_deploy.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Iris flowers — loaded straight from scikit-learn (no download needed)</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li><a href="https://docs.streamlit.io/get-started">Streamlit documentation — the official Get started tutorial</a></li>
+<li><a href="https://docs.streamlit.io/deploy/streamlit-community-cloud">Streamlit Community Cloud — deployment guide</a></li>
+<li><a href="https://huggingface.co/docs/hub/spaces-sdks-streamlit">Hugging Face Spaces — Streamlit Spaces docs</a></li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Put Your Model Online</h3><ul class="sbullets"><li>A practical workshop: from a notebook to a live link on your phone</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 5 — Statistics, Stakeholder Communication &amp; Light Deployment   ·   Session S27   ·   2 hours Workshop session · bring your laptop, charger and phone</p></div><div class="slide"><h3 class="stitle">Today is a workshop, not a lecture</h3><ul class="sbullets"><li>You will do every step on your own laptop, together with me.</li><li>There are six steps. After each step there is a checkpoint.</li><li>At each checkpoint we stop. Show your screen to your neighbour.</li><li>If your screen does not match the slide, raise your hand. Do not wait silently.</li><li>At the end, you will open your own app on your phone, from a public link.</li></ul></div><div class="slide"><h3 class="stitle">What you will build</h3><img class="sdiagram" src="S27/slides/3_0.png" alt="slide 3 diagram" loading="lazy"><p class="scaption">A small web app. The user moves the sliders; the model guesses the flower's species.</p></div><div class="slide"><h3 class="stitle">The only idea you need today</h3><img class="sdiagram" src="S27/slides/4_0.png" alt="slide 4 diagram" loading="lazy"><p class="scaption">There is no new maths today. This is the whole idea.</p></div><div class="slide"><h3 class="stitle">The plan for today</h3><img class="sdiagram" src="S27/slides/5_0.png" alt="slide 5 diagram" loading="lazy"><p class="scaption">Six steps, about 90 minutes. Each step ends with a checkpoint.</p></div><div class="slide"><h3 class="stitle">Before we start: check these five things</h3><ul class="sbullets"><li>A laptop with the course setup (you can open and run the course notebooks).</li><li>You can log in to github.com. (No account? Make one now. It is free.)</li><li>You have the folder sessions/S27_streamlit_deployment from the course GitHub.</li><li>Only Colab, no laptop setup? That is fine. You will skip step 2.</li><li>Your phone, to test the final link.</li></ul><p class="scaption">PRACTICAL TIPS</p></div><div class="slide"><h3 class="stitle">Step 1 · Make the three files</h3><ul class="sbullets"><li>Run the notebook. It trains the model and writes the app for you.</li></ul></div><div class="slide"><h3 class="stitle">Step 1: run the notebook from top to bottom</h3><ul class="sbullets"><li>Open 01_save_load_and_deploy.ipynb (on your laptop, or in Colab).</li><li>Run all cells. In Jupyter: Kernel → Restart &amp; Run All. In Colab: Runtime → Run all.</li><li>The notebook trains a small model on the Iris flower data and checks it.</li><li>Then it saves three files: iris_model.joblib, app.py and requirements.txt.</li><li>It does NOT start the app. That is normal. We start it in step 2.</li></ul></div><div class="slide"><h3 class="stitle">The two lines that matter in step 1</h3><ul class="sbullets"><li>Training is slow and needs the data. The app only loads the saved file, so it is fast.</li></ul><p class="scaption">CODE import joblib # save the trained model to a file (once, after training) joblib.dump(model, "iris_model.joblib") # later, in the app: load it back. No training again. loaded_model = joblib.load("iris_model.joblib") print(loaded_model.predict([[5.1, 3.5, 1.4, 0.2]])) OUTPUT  ▸ [0]     # 0 means 'setosa'</p></div><div class="slide"><h3 class="stitle">Check your package versions (one extra cell)</h3><ul class="sbullets"><li>Open requirements.txt. If your numbers are different, change them to YOUR numbers.</li></ul><p class="scaption">CODE import sklearn, numpy, joblib # the cloud must install the SAME versions you used to save the model print("scikit-learn ==", sklearn.__version__) print("numpy        ==", numpy.__version__) print("joblib       ==", joblib.__version__) OUTPUT  ▸ scikit-learn == 1.8.0 numpy        == 2.4.6 joblib       == 1.5.3</p></div><div class="slide"><h3 class="stitle">Checkpoint 1: three new files in your folder</h3><ul class="sbullets"><li>iris_model.joblib  (the saved model, a few KB)</li><li>app.py  (the web app, about 60 lines)</li><li>requirements.txt  (the list of packages, with YOUR version numbers)</li><li>Colab users: click the folder icon on the left, then download each file (⋮ → Download).</li><li>Show your three files to your neighbour. Then we go to step 2.</li></ul><p class="scaption">PRACTICAL TIPS</p></div><div class="slide"><h3 class="stitle">Step 2 · Run the app on your laptop</h3><ul class="sbullets"><li>Colab-only students: watch with a neighbour, then join again at step 3.</li></ul></div><div class="slide"><h3 class="stitle">Step 2: three commands in the terminal</h3><ul class="sbullets"><li>A browser tab opens by itself. If it does not, copy the Local URL into your browser.</li></ul><p class="scaption">CODE # 1. go to the folder that has app.py cd sessions/S27_streamlit_deployment/notebooks # 2. install Streamlit (only the first time) uv pip install streamlit==1.40.1      # or:  pip install streamlit==1.40.1 # 3. start the app streamlit run app.py OUTPUT  ▸ You can now view your Streamlit app in your browser. Local URL: http://localhost:8501</p></div><div class="slide"><h3 class="stitle">Checkpoint 2: the app works on your laptop</h3><ul class="sbullets"><li>You see the page 'Iris flower classifier' in your browser.</li><li>Move a slider on the left. The prediction on the right changes.</li><li>Keep the terminal open. Closing it stops the app.</li><li>To stop the app yourself: click the terminal and press Ctrl + C.</li><li>Problem? See the table 'When something goes wrong' near the end.</li></ul><p class="scaption">PRACTICAL TIPS</p></div><div class="slide"><h3 class="stitle">Step 3 · Read the app, then change it</h3><ul class="sbullets"><li>Every model app has the same four blocks.</li></ul></div><div class="slide"><h3 class="stitle">app.py, in four blocks (shortened)</h3><ul class="sbullets"><li>Load the model → show a heading → collect inputs → predict and show. That is the whole app.</li></ul><p class="scaption">CODE # Block 1: load the saved model, only once @st.cache_resource def load_model(): return joblib.load("iris_model.joblib") model = load_model() # Block 2: the page heading st.title("Iris flower classifier") # Block 3: collect the inputs (one line per slider) petal_length = st.sidebar.slider("Petal length (cm)", 1.0, 7.0, 1.4) # Block 4: predict, and show the answer predicted_number = model.predict(input_row)[0] st.metric(label="Predicted species", value=predicted_name)</p></div><div class="slide"><h3 class="stitle">One thing to know: the file runs again on every change</h3><ul class="sbullets"><li>When the user moves a slider, Streamlit runs app.py again, from the first line to the last.</li><li>That is why the page always shows the new answer.</li><li>Loading the model again on every move would be slow.</li><li>@st.cache_resource tells Streamlit: load the model once, then keep it in memory.</li></ul></div><div class="slide"><h3 class="stitle">Your turn (10 minutes): make the app yours</h3><ul class="sbullets"><li>Save the file. In the browser, click 'Rerun' at the top right. Your change appears.</li></ul><p class="scaption">CODE # 1. put your name in the title st.title("Iris flower classifier, by Priya") # 2. add one line under the title st.caption("Made in S27, Applications of Mathematics in Industry") # 3. change a starting value: petal length now starts at 4.5 petal_length = st.sidebar.slider("Petal length (cm)", 1.0, 7.0, 4.5)</p></div><div class="slide"><h3 class="stitle">Step 4 · Put the files on GitHub</h3><ul class="sbullets"><li>The cloud reads your app from a public GitHub repository.</li></ul></div><div class="slide"><h3 class="stitle">Step 4: make a repository and upload the files</h3><ul class="sbullets"><li>On github.com, click + (top right) → New repository.</li><li>Name: iris-app. Choose Public. Turn on 'Add a README file'. Click Create repository.</li><li>On the new repo page: Add file → Upload files.</li><li>Drag in app.py, iris_model.joblib and requirements.txt.</li><li>Click the green Commit changes button at the bottom.</li></ul></div><div class="slide"><h3 class="stitle">Checkpoint 4: your repo should look like this</h3><img class="sdiagram" src="S27/slides/21_0.png" alt="slide 21 diagram" loading="lazy"><p class="scaption">Four files at the top level: README.md, app.py, iris_model.joblib, requirements.txt.</p></div><div class="slide"><h3 class="stitle">Step 5 · Deploy on Streamlit Community Cloud</h3><ul class="sbullets"><li>Free. No credit card. You log in with your GitHub account.</li></ul></div><div class="slide"><h3 class="stitle">Step 5: connect Streamlit Cloud to your repo</h3><ul class="sbullets"><li>Go to share.streamlit.io and click Continue with GitHub.</li><li>Allow Streamlit to see your GitHub account when it asks.</li><li>Click Create app (top right).</li><li>Choose: Deploy a public app from GitHub.</li><li>Fill in the form (next slide) and click Deploy.</li></ul></div><div class="slide"><h3 class="stitle">Fill in the form</h3><img class="sdiagram" src="S27/slides/24_0.png" alt="slide 24 diagram" loading="lazy"><p class="scaption">Repository: yourname/iris-app · Branch: main · Main file path: app.py · App URL: choose a short name.</p></div><div class="slide"><h3 class="stitle">While it builds (2 to 5 minutes)</h3><ul class="sbullets"><li>You see a loading screen and a log on the right side.</li><li>The cloud computer starts empty. It installs the packages in requirements.txt.</li><li>Then it runs app.py, the same way you did in step 2.</li><li>Do not refresh again and again. Wait for the app to appear.</li><li>Red text in the log? Go to 'When something goes wrong' near the end.</li></ul></div><div class="slide"><h3 class="stitle">Checkpoint 5: open your link on your phone</h3><ul class="sbullets"><li>Your app opens at https://your-name.streamlit.app.</li><li>Open the same link on your phone. Use mobile data, not college Wi-Fi.</li><li>Move a slider on the phone. The answer changes.</li><li>Post your link in the class WhatsApp group.</li><li>Well done: your model is now on the internet.</li></ul><p class="scaption">PRACTICAL TIPS</p></div><div class="slide"><h3 class="stitle">Step 6 · Update the live app and share it</h3><ul class="sbullets"><li>Change a file on GitHub, and the app changes by itself.</li></ul></div><div class="slide"><h3 class="stitle">Change the live app</h3><ul class="sbullets"><li>Open app.py in your repo on GitHub.</li><li>Click the pencil icon. Change the caption line.</li><li>Click Commit changes.</li><li>After about a minute, refresh your app. The change is live.</li></ul><img class="sdiagram" src="S27/slides/28_0.png" alt="slide 28 diagram" loading="lazy"><p class="scaption">After the first deploy, you never deploy again.</p></div><div class="slide"><h3 class="stitle">Write a short README (5 minutes)</h3><ul class="sbullets"><li>Line 1: the live link, so people can click it first.</li><li>Line 2: what the app does, in one sentence.</li><li>Line 3: how to use it: 'Move the sliders on the left.'</li><li>Line 4: what model it uses, and its accuracy on test data.</li><li>Edit README.md on GitHub with the pencil icon, the same way as app.py.</li></ul></div><div class="slide"><h3 class="stitle">When something goes wrong</h3><ul class="sbullets"><li>Errors are normal. Find your message in the table.</li></ul></div><div class="slide"><h3 class="stitle">On Streamlit Cloud: what you see, and the fix</h3></div><div class="slide"><h3 class="stitle">On your laptop: what you see, and the fix</h3></div><div class="slide"><h3 class="stitle">How to ask for help so you get a quick answer</h3><ul class="sbullets"><li>Copy the LAST red line of the error, not the whole page.</li><li>Say which step you are on: 'Step 5, after I clicked Deploy'.</li><li>Say where: on your laptop, in Colab, or on Streamlit Cloud.</li><li>You can also paste that last line into a search engine. Many people have seen the same error.</li></ul><p class="scaption">PRACTICAL TIPS</p></div><div class="slide"><h3 class="stitle">Stretch · Use your own model instead of Iris</h3><ul class="sbullets"><li>For students who finished early, or for the capstone.</li></ul></div><div class="slide"><h3 class="stitle">What to change for your own model</h3></div><div class="slide"><h3 class="stitle">Example: inputs and answer for a flat-price model</h3><ul class="sbullets"><li>Same four blocks. Show the answer in rupees with a likely range, as we learned in S26.</li></ul><p class="scaption">CODE area = st.number_input("Carpet area (sq ft)", 300, 3000, 650) locality = st.selectbox("Locality", ["Kothrud", "Baner", "Hadapsar"]) age = st.slider("Age of building (years)", 0, 40, 10) row = pd.DataFrame([{"area": area, "locality": locality, "age": age}]) price = model.predict(row)[0]          # the saved pipeline, in Rs lakh st.metric("Estimated price", f"Rs {price:.1f} lakh") st.write(f"Likely range: Rs {price-5:.0f} to {price+5:.0f} lakh")</p></div><div class="slide"><h3 class="stitle">Safety rules for a public app</h3><ul class="sbullets"><li>Never</li><li>Passwords or API keys inside app.py</li><li>Real customer or personal data in a public repo</li><li>Very large data files in the repo</li><li>Calling it a 'production system' in an interview</li><li>Instead</li><li>Use Secrets in the Streamlit Cloud app settings</li><li>Use public or made-up data only</li><li>Upload only the small saved model</li><li>Call it a demo app; be proud of it as a demo</li></ul></div><div class="slide"><h3 class="stitle">Deliverable: your live app</h3><ul class="sbullets"><li>In the lab: submit two links: your live app and your GitHub repo. This is the Module 5 deployment deliverable.</li><li>1.  The app opens on a phone, using mobile data.</li><li>2.  The title has your name (step 3).</li><li>3.  The app shows the answer with its confidence, not a bare label.</li><li>4.  The repo is Public and has the four files at the top level.</li><li>5.  README line 1 is the live link; it also says what the app does and how to use it.</li><li>6.  Stretch (optional): the app uses your own model from an earlier session.</li><li>Deliverable:  the live app link + the GitHub repo link, in the course form, before S28.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S27_streamlit_deployment/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_save_load_and_deploy.ipynb app.py (the Streamlit app, written by the notebook) requirements.txt (the packages the cloud installs) Iris flowers: loaded from scikit-learn (no download needed) Or a trained model from any earlier session (stretch) New to code? primers/python_in_15_minutes.md Any new word? primers/glossary.md Streamlit docs: the official 'Get started' tutorial Streamlit Community Cloud: deploy your app (official guide) Hugging Face Spaces: another free place to host a Streamlit app</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S28: Industry guest panel (AI and data science). People who work with real models talk about their jobs. Bring your live link to show them.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

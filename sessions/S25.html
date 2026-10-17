@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Did the Change Actually Help? A/B Testing in Plain Words · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 5 — Statistics, Communication &amp; Light Deployment</p>
+  <h1>S25 · Did the Change Actually Help? A/B Testing in Plain Words</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/p_values_in_plain_words.html">P values in plain words</a></li><li><a href="../primers/what_is_a_distribution.html">What is a distribution</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A shopping app changes its checkout screen. Half the users keep the old screen; the
+other half get a redesigned one-tap UPI prompt. After a week the new screen looks a
+little better: a few more people finished paying. Someone in the meeting says "great,
+ship it." Someone else says "wait, is that real, or did we just get lucky this week?"</p>
+<p>That second question is the most common applied-statistics job in tech, fintech and
+e-commerce. Ship a change to half your users, keep the old version for the other
+half, and honestly decide whether the new one is genuinely better or the gap is just
+noise. That is an A/B test, and reading one honestly is what today is about.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Every measurement wobbles. Even if the two screens were secretly identical, the two
+groups would not tie exactly, because luck alone leaves a gap. So the honest question
+is not "did B do better in our sample?" but "could a gap this size have turned up
+even if the change did nothing?"</p>
+<p>Picture a pretend world where the change did nothing at all. Luck still produces
+gaps there: small ones often, big ones rarely. Now drop your real result onto that
+picture. If it lands in the fat middle, it is the kind of gap luck hands you all the
+time, so it is not convincing. If it lands far out in the thin tail, luck would
+almost never produce something that big, so it is real evidence the change did
+something.</p>
+<p>That "how surprising would this be if nothing happened?" number is the <strong>p-value</strong>,
+and it runs the whole session. A small p-value means your result is surprising under
+"nothing happened", so you doubt "nothing happened". One warning we will repeat all
+day: the p-value is <em>not</em> the probability that nothing happened. We work it out by
+<em>assuming</em> nothing happened, so it cannot also be the chance of that.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Tour the three everyday tests, one line of code each: a t-test to compare two
+   averages, a chi-square test to compare two conversion rates, and ANOVA to compare
+   three or more designs at once.</li>
+<li>Analyse a full checkout A/B test end to end: compute the conversion rates, run the
+   right test, and report the p-value alongside a plausible range for the lift.</li>
+<li>Decide A versus B, separating "unlikely to be luck" from "big enough to be worth
+   shipping".</li>
+<li>See the two ways a test can be wrong as two overlapping bell curves, then work out
+   how many users you need before you launch.</li>
+</ol>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>We teach all of this from scratch today, in plain steps:</p>
+<ul>
+<li>what a hypothesis test is and how it turns "real or luck?" into a number,</li>
+<li>what a p-value means, in words, and the one thing it does <em>not</em> mean,</li>
+<li>how to pick the right test for your data, and how to say how many users you need.</li>
+</ul>
+<p>The little you may want in advance: how to run a notebook cell, and the idea of an
+average and how spread-out numbers can be. Both are covered here first.</p>
+<ul>
+<li>Want the heart of today in one page? Read
+  <a href="../primers/p_values_in_plain_words.html">P-values in plain words</a>.</li>
+<li>New to averages and spread? Read
+  <a href="../primers/what_is_a_distribution.html">What is a distribution?</a>.</li>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already know some statistics or already code, skip ahead and look for the
+cells marked <strong>Stretch (optional)</strong> in the notebooks, where we add non-parametric
+tests and show the multiple-testing trap.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>State the two competing claims and read a p-value in plain words (and say what it
+  is NOT).</li>
+<li>Pick the right test for your data: t-test for averages, chi-square for conversion
+  rates, ANOVA for three or more groups.</li>
+<li>Report an effect with a confidence interval, and weigh "unlikely to be luck"
+  against "big enough to matter" — the three questions every manager asks: is it
+  real, how big is it, should we act?</li>
+<li>Work out the number of users needed to detect an effect you care about, before you
+  launch the test.</li>
+<li>Explain why correlation is not causation, and why the random split is what lets an
+  experiment say "caused" rather than just "linked".</li>
+<li>Spot a biased sample, and read a control chart — the same "ordinary wobble vs
+  something changed" idea that runs factory floors and pharma labs.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough to do the lab. This box is the extra depth for those who
+want it, and none of it is needed to finish.</p>
+<p>Today's mathematical object is the trio that runs the machine. A <strong>test statistic</strong>
+is the effect measured in standard-error units: roughly the difference you saw
+divided by how much it would wobble by chance, so it is signal over noise. Its beauty
+is that <em>under the null</em> (assuming the change did nothing) this standardised quantity
+follows a distribution we already know (normal, t, chi-square or F), so we can compute
+exactly how far out in the tail our value sits. That tail area is the p-value.</p>
+<p>Because we make a yes/no decision under uncertainty, two mistakes are possible. A
+<strong>Type I error</strong> (false positive) declares B better when it is not; its probability
+is <strong>alpha</strong>, the significance level, usually 0.05. A <strong>Type II error</strong> (false
+negative) misses a real improvement; its probability is <strong>beta</strong>. <strong>Statistical
+power</strong> is <code>1 − beta</code>, the chance of catching a real effect, and the convention is to
+design for 80% power. Alpha and beta trade off against each other through the decision
+threshold, and the way to shrink both at once is a larger sample, which pulls the two
+distributions apart. All of this is a bonus, not a gate.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>A/B test</strong> — ship the old version to half your users and the new one to the
+  other half, then compare, to see if the change really helped.</li>
+<li><strong>hypothesis test</strong> — the honest procedure for deciding whether a difference is
+  real or just luck.</li>
+<li><strong>p-value</strong> — if the change did nothing, how often luck alone would give a result
+  this extreme. Small means surprising, so evidence of a real effect.</li>
+<li><strong>null hypothesis</strong> — the sceptical default: there is no real difference, any gap
+  is chance.</li>
+<li><strong>test statistic</strong> — the effect measured in standard-error units, signal over
+  noise.</li>
+<li><strong>confidence interval</strong> — a plausible range for the true effect, reported with its
+  size rather than just a yes/no.</li>
+<li><strong>statistical power</strong> — the chance of catching a real effect if one exists; the
+  usual target is 80%.</li>
+<li><strong>practical significance</strong> — whether an effect is big enough to be worth acting on,
+  as opposed to merely unlikely to be luck.</li>
+<li><strong>correlation</strong> — two quantities moving together. Being linked says nothing about
+  which one (if either) causes the other.</li>
+<li><strong>confounder</strong> — a hidden third thing that drives two quantities at once, making
+  them look linked (summer heat drives both ice-cream sales and drownings).</li>
+<li><strong>sampling bias</strong> — when the people you measured do not mirror the people you care
+  about; no p-value can rescue a biased sample.</li>
+<li><strong>control chart</strong> — a daily plot of a process with limits marking what ordinary
+  wobble can produce; a point outside the limits says something changed.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">Pick the right test (t-test, chi-square, ANOVA)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S25/notebooks/01_pick_the_right_test.ipynb">Open in Colab</a>
+      <a class="btn" href="S25/notebooks/01_pick_the_right_test.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S25/notebooks/01_pick_the_right_test.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">A real A/B test, analysed end to end</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S25/notebooks/02_did_the_change_help.ipynb">Open in Colab</a>
+      <a class="btn" href="S25/notebooks/02_did_the_change_help.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S25/notebooks/02_did_the_change_help.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Power and sample size — how many users do we need?</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S25/notebooks/03_how_many_users_do_we_need.ipynb">Open in Colab</a>
+      <a class="btn" href="S25/notebooks/03_how_many_users_do_we_need.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S25/notebooks/03_how_many_users_do_we_need.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Small synthetic datasets generated inside each notebook (seeded, no downloads)</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Kohavi, Tang &amp; Xu — <em>Trustworthy Online Controlled Experiments</em></li>
+<li><a href="https://docs.scipy.org/doc/scipy/reference/stats.html">SciPy stats reference</a></li>
+<li><a href="https://www.statsmodels.org/stable/stats.html">statsmodels: statistics &amp; power</a></li>
+<li>StatQuest — hypothesis testing &amp; p-values (YouTube)</li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Did the Change Really Help?</h3><ul class="sbullets"><li>A/B testing: is the change real, or is it chance?</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 5 — Statistics, Stakeholder Communication &amp; Light Deployment   ·   Session S25   ·   2 hours Module 5 begins: statistics used in industry, in simple words</p></div><div class="slide"><h3 class="stitle">The problem: launch it, or was it chance?</h3><ul class="sbullets"><li>A shopping app changes its checkout screen. It adds a one-tap UPI button.</li><li>Half the users see the old screen. The other half see the new screen.</li><li>After one week, the new screen looks a little better. A few more people finished paying.</li><li>One person says, 'Good, launch it.' Another person asks, 'Is this real, or did it happen by chance this week?'</li></ul></div><div class="slide"><h3 class="stitle">The main idea of today, in one picture</h3><ul class="sbullets"><li>Every number goes up and down a little. This is random variation.</li><li>Even two same screens will not give exactly the same result.</li><li>So assume the change did nothing. Chance still gives gaps: small gaps often, big gaps rarely.</li><li>Now place our result here. In the middle: normal. Far at the end: a real change.</li></ul><img class="sdiagram" src="S25/slides/3_0.png" alt="slide 3 diagram" loading="lazy"><p class="scaption">Assume the change did nothing. Can chance alone give a gap as big as ours?</p></div><div class="slide"><h3 class="stitle">The right question is not 'Did B do better this week?' The right question is 'If the change did nothing, how often would chance give a gap this big?' That number is the p-value.</h3></div><div class="slide"><h3 class="stitle">The three questions every manager asks</h3></div><div class="slide"><h3 class="stitle">What we'll cover</h3><ul class="sbullets"><li>1   The problem, and the main idea (done: that was the big picture)</li><li>2   A/B testing: the question every product team asks</li><li>3   The steps of a test, and the p-value in simple words</li><li>4   The two ways to be wrong, and how many users we need</li><li>5   Choose the right test; report how big the change is, not only yes or no</li><li>6   After the A/B test: cause, a wrong sample, control charts</li><li>7   Lab: analyse a real A/B test from start to end</li></ul></div><div class="slide"><h3 class="stitle">1 · The A/B test, as companies use it</h3></div><div class="slide"><h3 class="stitle">What is an A/B test?</h3><ul class="sbullets"><li>Half the users see the OLD screen (A). The other half see the NEW screen (B).</li><li>Each user goes to A or B at RANDOM, like a coin toss. So both groups have the same mix of people.</li><li>Measure ONE number for each group. Choose this number before you start.</li><li>Then ask: is B really better, or is the gap only by chance?</li></ul><img class="sdiagram" src="S25/slides/8_0.png" alt="slide 8 diagram" loading="lazy"><p class="scaption">A random split makes the two groups alike. Then we compare one number.</p></div><div class="slide"><h3 class="stitle">A/B testing in Indian companies</h3></div><div class="slide"><h3 class="stitle">2 · The steps of a test, and the p-value</h3></div><div class="slide"><h3 class="stitle">Two claims</h3><ul class="sbullets"><li>Claim 1: there is NO real difference. B is the same as A. Any gap is by chance. (This is called the 'null hypothesis'.)</li><li>Claim 2: there IS a real difference. B really changes the number.</li><li>We start by assuming Claim 1 is true. It is like a court: a person is innocent until proven guilty.</li><li>Then we ask: if Claim 1 is true, how rare is the data we got?</li></ul></div><div class="slide"><h3 class="stitle">The steps of a test, in order</h3><img class="sdiagram" src="S25/slides/12_0.png" alt="slide 12 diagram" loading="lazy"><p class="scaption">Write the two claims, assume the change did nothing, measure how rare our gap is, then decide.</p></div><div class="slide"><h3 class="stitle">The p-value: how rare is our result?</h3><ul class="sbullets"><li>The p-value answers one question: if the change did nothing, how often would chance give a result this big or bigger?</li><li>Small p (for example, below 0.05): our result is rare if the change did nothing. So the change probably did something.</li><li>Large p: our result is normal. There is no strong evidence of a real change.</li><li>0.05 is a common choice, not a rule of nature. Choose your level BEFORE you see the data.</li></ul></div><div class="slide"><h3 class="stitle">What a p-value is, and what it is NOT</h3><ul class="sbullets"><li>A p-value IS</li><li>'If the change did nothing, how often would chance give a result this big?'</li><li>A measure of how rare our result is</li><li>Calculated by assuming the change did nothing</li><li>A signal to look closer, used with good judgement</li><li>A p-value is NOT</li><li>The chance that the change did nothing</li><li>The chance that we made a mistake</li><li>A measure of how BIG the change is</li><li>Proof of anything by itself</li></ul></div><div class="slide"><h3 class="stitle">Run the two-proportion z-test on A vs B</h3><ul class="sbullets"><li>p = 0.0004 is much smaller than 0.05. If A and B were really the same, a gap this big would be very rare.</li></ul><p class="scaption">CODE from statsmodels.stats.proportion import proportions_ztest # 871 of 8000 users paid in A; 1016 of 8000 in B successes = np.array([871, 1016]) totals    = np.array([8000, 8000]) # the standard A/B test: is the gap real, or chance? z_stat, p_value = proportions_ztest(successes, totals) print("z-statistic:", round(z_stat, 3)) print("p-value    :", round(p_value, 4)) OUTPUT  ▸ z-statistic: -3.554 p-value    : 0.0004</p></div><div class="slide"><h3 class="stitle">3 · The two ways to be wrong, and how many users we need</h3><ul class="sbullets"><li>Real change vs random variation, false alarms, and missed changes</li></ul></div><div class="slide"><h3 class="stitle">Compare the gap with the random variation</h3><ul class="sbullets"><li>We compare our gap with the normal random variation.</li><li>The middle shows the gaps we get if the change did nothing.</li><li>Our result is far out. The red area is the p-value.</li><li>More users give less random variation, so a clearer answer.</li></ul><img class="sdiagram" src="S25/slides/17_0.png" alt="slide 17 diagram" loading="lazy"><p class="scaption">If the change did nothing, most gaps fall near the middle. Our gap is far out at the end.</p></div><div class="slide"><h3 class="stitle">Two ways to be wrong</h3><ul class="sbullets"><li>False alarm (Type I error): we say it worked, but nothing changed. We keep this at 5%.</li><li>Missed effect (Type II error): there was a real gain, but we did not see it.</li><li>Moving the decision line reduces one mistake and increases the other.</li><li>More users move the bells apart. Then BOTH mistakes become smaller.</li></ul><img class="sdiagram" src="S25/slides/18_0.png" alt="slide 18 diagram" loading="lazy"><p class="scaption">Red is a false alarm (left bell). Amber is a missed real effect (right bell). Both depend on where we draw the decision line.</p></div><div class="slide"><h3 class="stitle">How many users do we need? (statistical power)</h3><ul class="sbullets"><li>Power = the chance that we CATCH a real effect, when it exists.</li><li>With low power, a 'no result' tells us nothing.</li><li>The thing we can control is the number of users.</li><li>The usual plan: catch a real effect 80% of the time.</li></ul><img class="sdiagram" src="S25/slides/19_0.png" alt="slide 19 diagram" loading="lazy"><p class="scaption">For a given effect, the chance of catching it goes up as the groups get bigger.</p></div><div class="slide"><h3 class="stitle">Calculate the users needed to catch the gain</h3><ul class="sbullets"><li>Give the effect worth catching and the 80% target. The calculator gives the sample size: 167 users in each group here.</li></ul><p class="scaption">CODE from statsmodels.stats.power import TTestIndPower calc = TTestIndPower() # the gain worth catching, divided by the normal spread effect_size = (11.8 - 11.0) / 2.6 # for 80% power at the 5% level, how big must each group be? n = calc.solve_power(effect_size=effect_size, power=0.80, alpha=0.05, alternative="two-sided") print("users needed PER GROUP:", int(np.ceil(n))) print("total across A and B  :", 2 * int(np.ceil(n))) OUTPUT  ▸ users needed PER GROUP: 167 total across A and B  : 334</p></div><div class="slide"><h3 class="stitle">4 · Choose the right test</h3></div><div class="slide"><h3 class="stitle">Choose the test from the type of data</h3><ul class="sbullets"><li>The right test depends on what we compare, and what kind of number it is.</li><li>Two averages (minutes, rupees) → t-test.</li><li>Two yes/no rates (paid or not paid) → chi-square test.</li><li>Three or more screens at the same time → ANOVA.</li><li>A few very large values, or very little data → a rank-based test.</li></ul></div><div class="slide"><h3 class="stitle">t-test: comparing two averages</h3><ul class="sbullets"><li>Use it when the number is an average.</li><li>It compares the average of B with the average of A.</li><li>It assumes the data is roughly bell-shaped.</li><li>If the spreads are different, use Welch's version.</li></ul><img class="sdiagram" src="S25/slides/23_0.png" alt="slide 23 diagram" loading="lazy"><p class="scaption">Is the gap between the two averages bigger than the normal spread inside each group?</p></div><div class="slide"><h3 class="stitle">Compare two averages with a t-test</h3><ul class="sbullets"><li>The gap between averages is much bigger than the spread inside the groups. p = 0.0006, so the difference is real.</li></ul><p class="scaption">CODE np.random.seed(0) # "time on page" for 120 users in each group group_A = np.random.normal(11.0, 2.6, size=120) group_B = np.random.normal(12.6, 2.6, size=120) # ttest_ind compares the averages of two separate groups t_stat, p_value = stats.ttest_ind(group_A, group_B, equal_var=False) print("t-statistic:", round(t_stat, 3)) print("p-value    :", round(p_value, 4)) OUTPUT  ▸ t-statistic: -3.457 p-value    : 0.0006</p></div><div class="slide"><h3 class="stitle">Chi-square test: comparing two yes/no rates</h3><ul class="sbullets"><li>Use it for rates or percentages.</li><li>It counts paid vs not paid, for each screen.</li><li>It compares the counts we got with the counts we expect.</li><li>In code: one line, scipy's chi2_contingency on the 2x2 table.</li></ul><img class="sdiagram" src="S25/slides/25_0.png" alt="slide 25 diagram" loading="lazy"><p class="scaption">Paying is a yes/no event. We compare how many users paid and how many did not.</p></div><div class="slide"><h3 class="stitle">ANOVA: comparing three or more screens</h3><ul class="sbullets"><li>Use it for 3 or more groups (A, B, C…): one test, not many.</li><li>It compares the gap between groups with the spread inside groups.</li><li>A small p says 'some group is different', but not which one.</li><li>Same test for 3 machine settings, 3 fertilisers, 3 treatments.</li></ul><img class="sdiagram" src="S25/slides/26_0.png" alt="slide 26 diagram" loading="lazy"><p class="scaption">Is the gap BETWEEN screens big compared with the spread INSIDE each screen?</p></div><div class="slide"><h3 class="stitle">Compare three screens at once with ANOVA</h3><ul class="sbullets"><li>One test for all three screens. F is big and p is close to 0, so at least one screen is really different.</li></ul><p class="scaption">CODE np.random.seed(0) # satisfaction scores: 80 users on each of three screens A = np.random.normal(7.0, 1.2, size=80) B = np.random.normal(7.1, 1.2, size=80) C = np.random.normal(7.9, 1.2, size=80) # one test for all three groups, not three separate tests F, p_value = stats.f_oneway(A, B, C) print("F-statistic:", round(F, 3)) print("p-value    :", round(p_value, 4)) OUTPUT  ▸ F-statistic: 10.373 p-value    : 0.0</p></div><div class="slide"><h3 class="stitle">When the data is not bell-shaped</h3><ul class="sbullets"><li>The t-test and ANOVA assume the data is roughly bell-shaped. Real data is often not.</li><li>Money spent per user is a common example. Most users spend a little. A few users spend a lot.</li><li>Rank-based tests compare the ORDER of the values, not the values. So one very large value cannot change the result much.</li><li>A simple rule: large, clean data → t-test. Small or uneven data → a rank-based test.</li></ul></div><div class="slide"><h3 class="stitle">Quick reference: which test when</h3></div><div class="slide"><h3 class="stitle">5 · Report the result honestly, and avoid common mistakes</h3></div><div class="slide"><h3 class="stitle">Show how big the change is, not only yes or no</h3><ul class="sbullets"><li>A p-value gives a yes or no answer. It does not tell HOW BIG the change is.</li><li>Better: report the size of the change AND a likely range around it. This range is called a 'confidence interval'.</li><li>'B increases payments by about 1.4 points. The real increase is likely between 0.3 and 2.5.' This says much more than 'p = 0.02'.</li><li>If the likely range does not include zero, the result is significant. Both methods agree.</li></ul></div><div class="slide"><h3 class="stitle">Show how big the change is, and how sure we are</h3><img class="sdiagram" src="S25/slides/32_0.png" alt="slide 32 diagram" loading="lazy"><p class="scaption">Each bar is a likely range. If a bar crosses 'no change', we cannot say it is different from chance.</p></div><div class="slide"><h3 class="stitle">Report the increase as a likely range</h3><ul class="sbullets"><li>The whole range (0.81 to 2.81 points) is above zero. So B is better, and the gain may be big enough to launch.</li></ul><p class="scaption">CODE from statsmodels.stats.proportion import confint_proportions_2indep # 95% confidence interval for the increase (B minus A) low, high = confint_proportions_2indep( 1016, 8000,      # B: users who paid, total users 871, 8000,       # A: users who paid, total users method="wald") print("95% CI for the increase (B - A):") print("from", round(low*100, 2), "to", round(high*100, 2), "points") OUTPUT  ▸ 95% CI for the increase (B - A): from 0.81 to 2.81 points</p></div><div class="slide"><h3 class="stitle">Common mistakes in real A/B tests</h3><ul class="sbullets"><li>Checking the result every day and stopping when it looks good. (This is called 'peeking'.)</li><li>Testing too many numbers: watch 20 numbers and one will look good only by chance.</li><li>Mixing up 'real' and 'big enough to matter'. A real change can still be too small to be useful.</li><li>Too few users: not enough data to catch the change we care about.</li></ul></div><div class="slide"><h3 class="stitle">Checking every day gives false wins</h3><img class="sdiagram" src="S25/slides/35_0.png" alt="slide 35 diagram" loading="lazy"><p class="scaption">The p-value goes up and down every day. If we check often, it will fall below 0.05 at some point, only by chance.</p></div><div class="slide"><h3 class="stitle">Test many numbers and some will look good by chance</h3><ul class="sbullets"><li>Each check has a 5% chance of a false alarm.</li><li>20 checks → about 1 false winner.</li><li>Simple fix: use a stricter level when we check many numbers.</li><li>Or use a better correction that keeps more power.</li></ul><img class="sdiagram" src="S25/slides/36_0.png" alt="slide 36 diagram" loading="lazy"><p class="scaption">At the 5% level, if we check 20 numbers, about one will look like a winner by chance.</p></div><div class="slide"><h3 class="stitle">A hidden mistake: the wrong sample</h3><ul class="sbullets"><li>Everything so far assumed one thing: the people IN the test are like the people we care about.</li><li>Survey only city users, and we miss the small towns. Test only app users, and we miss website users.</li><li>Count only people who reply, and we miss the many unhappy people who do not reply.</li><li>No p-value can correct a wrong sample. First check WHO is measured. Then ask if the gap is real.</li></ul></div><div class="slide"><h3 class="stitle">Mistakes vs good practice</h3><ul class="sbullets"><li>Mistakes</li><li>Checking every day until it 'works'</li><li>Watching many numbers with no correction</li><li>Stopping as soon as we like the result</li><li>Calling a very small change a 'win'</li><li>Measuring only the users we can reach quickly</li><li>Small samples with no plan</li><li>Good practice</li><li>Fix the sample size first, decide once at the end</li><li>Choose one main number; correct for the others</li><li>Agree on when to stop before starting</li><li>Report the size, its likely range, and if it matters</li><li>Check that the sample is like the people we act on</li><li>Calculate the users needed before the test starts</li></ul></div><div class="slide"><h3 class="stitle">'Not by chance' does not mean 'big enough to matter'. Always ask both: is it real, AND is it worth acting on?</h3></div><div class="slide"><h3 class="stitle">6 · After the A/B test</h3><ul class="sbullets"><li>Correlation vs causation, and statistics used every day in factories</li></ul></div><div class="slide"><h3 class="stitle">Moving together does not mean one causes the other</h3><img class="sdiagram" src="S25/slides/41_0.png" alt="slide 41 diagram" loading="lazy"><p class="scaption">Ice-cream sales and drowning cases go up and down together, because summer heat causes both.</p></div><div class="slide"><h3 class="stitle">Why an A/B test can say 'caused'</h3><ul class="sbullets"><li>Data we only COLLECTED (observational data) has many hidden third causes.</li><li>The random split is the key. Chance makes the third causes, like age, city and habits, equal in A and B.</li><li>So if the groups still differ, only the change can explain it. The experiment can say 'caused'.</li><li>A correlation in collected data can only say 'linked'. Use that word, or run an experiment.</li></ul></div><div class="slide"><h3 class="stitle">The control chart: today's idea, checked every day</h3><ul class="sbullets"><li>A bottle-filling line, a lab test, delivery time: measured every day.</li><li>The limits show how much normal variation can give.</li><li>Inside the limits: do not change the process.</li><li>Outside the limits: rare if nothing changed, so find the reason.</li></ul><img class="sdiagram" src="S25/slides/43_0.png" alt="slide 43 diagram" loading="lazy"><p class="scaption">Points inside the limits are normal variation. A point outside means 'something changed, find the reason'.</p></div><div class="slide"><h3 class="stitle">7 · Lab &amp; summary</h3></div><div class="slide"><h3 class="stitle">Did the change help? Plan the size first, then test it</h3><ul class="sbullets"><li>Compare the two groups with a test. But calculate the sample size you need BEFORE you start the experiment.</li></ul><p class="scaption">CODE from statsmodels.stats.proportion import proportions_ztest stat, pval = proportions_ztest([conv_a, conv_b], [n_a, n_b]) print("p-value:", round(pval, 4))     # below 0.05: probably not chance from statsmodels.stats.power import TTestIndPower n = TTestIndPower().solve_power(effect_size=0.2, alpha=0.05, power=0.8) print("need per group:", int(np.ceil(n)))   # decide sample size BEFORE</p></div><div class="slide"><h3 class="stitle">Lab: analyse a real A/B test from start to end</h3><ul class="sbullets"><li>In the lab: take a real checkout experiment, choose the right test, calculate the p-value and a likely range for the gain, check that you had enough users, and make a decision a product manager can act on.</li><li>1.  Notebook 01: try the three common tests on small data: t-test, chi-square, ANOVA. One line of code each.</li><li>2.  Notebook 02: load the checkout A/B data and check that the random split gave balanced groups.</li><li>3.  Choose the test from the type of number. Then calculate the rates, the p-value, and a likely range for the increase.</li><li>4.  Decide A or B. Keep 'not by chance' separate from 'big enough to launch'.</li><li>5.  Notebook 03: calculate how many users you need before a future test.</li><li>Deliverable:  a notebook on GitHub: the chosen test, the p-value, a likely range for the gain, a check of users needed, and one honest sentence a product manager can act on.</li></ul></div><div class="slide"><h3 class="stitle">How to report an A/B result in simple words</h3><ul class="sbullets"><li>Start with the decision and the size of the change, not the p-value.</li><li>'Launch B. It increases payments by about 1.4 points (likely between 0.3 and 2.5).'</li><li>Say how many users were in the test, and that the number was enough.</li><li>Mention the limits: a new design gets extra attention only because it is new, the test was short, or it ran in one city only.</li></ul></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>Answer all three manager questions: is it real (p-value), how big (size + likely range), is it worth acting on (business minimum).</li><li>p-value = if the change did nothing, how often chance gives a result this big. It is NOT the chance that nothing changed.</li><li>There are two mistakes, false alarms and missed effects. Enough users reduce both.</li><li>Choose the right test (t-test, chi-square, ANOVA, rank-based). The same four are used in factories, farms and hospitals.</li><li>Avoid daily checking, testing too many numbers, and a wrong sample. No p-value can correct data from the wrong people.</li><li>A correlation can only say 'linked'. The random split is what lets an experiment say 'caused'.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S25_ab_testing/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_pick_the_right_test.ipynb 02_did_the_change_help.ipynb 03_how_many_users_do_we_need.ipynb Small made-up datasets created inside each notebook (fixed seed, no downloads) Today's idea on one page: primers/p_values_in_plain_words.md New to averages and spread? primers/what_is_a_distribution.md New to code? primers/python_in_15_minutes.md Kohavi, Tang &amp; Xu: Trustworthy Online Controlled Experiments (the standard book) SciPy stats &amp; statsmodels documentation StatQuest: hypothesis testing &amp; p-values (YouTube, the simplest introduction)</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S26: Explaining a result to people who do not know statistics. We take a result like today's and write a one-page summary without using the word 'p-value'.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

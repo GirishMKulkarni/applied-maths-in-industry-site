@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f1e6">
+<meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+<title>Getting Your Model Believed — Communicating Results to Anyone · Applications of Mathematics in Industry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23bd4f2c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">Applications of Mathematics in Industry</a>
+  <nav>
+    <a href="../index.html">Sessions</a>
+    <a href="../primers/index.html">Primers</a>
+    <a href="../projects/index.html">Projects</a>
+    <a href="../primers/glossary.html">Glossary</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
+<main>
+<section class="shead">
+  <p class="crumb">Module 5 — Statistics, Communication &amp; Light Deployment</p>
+  <h1>S26 · Getting Your Model Believed — Communicating Results to Anyone</h1>
+</section>
+<section class="newhere"><h2>New here? Start with these</h2><p class="hint">Short, picture-first notes for anything below that is unfamiliar. Ten minutes each is plenty. You do not need a maths or a coding background to follow this session.</p><ul><li><a href="../primers/choosing_a_chart.html">Choosing a chart</a></li><li><a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a></li><li><a href="../primers/glossary.html">Glossary</a></li></ul></section>
+<section class="body">
+<h2 id="the-problem">The problem</h2>
+<p>A sharp young analyst at a telecom company spends three weeks building a churn
+model that actually works. It can spot the customers most likely to cancel next
+month. She presents it to the leadership team and opens with an ROC curve, then
+five slides of validation. By slide ten the CEO is on his phone. The project is
+quietly shelved. The lesson the company draws is "analytics does not deliver",
+which is unfair, but that is what happened in the room.</p>
+<p>The model was fine. The last step failed. A decision-maker had about sixty
+seconds and no interest in mathematics, and nobody handed them the one thing they
+needed: what should we do, and what is it worth. This session is about that last
+step, and it may be the most valuable two hours of the course for your career.</p>
+<h2 id="the-one-idea">The one idea</h2>
+<p>Say the answer first, in money, and say it in a sentence a busy person can act on.
+Then, and only then, give the reasons.</p>
+<p>Picture a newspaper. The headline tells you the whole story; you read the article
+only if you want the detail. A good executive summary is built the same way, upside
+down from how you did the work. You did the work bottom-up: data, method, checks,
+result. You present it top-down: recommendation first, then the two or three
+reasons that matter, then the detail for anyone who asks. This is called leading
+with the bottom line, or BLUF, bottom line up front.</p>
+<p>The trick that makes the sentence land is translation. "Churn is 4.1% and the
+model has good precision" means nothing to a manager. "Targeting the 500 likeliest
+leavers protects about ₹1.2 crore a year, approve the pilot" means everything. Same
+result, turned into a decision and a rupee figure. That translation is the whole
+skill today.</p>
+<h2 id="what-youll-build-today">What you'll build today</h2>
+<ol>
+<li>Start from a churn model's results, typed in as plain numbers, and turn a churn
+   rate into a rupee figure, the number a manager will actually hear.</li>
+<li>Draw a single clean summary chart and write a recommendation-first one-page
+   executive summary, rendered as tidy Markdown.</li>
+<li>Put a misleading chart (a truncated axis, a cherry-picked window) next to an
+   honest remake of the very same data.</li>
+<li>Replace a bare single-number forecast with a fan chart that shows uncertainty as
+   a range instead of pretending you know the future exactly.</li>
+</ol>
+<p>The lab then puts it together: take one project you already built earlier in the
+course and produce a one-page executive summary plus a three-slide deck for a
+non-technical stakeholder. There is a fill-in skeleton for the one-pager in
+<code>templates/one_pager.md</code>.</p>
+<h2 id="you-dont-need-to-already-know">You don't need to already know</h2>
+<p>Here is the good news, and please read it if you are worried you are in the wrong
+room. This is the one session with almost no maths in it, and it is the session
+where every background starts level. A commerce student who can write a clear,
+confident recommendation will out-present a maths PhD who buries the point on slide
+ten. Clear communication is a skill anyone can win at, and it is exactly where many
+technically strong people quietly lose marks in interviews and in their first jobs.</p>
+<p>We teach all of today from scratch, in plain steps:</p>
+<ul>
+<li>how to turn a model number (a churn rate, a probability) into rupees,</li>
+<li>how to structure a recommendation so the answer comes first,</li>
+<li>what makes a chart honest or misleading, and how to fix it,</li>
+<li>how to show uncertainty as a range without ever saying "p-value".</li>
+</ul>
+<p>The little you may want in advance: how to run a notebook cell, and the idea of
+picking an honest chart. Both are covered for you first.</p>
+<ul>
+<li>New to code? Read <a href="../primers/python_in_15_minutes.html">Python in 15 minutes</a>.
+  You can run every cell in today's notebooks with the play button regardless.</li>
+<li>Want the picture behind honest charts? Read
+  <a href="../primers/choosing_a_chart.html">Choosing a chart</a>. It grew out of Session 5
+  and today builds straight on it.</li>
+<li>Any unfamiliar word is in the <a href="../primers/glossary.html">glossary</a>.</li>
+</ul>
+<p>If you already code, look for the cells marked <strong>Stretch (optional)</strong> in the
+notebooks.</p>
+<h2 id="by-the-end-you-can">By the end you can</h2>
+<ul>
+<li>Translate a model metric (a churn rate, a probability) into a rupee figure and a
+  clear recommendation.</li>
+<li>Write a one-page executive summary that leads with the answer (BLUF) and ends
+  with a concrete next step.</li>
+<li>Spot and fix the two commonest chart lies: a truncated axis and a cherry-picked
+  window.</li>
+<li>Show uncertainty with a range or fan chart instead of a false-precision single
+  number.</li>
+</ul>
+<h2 id="for-the-mathematically-curious-optional">For the mathematically curious (optional)</h2>
+<p>Everything above is enough for the lab. This box is a way to think about the day,
+not something you need.</p>
+<p>Today's "mathematical object" is an unusual one: the <strong>executive summary</strong>, seen as
+a <em>compression problem</em>. A trained model holds thousands of parameters and a long
+validation story. A busy executive can act on roughly one sentence. The executive
+summary compresses all of that down to a single decision, and the compression is
+lossy on purpose. As in any compression, the skill is choosing what to keep and
+what to throw away: keep the recommendation, the rupee impact, the one chart that
+carries the argument, and one honest caveat; drop everything else into an appendix
+or a spoken answer. The fan chart in the second notebook has a quiet bit of maths
+behind it too: the band is about plus-or-minus two standard deviations, which for a
+bell-shaped spread covers roughly 95% of likely outcomes, and it widens with time
+because uncertainty compounds. None of this is needed to present well; it is just
+the machinery under the picture.</p>
+<h2 id="new-words-in-this-session">New words in this session</h2>
+<ul>
+<li><strong>churn</strong> — a customer leaving or cancelling; the churn rate is the share who
+  leave in a period.</li>
+<li><strong>BLUF (bottom line up front)</strong> — lead with the recommendation, then justify it.</li>
+<li><strong>executive summary / one-pager</strong> — the whole decision on a single page: answer,
+  a little evidence, a caveat, a next step.</li>
+<li><strong>pyramid principle</strong> — Barbara Minto's rule: answer on top, grouped support
+  below, detail at the base.</li>
+<li><strong>truncated axis</strong> — a chart whose value axis does not start at zero, which fakes
+  a big change out of a small one.</li>
+<li><strong>cherry-picking</strong> — showing only the flattering slice of the data and hiding the
+  rest of the context.</li>
+<li><strong>fan chart</strong> — a forecast drawn as a widening band (a range of outcomes) rather
+  than a single line.</li>
+<li><strong>calibrated confidence</strong> — stating a level of certainty that matches reality, so
+  "70%" really does come true about 70% of the time.</li>
+</ul>
+<p>Full definitions are in the <a href="../primers/glossary.html">glossary</a>.</p>
+</section>
+<section class="nbs"><h2>Notebooks</h2><p class="hint">Open in Colab to run in your browser (nothing to install), or download the .ipynb to run locally. Every notebook is written to be followed from any background.</p>
+  <div class="nb">
+    <span class="nbtitle">A one-pager from a model&#x27;s results (churn rate → rupees → recommendation)</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S26/notebooks/01_one_pager_from_results.ipynb">Open in Colab</a>
+      <a class="btn" href="S26/notebooks/01_one_pager_from_results.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S26/notebooks/01_one_pager_from_results.ipynb">Preview</a>
+    </span>
+  </div>
+  <div class="nb">
+    <span class="nbtitle">Good vs bad charts — honesty and showing uncertainty</span>
+    <span class="nblinks">
+      <a class="btn colab" href="https://colab.research.google.com/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S26/notebooks/02_good_vs_bad_charts.ipynb">Open in Colab</a>
+      <a class="btn" href="S26/notebooks/02_good_vs_bad_charts.ipynb" download>Download</a>
+      <a class="btn ghost" href="https://nbviewer.org/github/GirishMKulkarni/applied-maths-in-industry-site/blob/main/sessions/S26/notebooks/02_good_vs_bad_charts.ipynb">Preview</a>
+    </span>
+  </div>
+</section>
+<section class="reading"><h2>Data</h2><ul>
+<li>Small in-code numbers from an (already-built) churn model — no download needed</li>
+<li>Synthetic sales and forecast series generated inside the notebooks</li>
+</ul></section>
+<section class="reading"><h2>Further reading</h2><ul>
+<li>Barbara Minto — <em>The Pyramid Principle</em></li>
+<li>Cole Nussbaumer Knaflic — <em>Storytelling with Data</em></li>
+<li>Edward Tufte — <em>The Visual Display of Quantitative Information</em></li>
+<li><a href="https://hbr.org/2018/06/present-your-data-like-a-pro">HBR — How to give a great data presentation</a></li>
+</ul></section>
+<section class="slides"><h2>Slides</h2><p class="hint">The deck from class, as a page: every slide, its notes and its diagrams. A faithful copy — you do not need the .pptx file.</p><div class="slidedeck"><div class="slide"><h3 class="stitle">Getting Your Model Believed</h3><ul class="sbullets"><li>Explaining results to anyone: a good model that nobody understands is not used</li></ul><p class="scaption">APPLICATIONS OF MATHEMATICS IN INDUSTRY Module 5 — Statistics, Stakeholder Communication &amp; Light Deployment   ·   Session S26   ·   2 hours Module 5 · in this session, every background starts at the same level</p></div><div class="slide"><h3 class="stitle">The problem: the best model in the room was not used</h3><ul class="sbullets"><li>An analyst at an Indian telecom company builds a churn model. It works well. It finds the customers most likely to leave next month.</li><li>(Churn means a customer leaving. The churn rate is the share of customers who leave in a month.)</li><li>The analyst presents to the senior managers. The first slide is an ROC curve, a technical accuracy chart. Then come five slides of checks.</li><li>By slide ten, the CEO is looking at the phone. The project is stopped.</li><li>The company decides 'data analysis does not help us'. This is unfair, but it is what happened in that meeting.</li><li>The model was good. The last step failed: telling a busy person what to DO and how much it is worth.</li></ul></div><div class="slide"><h3 class="stitle">The main idea of today, in one picture</h3><ul class="sbullets"><li>You DID the work from the bottom up: data, method, checks, result.</li><li>You PRESENT it from the top down.</li><li>The recommendation comes first: one simple sentence, in rupees.</li><li>Then two or three reasons that matter. Details come last.</li></ul><img class="sdiagram" src="S26/slides/3_0.png" alt="slide 3 diagram" loading="lazy"><p class="scaption">Say the answer first, in rupees, like a newspaper headline. The reasons come below, for anyone who wants them.</p></div><div class="slide"><h3 class="stitle">What we'll cover</h3><ul class="sbullets"><li>1   The problem, and the main idea (done: that was the big picture)</li><li>2   Why explaining well is a strong career advantage</li><li>3   Know your listener: the same result, three ways</li><li>4   Answer first: the Pyramid Principle and the one-page summary</li><li>5   Dashboards, uncertainty, and changing a number into a decision</li><li>6   Being honest about limits, and still keeping trust</li><li>7   Lab: a one-page summary + a 3-slide presentation</li></ul></div><div class="slide"><h3 class="stitle">1 · Why explaining well matters</h3></div><div class="slide"><h3 class="stitle">Why the person who can explain gets ahead</h3><ul class="sbullets"><li>Many analysts can build a model. Very few can explain it to a CEO.</li><li>A person who can do both, build AND explain, becomes very valuable to the company.</li><li>Promotions, budgets and project approvals are decided by people who are not technical.</li><li>So this skill gives you an advantage that is hard for others to copy.</li></ul></div><div class="slide"><h3 class="stitle">Your job is not to look clever. Your job is to help someone who will never see your code make the right decision.</h3></div><div class="slide"><h3 class="stitle">2 · Know your listener</h3></div><div class="slide"><h3 class="stitle">Different people need different answers</h3><img class="sdiagram" src="S26/slides/9_0.png" alt="slide 9 diagram" loading="lazy"><p class="scaption">For more senior people, give less detail and more about the decision and the rupees.</p></div><div class="slide"><h3 class="stitle">The same result, three ways</h3><img class="sdiagram" src="S26/slides/10_0.png" alt="slide 10 diagram" loading="lazy"><p class="scaption">One churn model, one result, explained for three different listeners.</p></div><div class="slide"><h3 class="stitle">3 · Answer first: the Pyramid Principle</h3></div><div class="slide"><h3 class="stitle">Answer first, then group the reasons</h3><ul class="sbullets"><li>Start with the one main answer.</li><li>Support it with 3 or 4 grouped reasons.</li><li>Put the data and charts under each reason.</li><li>Details are ready if asked, not shown first.</li></ul><img class="sdiagram" src="S26/slides/12_0.png" alt="slide 12 diagram" loading="lazy"><p class="scaption">Barbara Minto's pyramid: the recommendation is at the top.</p></div><div class="slide"><h3 class="stitle">Give the conclusion first, not at the end</h3><img class="sdiagram" src="S26/slides/13_0.png" alt="slide 13 diagram" loading="lazy"><p class="scaption">Top: the slow build-up, where people stop listening. Bottom: answer first.</p></div><div class="slide"><h3 class="stitle">4 · The one-page summary</h3></div><div class="slide"><h3 class="stitle">Situation → Complication → Question → Answer</h3><ul class="sbullets"><li>Situation: the background that everyone already agrees on.</li><li>Complication: what changed, or what problem has come up.</li><li>Question: the decision this problem forces us to make.</li><li>Answer: your recommendation, given first, in simple words, with the rupee amount.</li><li>Then: the evidence, on one page, ending with a next step.</li></ul></div><div class="slide"><h3 class="stitle">A sample one-page summary</h3><img class="sdiagram" src="S26/slides/16_0.png" alt="slide 16 diagram" loading="lazy"><p class="scaption">The decision and the rupee amount are in the top third of the page.</p></div><div class="slide"><h3 class="stitle">Print the one-page summary, top line first</h3><ul class="sbullets"><li>The order is the message: the answer and the rupee amount come before any evidence.</li></ul><p class="scaption">CODE # one page, in the order a busy reader wants it one_pager = [ "ANSWER : approve a 3-month pilot on the 500 customers most likely to leave.", "IMPACT : protects about Rs 12 lakh of revenue per year.", "WHY    : churn is 4.1% a month; past pilots kept ~30%.", "RISK   : the 30% is an estimate; we will measure it.", "NEXT   : retention team starts next month; review in 3 months.", ] for line in one_pager: print(line) OUTPUT  ▸ ANSWER : approve a 3-month pilot on the 500 customers most likely to leave. IMPACT : protects about Rs 12 lakh of revenue per year. WHY    : churn is 4.1% a month; past pilots kept ~30%. RISK   : the 30% is an estimate; we will measure it. NEXT   : retention team starts next month; review in 3 months.</p></div><div class="slide"><h3 class="stitle">What should be on the page</h3><ul class="sbullets"><li>A title that gives the decision (a sentence, not a topic).</li><li>'Cut churn 18%: approve the pilot', not 'Churn analysis'.</li><li>Only one chart, the one that supports the decision.</li><li>Three evidence points, one honest risk, one next step.</li><li>Everything else goes in the appendix, or in your spoken answers.</li></ul></div><div class="slide"><h3 class="stitle">5 · Dashboards that give a clear message</h3></div><div class="slide"><h3 class="stitle">Busy dashboard vs clear dashboard</h3><img class="sdiagram" src="S26/slides/20_0.png" alt="slide 20 diagram" loading="lazy"><p class="scaption">Left: many numbers that look good. Right: one message, one decision.</p></div><div class="slide"><h3 class="stitle">Dashboard design</h3><ul class="sbullets"><li>Avoid</li><li>A dozen unrelated boxes</li><li>Numbers that look good but nobody acts on</li><li>Too many colours, 3-D effects, crowded charts</li><li>No message, no recommended action</li><li>Do this</li><li>One main number, then the comparison</li><li>Numbers connected to a decision</li><li>Few colours; highlight the main point</li><li>A clear order: status → reason → what to do</li></ul></div><div class="slide"><h3 class="stitle">6 · Explaining uncertainty</h3></div><div class="slide"><h3 class="stitle">Talk about uncertainty without technical words</h3><ul class="sbullets"><li>Do not say 'p-value' or 'confidence interval' to people who are not technical.</li><li>Use a range: 'We expect an increase of 8 to 12%, most likely about 10%.'</li><li>Use cases: best case, expected case, worst case.</li><li>Say how sure you are, and why, in one simple sentence.</li></ul></div><div class="slide"><h3 class="stitle">Show a range, not one exact-looking number</h3><img class="sdiagram" src="S26/slides/24_0.png" alt="slide 24 diagram" loading="lazy"><p class="scaption">One number hides the risk. A range (fan chart) shows it honestly.</p></div><div class="slide"><h3 class="stitle">Change one number into an honest range</h3><ul class="sbullets"><li>The same model gives Rs 8 to 16 lakh: a range you can state honestly.</li></ul><p class="scaption">CODE flagged  = 500         # customers the model marks as likely to leave value_yr = 8000        # Rs per customer kept, per year # try a careful and a hopeful success rate, in lakh protected low  = flagged * 0.20 * value_yr / 1e5 high = flagged * 0.40 * value_yr / 1e5 print("Careful (20% kept): Rs", round(low, 1), "lakh") print("Hopeful (40% kept): Rs", round(high, 1), "lakh") OUTPUT  ▸ Careful (20% kept): Rs 8.0 lakh Hopeful (40% kept): Rs 16.0 lakh</p></div><div class="slide"><h3 class="stitle">Use a familiar example</h3><img class="sdiagram" src="S26/slides/26_0.png" alt="slide 26 diagram" loading="lazy"><p class="scaption">'70% chance of rain' is a kind of uncertainty everyone already trusts.</p></div><div class="slide"><h3 class="stitle">7 · From model output to decision</h3></div><div class="slide"><h3 class="stitle">Model output → decision → ₹ impact</h3><img class="sdiagram" src="S26/slides/28_0.png" alt="slide 28 diagram" loading="lazy"><p class="scaption">A probability is not an answer until it becomes an action with a rupee amount.</p></div><div class="slide"><h3 class="stitle">From a marked customer to rupees protected</h3><ul class="sbullets"><li>Each line is one step: 500 marked → 150 kept → Rs 12 lakh a year.</li></ul><p class="scaption">CODE # from the model's results flagged   = 500        # customers marked as likely to leave save_rate = 0.30       # past pilots kept ~30% of them value_yr  = 8000       # Rs from each customer kept, per year retained  = flagged * save_rate protected = retained * value_yr print("Customers expected to stay :", retained) print("Revenue protected per year : Rs", protected) print("Revenue protected per year : Rs", round(protected / 1e5, 1), "lakh") OUTPUT  ▸ Customers expected to stay : 150.0 Revenue protected per year : Rs 1200000.0 Revenue protected per year : Rs 12.0 lakh</p></div><div class="slide"><h3 class="stitle">The "so what?" steps</h3><img class="sdiagram" src="S26/slides/30_0.png" alt="slide 30 diagram" loading="lazy"><p class="scaption">Keep asking 'so what?' until you reach a decision and a rupee amount. If you cannot reach an action, you are not ready to present.</p></div><div class="slide"><h3 class="stitle">8 · Honesty and limits</h3></div><div class="slide"><h3 class="stitle">Honest charts: where the axis starts</h3><img class="sdiagram" src="S26/slides/32_0.png" alt="slide 32 diagram" loading="lazy"><p class="scaption">If the axis starts at 100, a rise of 3.5% looks like a huge jump.</p></div><div class="slide"><h3 class="stitle">The four numbers behind the 'huge jump' chart</h3><ul class="sbullets"><li>The cut-off axis made a 3.5% rise look dramatic.</li></ul><p class="scaption">CODE quarters = ["Q1", "Q2", "Q3", "Q4"] sales    = [101.0, 102.0, 103.0, 104.5]    # sales in Rs lakh # the real change that the dramatic chart was hiding percent_change = (sales[3] - sales[0]) / sales[0] * 100 print("Sales (Rs lakh):", sales) print("Real change Q1 to Q4:", round(percent_change, 1), "%") OUTPUT  ▸ Sales (Rs lakh): [101.0, 102.0, 103.0, 104.5] Real change Q1 to Q4: 3.5 %</p></div><div class="slide"><h3 class="stitle">Choosing only the good months</h3><img class="sdiagram" src="S26/slides/34_0.png" alt="slide 34 diagram" loading="lazy"><p class="scaption">Six good months vs the full three years.</p></div><div class="slide"><h3 class="stitle">Talk about limits and still keep trust</h3><ul class="sbullets"><li>Say the main limit clearly. If you hide it, you lose trust when it comes out later.</li><li>With every limit, say what you will do about it: 'The sample is small, so we will run a pilot first.'</li><li>Give a number for the risk where you can. Do not leave it vague.</li><li>Being confident and being honest go together. Accepting the limits builds trust.</li></ul></div><div class="slide"><h3 class="stitle">Lab: explain a past project to a manager who is not technical</h3><ul class="sbullets"><li>In the lab: take ONE of your earlier projects (house prices, loan default, the portfolio, or the demand forecast) and make a one-page summary plus a 3-slide presentation for a manager who is not technical. No new modelling: all the work is in explaining.</li><li>1.  Notebook 01: start from a churn model's results. Change a churn rate into a rupee amount, then into a recommendation.</li><li>2.  Write the one-page summary: SCQA at the top, one chart, three evidence points, one risk (use templates/one_pager.md).</li><li>3.  Notebook 02: put a misleading chart next to an honest version of the same data; add a fan chart instead of one number.</li><li>4.  Make the 3 slides: (1) recommendation, (2) why / evidence, (3) risk + next step.</li><li>5.  Exchange with a partner: can they tell your decision after reading for 30 seconds?</li><li>Deliverable:  a one-page summary (PDF) + a 3-slide presentation, no technical words, on GitHub.</li></ul></div><div class="slide"><h3 class="stitle">Key takeaways</h3><ul class="sbullets"><li>Explaining well is a career advantage: the analyst who turns results into decisions gets ahead.</li><li>Say the answer first, in rupees (BLUF / pyramid). Then the reasons. Details last.</li><li>Match the message to the listener. Start with what THEY care about.</li><li>One message per dashboard or one-page summary, ending in a decision and a ₹ amount.</li><li>Show uncertainty as a range, not one exact-looking number. Use familiar examples.</li><li>Be honest and correctly confident: name the limit, and say what you will do about it.</li></ul></div><div class="slide"><h3 class="stitle">Code &amp; further reading</h3><ul class="sbullets"><li>Code:  github.com/bp-course/applied-maths-in-industry  ›  S26_communication/</li><li>Notebooks for this session</li><li>Data</li><li>Reading</li></ul><p class="scaption">01_one_pager_from_results.ipynb 02_good_vs_bad_charts.ipynb templates/one_pager.md  (fill-in one-page template) Small numbers inside the code, from a churn model already built (no download) Made-up sales and forecast data created inside the notebooks New to code? primers/python_in_15_minutes.md How to choose an honest chart: primers/choosing_a_chart.md Any new word: primers/glossary.md Barbara Minto: The Pyramid Principle (structure) Cole Nussbaumer Knaflic: Storytelling with Data (charts; start here) Edward Tufte: The Visual Display of Quantitative Information (honesty) HBR: How to give a great data presentation</p></div><div class="slide"><h3 class="stitle">Next session</h3><ul class="sbullets"><li>S27: Put your model online. A practical workshop: by the end of the class, your model is a live web app with a link you can open on your phone.</li></ul></div></div></section>
+<p class="back"><a href="../index.html">&larr; All sessions</a></p>
+</main>
+<footer class="foot">
+  <p>Applications of Mathematics in Industry · Dr. Girish Kulkarni</p>
+  <p><a href="../primers/index.html">Primers</a> · <a href="../projects/index.html">Projects</a> · <a href="../primers/glossary.html">Glossary</a> · <a href="../about.html">About</a></p>
+</footer>
+</body>
+</html>

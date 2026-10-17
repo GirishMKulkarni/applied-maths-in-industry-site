@@ -1,0 +1,7 @@
+# Packages the Streamlit app needs. The cloud machine starts empty and installs
+# exactly these. Pinning versions keeps the cloud matching your laptop, so the
+# saved model loads cleanly.
+streamlit==1.40.1
+scikit-learn==1.8.0
+numpy==2.4.6
+joblib==1.5.3
